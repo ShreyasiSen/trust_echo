@@ -15,7 +15,7 @@ import {
     items?: FaqItem[];
   }
   
-  const Faq1 = ({
+  const Faq= ({
     heading = "Frequently Asked Questions",
     items = [
       {
@@ -68,4 +68,4 @@ import {
     );
   };
   
-  export { Faq1 };
+export { Faq };

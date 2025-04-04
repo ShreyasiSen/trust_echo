@@ -26,9 +26,9 @@ interface Navbar1Props {
 const Header = ({
   logo = {
     url: "#hero",
-    src: "https://shadcnblocks.com/images/block/logos/shadcnblockscom-icon.svg",
+    src: "https://ibb.co/5Wb199DW",
     alt: "logo",
-    title: "TrustEcho",
+    title: "",
   },
 }: Navbar1Props) => {
   const menu = [
@@ -40,26 +40,28 @@ const Header = ({
   ];
 
   return (
-    <section className="py-4 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
+    <section className="py-3 fixed top-0 left-0 px-10 w-full bg-gradient-to-l from-purple-600 via-pink-400 to-red-200 z-50 shadow-xl">
       <div className="container mx-auto">
         {/* Desktop Menu */}
         <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="max-h-8" alt={logo.alt} />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
+            <a href="https://imgbb.com/">
+              <img
+                src="https://i.ibb.co/7JsSzzcJ/Screenshot-2025-04-05-001203.png"
+                alt="Logo"
+                style={{ border: "0", height: "60px", width: "150px" }}
+                className="hover:opacity-90 transition-opacity duration-300"
+              />
             </a>
             <div className="flex items-center">
               <NavigationMenu>
-                <NavigationMenuList>
+                <NavigationMenuList className="flex gap-6">
                   {menu.map((item) => (
                     <NavigationMenuItem key={item.title}>
                       <NavigationMenuLink
                         href={item.url}
-                        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+                        className="group inline-flex h-10 w-32 items-center justify-center rounded-md bg-white/60 px-4 py-2 text-lg font-semibold text-blue-900 transition-all hover:scale-110 hover:bg-white/50 hover:text-red-600 shadow-lg hover:shadow-[0_8px_30px_rgba(255,255,255,0.5)]"
                       >
                         {item.title}
                       </NavigationMenuLink>
@@ -69,10 +71,21 @@ const Header = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">Sign In</Button>
-            <Button variant="outline">Sign Up</Button>
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              className="text-white text-lg font-semibold font hover:text-blue-800 hover:scale-105 hover:shadow-[0_4px_15px_rgba(255,255,255,0.4)] transition-all duration-300 ease-out"
+            >
+              Sign In
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-white text-lg font-semibold hover:text-black hover:scale-105 hover:shadow-[0_4px_15px_rgba(255,255,255,0.4)] transition-all duration-300 ease-out"
+            >
+              Sign Up
+            </Button>
           </div>
+
         </nav>
 
         {/* Mobile Menu */}
@@ -80,19 +93,33 @@ const Header = ({
           <div className="flex items-center justify-between">
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
-              <img src={logo.src} className="max-h-8" alt={logo.alt} />
+              <img
+                src={logo.src}
+                className="max-h-8"
+                alt={logo.alt}
+                style={{ height: "50px", width: "50px" }}
+                className="hover:opacity-90 transition-opacity duration-300"
+              />
             </a>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="text-white border-white hover:bg-white hover:text-black transition-all duration-300"
+                >
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
+              <SheetContent className="overflow-y-auto bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 text-white">
                 <SheetHeader>
                   <SheetTitle>
                     <a href={logo.url} className="flex items-center gap-2">
-                      <img src={logo.src} className="max-h-8" alt={logo.alt} />
+                      <img
+                        src={logo.src}
+                        className="max-h-8 hover:opacity-90 transition-opacity duration-300"
+                        alt={logo.alt}
+                      />
                     </a>
                   </SheetTitle>
                 </SheetHeader>
@@ -101,14 +128,24 @@ const Header = ({
                     <a
                       key={item.title}
                       href={item.url}
-                      className="text-md font-semibold"
+                      className="text-md font-semibold hover:underline hover:text-black transition-all duration-300"
                     >
                       {item.title}
                     </a>
                   ))}
                   <div className="flex flex-col gap-3">
-                    <Button variant="outline">Sign In</Button>
-                    <Button variant="outline">Sign Up</Button>
+                    <Button
+                      variant="outline"
+                      className="text-white border-white hover:bg-white hover:text-black transition-all duration-300"
+                    >
+                      Sign In
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="text-white border-white hover:bg-white hover:text-black transition-all duration-300"
+                    >
+                      Sign Up
+                    </Button>
                   </div>
                 </div>
               </SheetContent>
@@ -118,6 +155,6 @@ const Header = ({
       </div>
     </section>
   );
-};
+}
 
 export { Header };

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const Contact2 = () => {
+const Contact = () => {
   return (
     <section className="py-32" id="contact">
       <div className="container mx-auto">
@@ -67,4 +67,4 @@ const Contact2 = () => {
   );
 };
 
-export { Contact2 };
+export { Contact };
