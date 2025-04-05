@@ -14,23 +14,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-interface Navbar1Props {
-  logo?: {
-    url: string;
-    src: string;
-    alt: string;
-    title: string;
-  };
-}
-
-const Header = ({
-  logo = {
-    url: "#hero",
-    src: "https://ibb.co/5Wb199DW",
-    alt: "logo",
-    title: "",
-  },
-}: Navbar1Props) => {
+const Header = () => {
   const menu = [
     { title: "Features", url: "#features" },
     { title: "Testimonial", url: "#pricing" },
@@ -76,16 +60,6 @@ const Header = ({
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                className="max-h-8"
-                alt={logo.alt}
-                style={{ height: "50px", width: "50px" }}
-                className="hover:opacity-90 transition-opacity duration-300"
-              />
-            </a>
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -99,13 +73,9 @@ const Header = ({
               <SheetContent className="overflow-y-auto bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 text-white">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      <img
-                        src={logo.src}
-                        className="max-h-8 hover:opacity-90 transition-opacity duration-300"
-                        alt={logo.alt}
-                      />
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-semibold">Menu</span>
+                    </div>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
@@ -140,6 +110,6 @@ const Header = ({
       </div>
     </section>
   );
-}
+};
 
 export { Header };
