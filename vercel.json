@@ -1,7 +1,5 @@
 {
-    "functions": {
-      "src/app/api/**": {
-        "includeFiles": "prisma/**"
-      }
-    }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
+    ]
   }
