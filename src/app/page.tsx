@@ -4,9 +4,9 @@ import { Hero } from "@/components/hero";
 import { Faq } from "@/components/faq";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-import { Feature } from "@/components/feature";
+import {Feature } from "@/components/feature";
+export   default  async function Home() {
 
-export default function Home() {
   return (
     <div >
       <Header/>
@@ -15,6 +15,8 @@ export default function Home() {
       <Faq/>
       <Contact />
       <Footer />
+     
+     
     </div>
   );
 }
