@@ -1,4 +1,4 @@
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaGithub } from "react-icons/fa";
+
 
 const sections = [
   {
@@ -62,12 +62,7 @@ const Footer = ({
         1,200+ testimonials, capturing video, text & star ratings to help brands build trust and convert faster.
         </p>
         {/* Socials */}
-        <div className="flex space-x-3 pt-2 text-gray-700">
-          <a href="#" className="hover:text-black transition"><FaFacebookF /></a>
-          <a href="#" className="hover:text-black transition"><FaTwitter /></a>
-          <a href="#" className="hover:text-black transition"><FaLinkedinIn /></a>
-          <a href="#" className="hover:text-black transition"><FaGithub /></a>
-        </div>
+        
       </div>
 
       {/* Link Sections */}

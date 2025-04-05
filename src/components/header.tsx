@@ -1,6 +1,5 @@
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SignedIn,SignInButton,SignedOut,UserButton } from "@clerk/nextjs";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -69,19 +68,9 @@ const Header = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              className="text-gray-700 hover:text-blue-500 transition-colors duration-200"
-            >
-              Sign In
-            </Button>
-            <Button
-              variant="ghost"
-              className="text-gray-700 hover:text-blue-500 transition-colors duration-200"
-            >
-              Sign Up
-            </Button>
+          <div className="flex gap-2">
+            <Button variant="outline">Sign In</Button>
+            <Button variant="outline">Sign Up</Button>
           </div>
         </nav>
         {/* Mobile Menu */}
