@@ -2,64 +2,139 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Mail, Phone, User } from "lucide-react"; // icon lib like lucide
 
-const Contact2 = () => {
+const Contact = () => {
   return (
-    <section className="py-32" id="contact">
-      <div className="container mx-auto">
-        <div className="mx-auto flex max-w-screen-xl flex-col justify-between gap-10 lg:flex-row lg:gap-20">
-          <div className="mx-auto flex max-w-sm flex-col justify-between gap-10">
-            <div className="text-center lg:text-left">
-              <h1 className="mb-2 text-5xl font-semibold lg:mb-1 lg:text-6xl">
-                Contact Us
-              </h1>
-              <p className="text-muted-foreground">
-                We are available for questions, feedback, or collaboration
-                opportunities. Let us know how we can help!
-              </p>
-            </div>
-            <div className="mx-auto w-fit lg:mx-0">
-              <h3 className="mb-6 text-center text-2xl font-semibold lg:text-left">
-                Contact Details
-              </h3>
-              <ul className="ml-4 list-disc">
-                <li>
-                  <span className="font-bold">Phone: </span>
-                  (123) 34567890
-                </li>
-                <li>
-                  <span className="font-bold">Email: </span>
-                  <a href="" className="underline">
+    <section
+      id="contact"
+      className="py-32 bg-gradient-to-b from-purple-100 via-purple-50 to-pink-50 relative overflow-hidden"
+    >
+      <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 opacity-20 rounded-full blur-[120px] -z-10"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-200 opacity-20 rounded-full blur-[160px] -z-10"></div>
+
+      <div className="container px-6 mx-auto max-w-7xl">
+        <div className="grid gap-16 lg:grid-cols-2 items-center">
+          {/* Left side - Welcome message + contact info */}
+          <div>
+            <h1 className="text-5xl font-bold text-gray-800 leading-tight mb-4 tracking-tight">
+              Let’s Talk!
+            </h1>
+            <p className="text-lg text-gray-600 mb-8 max-w-md">
+              Have questions, feedback, or collaboration ideas? We’re here to
+              listen and ready to help.
+            </p>
+
+            <div className="space-y-4 text-lg text-gray-700">
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-xl">📞</span>
+                <span>
+                  <strong>Phone:</strong> (123) 34567890
+                </span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-xl">✉️</span>
+                <span>
+                  <strong>Email:</strong>{" "}
+                  <a href="mailto:your-email@example.com" className="underline text-purple-700">
                     your-email@example.com
                   </a>
-                </li>
-              </ul>
+                </span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-purple-600 text-xl">📍</span>
+                <span>We’re global. Remote-first. Built for everyone.</span>
+              </div>
             </div>
           </div>
-          <div className="mx-auto flex max-w-screen-md flex-col gap-6 rounded-lg border p-10">
-            <div className="flex gap-4">
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="firstname">First Name</Label>
-                <Input type="text" id="firstname" placeholder="First Name" />
-              </div>
-              <div className="grid w-full items-center gap-1.5">
-                <Label htmlFor="lastname">Last Name</Label>
-                <Input type="text" id="lastname" placeholder="Last Name" />
-              </div>
-            </div>
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input type="email" id="email" placeholder="Email" />
-            </div>
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="subject">Subject</Label>
-              <Input type="text" id="subject" placeholder="Subject" />
-            </div>
-            <div className="grid w-full gap-1.5">
-              <Label htmlFor="message">Message</Label>
-              <Textarea placeholder="Type your message here." id="message" />
-            </div>
-            <Button className="w-full">Send Message</Button>
+
+          {/* Right: Fancy Form */}
+          <div className="bg-white/80 backdrop-blur-md border border-purple-200 shadow-sm rounded-3xl p-10">
+          <form className="space-y-6">
+  {/* Name Fields */}
+  <div className="grid md:grid-cols-2 gap-4">
+    <div className="relative">
+      <Input
+        id="firstname"
+        placeholder=" "
+        className="peer h-12 px-4 pt-5 border-b-2 border-gray-200 focus:border-indigo-500 focus:outline-none w-full bg-transparent text-gray-800"
+      />
+      <Label
+        htmlFor="firstname"
+        className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all peer-focus:top-2 peer-focus:text-sm peer-focus:text-indigo-600"
+      >
+        First Name
+      </Label>
+    </div>
+    <div className="relative">
+      <Input
+        id="lastname"
+        placeholder=" "
+        className="peer h-12 px-4 pt-5 border-b-2 border-gray-200 focus:border-indigo-500 focus:outline-none w-full bg-transparent text-gray-800"
+      />
+      <Label
+        htmlFor="lastname"
+        className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all peer-focus:top-2 peer-focus:text-sm peer-focus:text-indigo-600"
+      >
+        Last Name
+      </Label>
+    </div>
+  </div>
+
+  {/* Email Field */}
+  <div className="relative">
+    <Input
+      type="email"
+      id="email"
+      placeholder=" "
+      className="peer h-12 px-4 pt-5 border-b-2 border-gray-200 focus:border-indigo-500 focus:outline-none w-full bg-transparent text-gray-800"
+    />
+    <Label
+      htmlFor="email"
+      className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all peer-focus:top-2 peer-focus:text-sm peer-focus:text-indigo-600"
+    >
+      Email
+    </Label>
+  </div>
+
+  {/* Subject Field */}
+  <div className="relative">
+    <Input
+      id="subject"
+      placeholder=" "
+      className="peer h-12 px-4 pt-5 border-b-2 border-gray-200 focus:border-indigo-500 focus:outline-none w-full bg-transparent text-gray-800"
+    />
+    <Label
+      htmlFor="subject"
+      className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all peer-focus:top-2 peer-focus:text-sm peer-focus:text-indigo-600"
+    >
+      Subject
+    </Label>
+  </div>
+
+  {/* Message */}
+  <div className="relative">
+    <Textarea
+      id="message"
+      placeholder=" "
+      rows={5}
+      className="peer w-full px-4 pt-5 border-b-2 border-gray-200 focus:border-indigo-500 focus:outline-none bg-transparent resize-none text-gray-800"
+    />
+    <Label
+      htmlFor="message"
+      className="absolute left-4 top-2 text-sm text-gray-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all peer-focus:top-2 peer-focus:text-sm peer-focus:text-indigo-600"
+    >
+      Message
+    </Label>
+  </div>
+
+  {/* Submit Button */}
+  <div className="flex justify-center">
+    <Button className="bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-md hover:shadow-lg rounded-full px-8 py-3 transition-colors duration-300 hover:scale-105">
+      Send Message
+    </Button>
+  </div>
+</form>
           </div>
         </div>
       </div>
@@ -67,4 +142,4 @@ const Contact2 = () => {
   );
 };
 
-export { Contact2 };
+export { Contact };
