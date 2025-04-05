@@ -43,7 +43,7 @@ const Hero = () => {
 
   return (
     <section className="py-32 bg-purple-50 font-[Quicksand]" id="hero">
-      <div className="overflow-hidden border-b border-gray-300 shadow-sm">
+      <div className="overflow-hidden ">
         <div className="container mx-auto">
           <div className="mx-auto flex max-w-5xl flex-col items-center">
             <div className="z-10 items-center text-center">
@@ -55,7 +55,7 @@ const Hero = () => {
                 {Array.from("Create custom testimonial links with questions, share them with your customers, and gather valuable feedback. Unlock features like video testimonials, insight graphs, and more to grow your business. ").map((char, index) => (
                   <span
                     key={index}
-                    className="inline-block animate-typing opacity-0 text-black font-sans rounded-sm px-0.5"
+                    className="inline-block animate-typing opacity-0 text-black font-sans rounded-sm"
                     style={{
                       animationDelay: `${index * 0.09}s`,
                       animationIterationCount: "infinite",
@@ -66,29 +66,26 @@ const Hero = () => {
                   </span>
                 ))}
               </p>
-
-
-
               <div className="mt-12 flex w-full flex-col justify-center gap-4 sm:flex-row">
-                <Button className="bg-gray-800 text-white shadow-md rounded-md px-6 py-3 font-[Quicksand] hover:bg-gray-900 transition">
+                <Button className="bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-8 py-4 font-[Quicksand] text-lg transition-all duration-300 hover:scale-105">
                   Get started now
-                  <ChevronRight className="ml-2 h-4" />
+                  <ChevronRight className="ml-2 h-5" />
                 </Button>
                 <Button
                   variant="ghost"
-                  className="text-gray-800 border-2 border-gray-800 hover:bg-gray-800 hover:text-white transition rounded-md px-6 py-3 font-[Quicksand]"
+                  className="bg-white/80 text-gray-800 border-2 border-gray-400 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 rounded-full px-8 py-4 font-[Quicksand] text-lg shadow-md hover:shadow-lg"
                 >
                   Learn more
-                  <ChevronRight className="ml-2 h-4" />
+                  <ChevronRight className="ml-2 h-5" />
                 </Button>
               </div>
             </div>
           </div>
-          <img
+          {/* <img
             src="https://shadcnblocks.com/images/block/placeholder-1.svg"
             alt="placeholder"
             className="mx-auto mt-24 max-h-[700px] w-full max-w-7xl rounded-t-lg object-cover shadow-lg"
-          />
+          /> */}
         </div>
       </div>
     </section>

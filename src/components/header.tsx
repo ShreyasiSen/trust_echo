@@ -40,28 +40,25 @@ const Header = ({
   ];
 
   return (
-    <section className="py-3 fixed top-0 left-0 px-10 w-full bg-gradient-to-l from-purple-600 via-pink-400 to-red-200 z-50 shadow-xl">
+    <section className="py-6 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
       <div className="container mx-auto">
-        {/* Desktop Menu */}
-        <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-8">
-            {/* Logo */}
-            <a href="https://imgbb.com/">
-              <img
-                src="https://i.ibb.co/7JsSzzcJ/Screenshot-2025-04-05-001203.png"
-                alt="Logo"
-                style={{ border: "0", height: "60px", width: "150px" }}
-                className="hover:opacity-90 transition-opacity duration-300"
-              />
-            </a>
-            <div className="flex items-center">
+        <nav className="flex justify-between items-center">
+          <div className="flex items-center">
+            <div className="flex items-center font-bold tracking-tight text-white text-4xl sm:text-5xl mr-10">
+              <span className="italic bg-gradient-to-r from-indigo-600 via-violet-700 to-pink-600 bg-clip-text text-transparent font-display">
+                Fide
+              </span>
+              <span className="text-blue-900 italic font-light ml-1">Feed</span>
+            </div>
+
+            <div className="hidden lg:flex ml-8">
               <NavigationMenu>
-                <NavigationMenuList className="flex gap-6">
+                <NavigationMenuList className="flex space-x-4">
                   {menu.map((item) => (
                     <NavigationMenuItem key={item.title}>
                       <NavigationMenuLink
                         href={item.url}
-                        className="group inline-flex h-10 w-32 items-center justify-center rounded-md bg-white/60 px-4 py-2 text-lg font-semibold text-blue-900 transition-all hover:scale-110 hover:bg-white/50 hover:text-red-600 shadow-lg hover:shadow-[0_8px_30px_rgba(255,255,255,0.5)]"
+                        className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
                       >
                         {item.title}
                       </NavigationMenuLink>
@@ -71,23 +68,21 @@ const Header = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
-              className="text-white text-lg font-semibold font hover:text-blue-800 hover:scale-105 hover:shadow-[0_4px_15px_rgba(255,255,255,0.4)] transition-all duration-300 ease-out"
+              className="text-gray-700 hover:text-blue-500 transition-colors duration-200"
             >
               Sign In
             </Button>
             <Button
               variant="ghost"
-              className="text-white text-lg font-semibold hover:text-black hover:scale-105 hover:shadow-[0_4px_15px_rgba(255,255,255,0.4)] transition-all duration-300 ease-out"
+              className="text-gray-700 hover:text-blue-500 transition-colors duration-200"
             >
               Sign Up
             </Button>
           </div>
-
         </nav>
-
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
