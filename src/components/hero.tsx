@@ -1,7 +1,6 @@
 "use client";
 import { ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -67,7 +66,8 @@ const Hero = () => {
                 ))}
               </p>
               <div className="mt-12 flex w-full flex-col justify-center gap-4 sm:flex-row">
-                <Button className="bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-8 py-4 font-[Quicksand] text-lg transition-all duration-300 hover:scale-105">
+                <Button className="bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-8 py-4 font-[Quicksand] text-lg transition-all duration-300 hover:scale-105" 
+                onClick={() => window.location.href = "/dashboard"}>
                   Get started now
                   <ChevronRight className="ml-2 h-5" />
                 </Button>

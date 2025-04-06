@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const menu = [
@@ -52,11 +53,26 @@ const Header = () => {
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">Sign In</Button>
-            <Button variant="outline">Sign Up</Button>
+
+          <div className="flex items-center gap-4">
+            <SignedOut>
+              <SignInButton>
+                <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                  Sign In
+                </Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </nav>
+
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
@@ -89,18 +105,22 @@ const Header = () => {
                     </a>
                   ))}
                   <div className="flex flex-col gap-3">
-                    <Button
-                      variant="outline"
-                      className="text-white border-white hover:bg-white hover:text-black transition-all duration-300"
-                    >
-                      Sign In
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="text-white border-white hover:bg-white hover:text-black transition-all duration-300"
-                    >
-                      Sign Up
-                    </Button>
+                    <SignInButton>
+                      <Button
+                        variant="outline"
+                        className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-all"
+                      >
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton>
+                      <Button
+                        variant="outline"
+                        className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all"
+                      >
+                        Sign Up
+                      </Button>
+                    </SignUpButton>
                   </div>
                 </div>
               </SheetContent>

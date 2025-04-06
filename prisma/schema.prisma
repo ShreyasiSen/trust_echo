@@ -12,6 +12,7 @@ datasource db {
 
 model User {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  clerk_id      String        @unique
   name         String
   email        String        @unique
   forms        Form[]
@@ -24,6 +25,7 @@ model Form {
   questions   String[] 
   userId      String     @db.ObjectId
   user        User       @relation(fields: [userId], references: [id])
+  createdAt  DateTime?  @default(now())
   responses   Response[]
 }
 
@@ -31,5 +33,8 @@ model Response {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   formId  String   @db.ObjectId
   form    Form     @relation(fields: [formId], references: [id])
+  createdAt DateTime? @default(now())
+  responderName String
+  responderEmail String
   answers String[] 
 }
