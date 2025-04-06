@@ -51,7 +51,7 @@ const Hero = () => {
                 <span className="animate-pulse">|</span>
               </h1>
               <p className="mx-auto max-w-screen-md text-black lg:text-xl font-serif overflow-hidden inline-block">
-                {Array.from("Create custom testimonial links with questions, share them with your customers, and gather valuable feedback. Unlock features like video testimonials, insight graphs, and more to grow your business. ").map((char, index) => (
+                {Array.from("Create custom testimonial links with questions, share them with your customers, and gather valuable feedback. Unlock features like video testimonials, insight          graphs, and more to grow your business. ").map((char, index) => (
                   <span
                     key={index}
                     className="inline-block animate-typing opacity-0 text-black font-sans rounded-sm"

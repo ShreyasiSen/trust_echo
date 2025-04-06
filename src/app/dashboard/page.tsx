@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/components/header';
+import { Header2 } from '@/components/header2';
 
 export default function Dashboard() {
   const { user, isLoaded } = useUser(); // Ensure user data is fully loaded
@@ -16,6 +16,7 @@ export default function Dashboard() {
     createdAt: string;
   }
 
+  const [copied, setCopied] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
@@ -86,78 +87,127 @@ export default function Dashboard() {
     );
   }
 
+  const handleCopy = (formId: string, link: string) => {
+    navigator.clipboard.writeText(link);
+    setCopied(formId);
+
+    // Clear the copied state after 2 seconds
+    setTimeout(() => {
+      setCopied(null);
+    }, 1000);
+  };
+
   return (
     <div>
-      <Header /> {/* Add Header component here */}
+      <Header2 />
+      <div className='bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen'>
+        <div className="w-full px-4 sm:px-10 mx-auto py-8 sm:py-12 mt-20 sm:mt-18">
 
-      <div className="max-w-4xl mx-auto p-6 mt-60">
-        <h1 className="text-3xl font-bold mb-6">Welcome, {user.firstName}!</h1>
+          <h1 className="w-full sm:w-auto absolute left-1/2 -translate-x-1/2 text-2xl sm:text-4xl font-bold text-gray-800 text-center sm:text-left">
+            Welcome,
+            <span className='italic font-serif bg-gradient-to-l from-blue-500 via-blue-700 to-blue-900 bg-clip-text text-transparent font-display ml-1'>
+              {user.firstName}
+            </span>
+            <span className="ml-1">👋</span>
+          </h1>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">Your Spaces</h2>
-          <button
-            onClick={() => router.push('/create-form')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            + Create New Space
-          </button>
+          <div className='flex flex-row gap-14 items-center justify-center mb-2 mt-14'>
+            <h2 className="text-2xl sm:text-2xl font-bold text-gray-800 font-playfair tracking-wide">
+              Your <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">Spaces</span>
+            </h2>
+
+            <div className="sm:ml-auto sm:mt-0">
+              <button
+                onClick={() => router.push('/create-form')}
+                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
+              >
+                + Create New Space
+              </button>
+            </div>
+          </div>
+          <div className="border-b-2 border-gray-300 pb-2 tracking-wide w-full mb-6" />
+          {forms.length === 0 ? (
+            <p className="text-gray-500 italic text-center">You haven’t created any forms yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {forms.map((form, index) => {
+                const headerColors = [
+                  'bg-red-400', 'bg-green-400', 'bg-blue-400', 'bg-yellow-500',
+                  'bg-pink-400', 'bg-purple-400', 'bg-orange-400', 'bg-teal-400',
+                  'bg-indigo-400', 'bg-emerald-400',
+                ];
+                const randomColor = headerColors[index % headerColors.length];
+
+                return (
+                  <div
+                    key={form.id}
+                    className="relative rounded-2xl bg-white transition-all duration-300 shadow-2xl hover:shadow-gray-300 "
+                  >
+                    {/* Neon Gradient Tag with Left Cut */}
+                    <div className="relative">
+                      <div className={`italic text-center px-4 py-2 text-white text-xl font-bold rounded-tr-2xl rounded-bl-[1.25rem] ${randomColor}`}>
+                        {form.title}
+                      </div>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="p-5 text-black">
+                      <p className="text-sm opacity-80 mb-3">
+                        {form.description || 'No description provided.'}
+                      </p>
+                      <div className='flex flex-row items-start justify-between h-full'>
+                        <p className="text-xs font-medium tracking-wider text-blue-800 mb-4">
+                          {new Date(form.createdAt).toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </p>
+                        {/* Read Responses Button */}
+                        <button
+                          onClick={() => router.push(`/forms/${form.id}/responses`)}
+                          className="text-sm text-pink-600 font-semibold hover:text-cyan-700 hover:underline transition"
+                        >
+                          READ RESPONSES →
+                        </button>
+                      </div>
+                      {/* Shareable Link Section */}
+                      <div className="mt-6">
+                        <p className="text-sm font-semibold text-indigo-500 mb-2">Shareable Link</p>
+
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white border border-gray-300 rounded-lg px-3 py-2 shadow-sm">
+                          <input
+                            type="text"
+                            value={`${window.location.origin}/forms/${form.id}`}
+                            readOnly
+                            className="w-full sm:flex-1 text-sm text-gray-800 px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          />
+                          <button
+                            onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
+                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${copied === form.id
+                                ? "bg-blue-700 hover:bg-blue-800 text-white"
+                                : "bg-cyan-500 hover:bg-cyan-700 text-white"
+                              }`}
+                          >
+                            {copied === form.id ? "Copied" : "Copy"}
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {forms.length === 0 ? (
-          <p className="text-gray-600">You haven't created any forms yet.</p>
-        ) : (
-          <ul className="space-y-4">
-            {forms.map((form) => (
-              <li
-                key={form.id}
-                className="p-4 border rounded-md shadow-sm hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-xl font-semibold">{form.title}</h3>
-                <p className="text-gray-600">{form.description || 'No description provided.'}</p>
-                <div className="mt-4 flex justify-between items-center">
-                  <button
-                    onClick={() => router.push(`/forms/${form.id}/responses`)}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                  >
-                    View Responses
-                  </button>
-                  <span className="text-sm text-gray-500">
-                    Created on{' '}
-                    {new Intl.DateTimeFormat('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                      hour12: false,
-                    }).format(new Date(form.createdAt))}
-                  </span>
-                </div>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">Shareable Link:</p>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      value={`${window.location.origin}/forms/${form.id}`}
-                      readOnly
-                      className="w-full px-2 py-1 border rounded-md text-gray-700"
-                    />
-                    <button
-                      onClick={() =>
-                        navigator.clipboard.writeText(`${window.location.origin}/forms/${form.id}`)
-                      }
-                      className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                    >
-                      Copy Link
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+      <footer className="w-full text-center bg-purple-100 py-2 px-8 text-lg text-black mt-auto bottom-0">
+        <p>© 2024 FideFeed. All rights reserved.</p>
+      </footer>
     </div>
+
   );
 }

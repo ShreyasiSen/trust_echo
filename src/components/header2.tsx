@@ -1,12 +1,7 @@
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+
 import {
   Sheet,
   SheetContent,
@@ -16,17 +11,17 @@ import {
 } from "@/components/ui/sheet";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
-const Header = () => {
-  const menu = [
-    { title: "Features", url: "#features" },
-    { title: "Testimonial", url: "#testimonial" },
-    { title: "FAQ", url: "#faq" },
-    { title: "Contact", url: "#contact" },
-    { title: "AboutUs", url: "#aboutUs" },
-  ];
+const Header2 = () => {
+//   const menu = [
+//     { title: "Features", url: "#features" },
+//     { title: "Testimonial", url: "#testimonial" },
+//     { title: "FAQ", url: "#faq" },
+//     { title: "Contact", url: "#contact" },
+//     { title: "AboutUs", url: "#aboutUs" },
+//   ];
 
   return (
-    <section className="py-6 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
+    <section className="py-4 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
       <div className="container mx-auto">
         <nav className="lg:flex justify-between items-center hidden lg:block">
           <div className="flex items-center">
@@ -37,23 +32,6 @@ const Header = () => {
                 </span>
                 <span className="text-blue-900 italic font-light ml-1">Feed</span>
               </Link>
-            </div>
-
-            <div className="hidden lg:flex ml-8">
-              <NavigationMenu>
-                <NavigationMenuList className="flex space-x-4">
-                  {menu.map((item) => (
-                    <NavigationMenuItem key={item.title}>
-                      <NavigationMenuLink
-                        href={item.url}
-                        className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
-                      >
-                        {item.title}
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
             </div>
           </div>
 
@@ -112,16 +90,6 @@ const Header = () => {
 
                 {/* Menu Items */}
                 <div className="flex flex-col gap-6 p-4">
-                  {menu.map((item) => (
-                    <a
-                      key={item.title}
-                      href={item.url}
-                      className="text-md font-semibold hover:underline hover:text-black transition-all duration-300"
-                    >
-                      {item.title}
-                    </a>
-                  ))}
-
                   <SignedOut>
                     <div className="flex flex-col gap-3">
                       <SignInButton>
@@ -159,4 +127,4 @@ const Header = () => {
   );
 };
 
-export { Header };
+export { Header2 };
