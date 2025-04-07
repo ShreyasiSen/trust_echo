@@ -27,6 +27,7 @@ model Form {
   user        User       @relation(fields: [userId], references: [id])
   createdAt  DateTime?  @default(now())
   responses   Response[]
+  improvements String[]
 }
 
 model Response {
@@ -37,4 +38,13 @@ model Response {
   responderName String
   responderEmail String
   answers String[] 
+  rating Int?
+  spam Boolean? @default(false)
+}
+model ContactForm{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String
+  message     String
+  createdAt   DateTime? @default(now())
 }

@@ -23,13 +23,13 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-      
+
         const newForm = await prisma.form.create({
             data: {
                 title,
                 description,
                 questions,
-                userId: user.id, 
+                userId: user.id,
                 createdAt: new Date(),
             },
         });

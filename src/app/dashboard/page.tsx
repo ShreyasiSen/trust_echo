@@ -18,6 +18,8 @@ export default function Dashboard() {
 
   const [copied, setCopied] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
+  const [filteredForms, setFilteredForms] = useState<Form[]>([]); // For filtered results
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Search query
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
 
@@ -50,6 +52,7 @@ export default function Dashboard() {
         if (response.ok) {
           const data = await response.json();
           setForms(data);
+          setFilteredForms(data); // Initialize filtered forms
         } else {
           console.error('Failed to fetch forms');
         }
@@ -62,6 +65,41 @@ export default function Dashboard() {
 
     fetchForms();
   }, [mongoUserId]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const filtered = forms.filter((form) =>
+      form.title.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredForms(filtered);
+  };
+
+  const handleDelete = async (formId: string) => {
+    try {
+      const response = await fetch(`/api/forms/${formId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setForms((prev) => prev.filter((form) => form.id !== formId));
+        setFilteredForms((prev) => prev.filter((form) => form.id !== formId)); // Update filtered results
+      } else {
+        console.error('Failed to delete form');
+      }
+    } catch (err) {
+      console.error('Error deleting form:', err);
+    }
+  };
+
+  const handleCopy = (formId: string, link: string) => {
+    navigator.clipboard.writeText(link);
+    setCopied(formId);
+
+    // Clear the copied state after 2 seconds
+    setTimeout(() => {
+      setCopied(null);
+    }, 1000);
+  };
 
   if (!isLoaded) {
     return (
@@ -86,16 +124,6 @@ export default function Dashboard() {
       </div>
     );
   }
-
-  const handleCopy = (formId: string, link: string) => {
-    navigator.clipboard.writeText(link);
-    setCopied(formId);
-
-    // Clear the copied state after 2 seconds
-    setTimeout(() => {
-      setCopied(null);
-    }, 1000);
-  };
 
   return (
     <div>
@@ -125,12 +153,24 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+
+          {/* Search Bar */}
+          <div className="mb-6">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Search spaces by name..."
+              className="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div className="border-b-2 border-gray-300 pb-2 tracking-wide w-full mb-6" />
-          {forms.length === 0 ? (
-            <p className="text-gray-500 italic text-center">You haven’t created any forms yet.</p>
+          {filteredForms.length === 0 ? (
+            <p className="text-gray-500 italic text-center">No spaces match your search.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {forms.map((form, index) => {
+              {filteredForms.map((form, index) => {
                 const headerColors = [
                   'bg-red-400', 'bg-green-400', 'bg-blue-400', 'bg-yellow-500',
                   'bg-pink-400', 'bg-purple-400', 'bg-orange-400', 'bg-teal-400',
@@ -193,7 +233,15 @@ export default function Dashboard() {
                           </button>
                         </div>
                       </div>
-
+                      {/* Delete Button */}
+                      <div className="mt-4">
+                        <button
+                          onClick={() => handleDelete(form.id)}
+                          className="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 transition"
+                        >
+                          Delete Space
+                        </button>
+                      </div>
                     </div>
                   </div>
 
