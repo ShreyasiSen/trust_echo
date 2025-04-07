@@ -2,7 +2,7 @@ import { Timer, Zap, ZoomIn } from "lucide-react";
 
 const Feature = () => {
   return (
-    <section className="py-10 bg-gradient-to-b from-purple-50 via-purple-100 to-pink-50" id="features">
+    <section className="py-10 bg-gradient-to-b mt-20 from-pink-50 via-purple-100 to-purple-50" id="features">
     <div className="container mx-auto">
       <h2 className="text-4xl font-bold font-[Playfair Display]  text-black mb-16">
         Why Choose Us?

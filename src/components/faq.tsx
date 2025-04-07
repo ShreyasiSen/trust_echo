@@ -48,7 +48,7 @@ const Faq = ({
   return (
     <section
       id="faq"
-      className="py-32 bg-gradient-to-b from-pink-50 via-purple-50 to-purple-100 relative overflow-hidden"
+      className="py-32 bg-gradient-to-b from-purple-50 via-purple-100 to-pink-50 relative overflow-hidden"
     >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-200/20 via-white to-white"></div>
 

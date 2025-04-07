@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-
+import { Header2 } from '@/components/header2';
 export default function CreateFormPage() {
     const router = useRouter();
     const [title, setTitle] = useState('');
@@ -12,8 +12,7 @@ export default function CreateFormPage() {
     const [message, setMessage] = useState('');
     const { user } = useUser();
     const userId = user?.id;
-    console.log('User:', user); // Debugging line
-    console.log('User ID:', userId); // Debugging line
+
     const handleAddQuestion = () => {
         setQuestions([...questions, '']);
     };
@@ -24,9 +23,14 @@ export default function CreateFormPage() {
         setQuestions(updatedQuestions);
     };
 
+    const handleDeleteQuestion = (index: number) => {
+        if (questions.length === 1) return; // Prevent deleting the last question
+        const updatedQuestions = questions.filter((_, i) => i !== index);
+        setQuestions(updatedQuestions);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
             const response = await fetch('/api/forms', {
                 method: 'POST',
@@ -40,73 +44,173 @@ export default function CreateFormPage() {
             });
 
             if (response.ok) {
-                setMessage('Form created successfully!');
+                setMessage('✅ Form created successfully!');
                 setTitle('');
                 setDescription('');
                 setQuestions(['']);
-                router.push('/dashboard'); // Redirect to the dashboard after form creation
+                router.push('/dashboard');
             } else {
-                setMessage('Failed to create form.');
+                setMessage('❌ Failed to create form.');
             }
         } catch (err) {
             console.error('Error creating form:', err);
-            setMessage('An error occurred.');
+            setMessage('⚠️ An error occurred.');
         }
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-4">Create a Feedback Form</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Form Title</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter form title"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        required
-                    />
+        <div>
+            <Header2 />
+            <div className="h-16"></div> {/* Spacer for fixed header */}
+            <div className="relative w-full min-h-screen">
+                <div
+                    className="absolute inset-0 z-0 bg-cover bg-center  brightness-100"
+                    style={{ backgroundImage: "url('/feedback4.jpg')" }}
+                />
+
+
+
+                {/* 🧾 Feedback Form Content */}
+                <div className="relative z-10 flex items-center justify-center px-4 py-24">
+                    <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white bg-opacity-90 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden">
+
+                        {/* 📢 Left Panel */}
+                        <div className="bg-purple-200 text-black md:w-1/2 w-full p-10 flex flex-col justify-center relative">
+
+                            {/* Go to Dashboard link */}
+                            <a
+                                href="/dashboard"
+                                className="absolute top-4 left-4 text-indigo-700 hover:text-indigo-900 font-semibold text-xl underline flex items-center gap-1"
+                            >
+                                Go to Dashboard →
+                            </a>
+
+                            {/* Feedback Matters section */}
+                            <div className="flex items-center mb-4 mt-8">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8 text-indigo-600 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M7 8h10M7 12h4m1 8a9 9 0 100-18 9 9 0 000 18z"
+                                    />
+                                </svg>
+                                <h2 className="text-3xl font-bold text-indigo-700">Feedback Matters</h2>
+                            </div>
+
+                            <p className="text-gray-700 text-base mt-2 leading-relaxed">
+                                Create custom feedback forms to gather valuable insights from your customers.
+                            </p>
+                        </div>
+
+
+                        {/* 📝 Right Panel (Form) */}
+                        <div className="md:w-1/2 w-full p-10 md:p-14">
+                            <form onSubmit={handleSubmit} className="space-y-8">
+                                <div className="flex flex-col items-center mb-6">
+                                    <div className="bg-indigo-500 p-3 rounded-full shadow-lg">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-8 w-8 text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={2}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <h1 className="mt-4 text-2xl font-bold text-gray-800 tracking-wide">
+                                        Create <span className="text-indigo-600">Feedback Form</span>
+                                    </h1>
+                                </div>
+
+                                {/* Title */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-600 mb-2">Form Title</label>
+                                    <input
+                                        type="text"
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        placeholder="Your awesome form title..."
+                                        className="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 px-4 py-3 text-sm"
+                                        required
+                                    />
+                                </div>
+
+                                {/* Description */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-600 mb-2">Description</label>
+                                    <textarea
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        placeholder="What is this form about?"
+                                        className="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 px-4 py-3 text-sm"
+                                        rows={3}
+                                    />
+                                </div>
+
+                                {/* Questions */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-600 mb-2">Questions</label>
+                                    {questions.map((question, index) => (
+                                        <div key={index} className="flex items-center gap-2 mb-4">
+                                            <input
+                                                type="text"
+                                                value={question}
+                                                onChange={(e) => handleQuestionChange(index, e.target.value)}
+                                                placeholder={`Question ${index + 1}`}
+                                                className="flex-1 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 px-4 py-3 text-sm"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteQuestion(index)}
+                                                className="text-red-500 hover:text-red-700"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        type="button"
+                                        onClick={handleAddQuestion}
+                                        className="text-sm text-indigo-600 hover:underline mt-2"
+                                    >
+                                        + Add another question
+                                    </button>
+                                </div>
+
+                                {/* Submit */}
+                                <button
+                                    type="submit"
+                                    className="w-full py-2 text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition"
+                                >
+                                    Create Form
+                                </button>
+
+                                {/* Message */}
+                                {message && (
+                                    <p className="text-center text-sm text-green-600 mt-4">{message}</p>
+                                )}
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Form Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Enter form description"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Questions</label>
-                    {questions.map((question, index) => (
-                        <input
-                            key={index}
-                            type="text"
-                            value={question}
-                            onChange={(e) => handleQuestionChange(index, e.target.value)}
-                            placeholder={`Question ${index + 1}`}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm mb-2"
-                            required
-                        />
-                    ))}
-                    <button
-                        type="button"
-                        onClick={handleAddQuestion}
-                        className="text-indigo-600 hover:text-indigo-900 text-sm"
-                    >
-                        + Add Question
-                    </button>
-                </div>
-                <button
-                    type="submit"
-                    className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Create Form
-                </button>
-                {message && <p className="text-sm text-green-600 mt-2">{message}</p>}
-            </form>
+            </div>
+            <footer className="w-full text-center py-2 px-8 text-lg text-black mt-auto bottom-0">
+                <p>© 2024 FideFeed. All rights reserved.</p>
+            </footer>
         </div>
     );
 }

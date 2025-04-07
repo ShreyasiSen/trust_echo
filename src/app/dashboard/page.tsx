@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Header2 } from '@/components/header2';
+import { Trash2 } from 'lucide-react';
 
 export default function Dashboard() {
   const { user, isLoaded } = useUser(); // Ensure user data is fully loaded
@@ -98,7 +99,7 @@ export default function Dashboard() {
     // Clear the copied state after 2 seconds
     setTimeout(() => {
       setCopied(null);
-    }, 1000);
+    }, 400);
   };
 
   if (!isLoaded) {
@@ -184,10 +185,17 @@ export default function Dashboard() {
                     className="relative rounded-2xl bg-white transition-all duration-300 shadow-2xl hover:shadow-gray-300 "
                   >
                     {/* Neon Gradient Tag with Left Cut */}
-                    <div className="relative">
+                    <div className="relative flex flex-row justify-between items-center">
                       <div className={`italic text-center px-4 py-2 text-white text-xl font-bold rounded-tr-2xl rounded-bl-[1.25rem] ${randomColor}`}>
                         {form.title}
                       </div>
+
+                      <button
+                        onClick={() => handleDelete(form.id)}
+                        className="ml-3 p-2 hover:scale-105 transition"
+                      >
+                        <Trash2 size={22} className="text-red-500" />
+                      </button>
                     </div>
 
                     {/* Card Body */}
@@ -225,23 +233,15 @@ export default function Dashboard() {
                           <button
                             onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
                             className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${copied === form.id
-                                ? "bg-blue-700 hover:bg-blue-800 text-white"
-                                : "bg-cyan-500 hover:bg-cyan-700 text-white"
+                              ? "bg-blue-700 hover:bg-blue-800 text-white"
+                              : "bg-black hover:bg-gray-700 text-white"
                               }`}
                           >
                             {copied === form.id ? "Copied" : "Copy"}
                           </button>
                         </div>
                       </div>
-                      {/* Delete Button */}
-                      <div className="mt-4">
-                        <button
-                          onClick={() => handleDelete(form.id)}
-                          className="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 transition"
-                        >
-                          Delete Space
-                        </button>
-                      </div>
+
                     </div>
                   </div>
 
