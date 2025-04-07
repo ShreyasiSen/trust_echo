@@ -7,7 +7,7 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-32 bg-gradient-to-b from-purple-100 via-purple-50 to-pink-50 relative overflow-hidden"
+      className="py-32 bg-gradient-to-b from-pink-50 via-purple-50 to-purple-100 relative overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 opacity-20 rounded-full blur-[120px] -z-10"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-200 opacity-20 rounded-full blur-[160px] -z-10"></div>
