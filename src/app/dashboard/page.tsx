@@ -32,7 +32,7 @@ export default function Dashboard() {
         const response = await fetch(`/api/users/${user.id}`); // Fetch MongoDB user ID using Clerk ID
         if (response.ok) {
           const data = await response.json();
-          setMongoUserId(data.id); // Set the MongoDB user ID
+          setMongoUserId(data.id); 
         } else {
           console.error('Failed to fetch MongoDB user ID');
         }

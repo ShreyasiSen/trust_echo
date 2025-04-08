@@ -22,7 +22,7 @@ const Contact = () => {
             variants={fadeIn("right", 0.2)}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: false, amount: 0.4 }}>
+            viewport={{ once: true, amount: 0.4 }}>
             <h1 className="text-5xl font-bold text-gray-800 leading-tight mb-4 tracking-tight">
               Let’s Talk!
             </h1>

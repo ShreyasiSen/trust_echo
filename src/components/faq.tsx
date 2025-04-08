@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/accordion";
 
 import { motion } from "framer-motion";
-import { fadeIn } from "../../variants";
 
 interface FaqItem {
   question: string;
@@ -50,31 +49,22 @@ const Faq = ({
   ],
 }: Faq1Props) => {
   return (
-    <section
+    <motion.section
       id="faq"
       className="py-32 bg-gradient-to-b from-purple-50 via-purple-100 to-pink-50 relative overflow-hidden"
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-200/20 via-white to-white"></div>
 
       <div className="container mx-auto max-w-4xl px-6 sm:px-12 lg:px-0">
-        <motion.h2
-          variants={fadeIn("left", 0.2)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: false, amount: 0.4 }}
-          className="text-center text-4xl font-semibold font-['Playfair_Display'] text-gray-800 relative mb-16"
-        >
+        <h2 className="text-center text-4xl font-semibold font-['Playfair_Display'] text-gray-800 relative mb-16">
           {heading}
           <span className="block h-1 w-24 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 mx-auto mt-3 rounded-full animate-pulse" />
-        </motion.h2>
+        </h2>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.4}}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="rounded-2xl bg-white/60 backdrop-blur-md shadow-xl ring-1 ring-purple-100 px-6 py-10 space-y-4 transition-all duration-500"
-        >
+        <div className="rounded-2xl bg-white/60 backdrop-blur-md shadow-xl ring-1 ring-purple-100 px-6 py-10 space-y-4 transition-all duration-500">
           <Accordion type="single" collapsible className="w-full">
             {items.map((item, index) => (
               <AccordionItem
@@ -82,25 +72,18 @@ const Faq = ({
                 value={`item-${index}`}
                 className="border-b border-gray-200"
               >
-                <motion.div
-                  variants={fadeIn("up", 0.2)}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: false, amount: 0.4 }}>
                 <AccordionTrigger className="text-lg font-semibold cursor-pointer text-gray-800 hover:text-purple-600 transition-all duration-300">
                   {item.question}
                 </AccordionTrigger>
-                </motion.div>
-                
                 <AccordionContent className="text-gray-600 leading-relaxed text-base font-[Inter] transition-all duration-500">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-        </motion.div>
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
