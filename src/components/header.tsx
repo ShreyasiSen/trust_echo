@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,7 +37,7 @@ const Header = () => {
                 <span className="italic bg-gradient-to-r from-indigo-600 via-violet-700 to-pink-600 bg-clip-text text-transparent font-display">
                   Fide
                 </span>
-                <span className="text-blue-900 italic font-light ml-1">Feed</span>
+                 <span className="text-blue-900 italic font-light ml-1">Feed</span>
               </Link>
             </div>
 
