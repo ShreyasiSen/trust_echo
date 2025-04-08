@@ -7,9 +7,8 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link'; // Import Link from next/link
 import { FiGrid } from 'react-icons/fi';
 
-
-export default function ResponsesPage({ params }: { params: { formId: string } }) {
-  const { formId } = params;
+export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
+  const [formId, setFormId] = useState<string | null>(null);
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
@@ -35,6 +34,25 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
   const [filter, setFilter] = useState<'spam' | 'text'>('text'); // Filter state
 
   useEffect(() => {
+    const resolveParams = async () => {
+      try {
+        const resolvedParams = await params; // Await the params Promise
+        setFormId(resolvedParams.formId);
+      } catch (err) {
+        console.error('Error resolving params:', err);
+        setError('Failed to resolve form ID.');
+      }
+    };
+
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (!formId) {
+      setError('Form ID is missing.');
+      return;
+    }
+
     const fetchFormAndResponses = async () => {
       try {
         // Fetch form details and responses simultaneously
@@ -88,8 +106,6 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
     }
   };
 
-  // Removed unused renderStars function to resolve the compile error.
-
   const filteredResponses = responses?.filter((response) =>
     filter === 'spam' ? response?.spam : !response?.spam
   );
@@ -117,7 +133,6 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
 
       {/* Content Area */}
       <div className="flex flex-col lg:flex-row min-h-screen">
-
         {/* Sidebar */}
         <div className="w-full lg:w-1/4 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
@@ -127,42 +142,26 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
           <div className="space-y-4">
             <button
               onClick={() => setFilter('text')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'text'
-                ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'text'
+                  ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
+              }`}
             >
               ✍️ Text Testimonials
             </button>
 
             <button
               onClick={() => setFilter('spam')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'spam'
-                ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'spam'
+                  ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+              }`}
             >
               🚫 Spam
             </button>
           </div>
-
-          {/* <div className="mt-10 sm:mt-12">
-            <p className="text-gray-500 uppercase text-xs font-medium mb-3 tracking-wider">🧩 Embed Widgets</p>
-            <ul className="text-sm space-y-3 text-gray-600">
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                ❤️ <span>Wall of Love</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                💻 <span>Single Testimonial</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                🏷️ <span>Badge</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                🧲 <span>Collecting Widget</span>
-              </li>
-            </ul>
-          </div> */}
         </div>
 
         {/* Page Content */}
@@ -235,15 +234,16 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
 
                 {/* Timestamp */}
                 <p className="text-xs text-gray-400 mb-4">
-                  🕒 {response?.createdAt
+                  🕒{' '}
+                  {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                    }).format(new Date(response.createdAt))
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                      }).format(new Date(response.createdAt))
                     : 'Unknown'}
                 </p>
 
@@ -286,10 +286,8 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>
-
   );
 }
