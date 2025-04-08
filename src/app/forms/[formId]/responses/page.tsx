@@ -183,7 +183,7 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
 
           {/* Responses */}
           <div className="w-full flex flex-wrap justify-center gap-6">
-            {filteredResponses.map((response, index) => (
+            {filteredResponses.map((response) => (
               <div
                 key={response?.id}
                 className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
