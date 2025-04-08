@@ -1,29 +1,29 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Header2 } from '@/components/header2'; // Import your Header2 component
+import { Header2 } from '@/components/header2';
 import { FaStar, FaRegStar, FaLink, FaShareAlt, FaDownload, FaTrash } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
-import Link from 'next/link'; // Import Link from next/link
+import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 
-export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> })  {
+export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [responses, setResponses] = useState<Response[]>([]);
-  const [questions, setQuestions] = useState<string[]>([]); // Store form questions
+  const [responses, setResponses] = useState<Response[]>([]); 
+  const [questions, setQuestions] = useState<string[]>([]);
   const [formTitle, setFormTitle] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'spam' | 'text'>('text'); // Filter state
+  const [filter, setFilter] = useState<'spam' | 'text'>('text');
 
   interface Response {
     id: string;
-    responderName?: string; // Nullable
-    responderEmail?: string; // Nullable
-    answers?: string[]; // Nullable
-    createdAt?: string; // Nullable
-    rating?: number; // Rating provided by the responder
-    spam?: boolean; // Nullable
+    responderName?: string;
+    responderEmail?: string;
+    answers?: string[];
+    createdAt?: string;
+    rating?: number;
+    spam?: boolean;
   }
 
   useEffect(() => {
@@ -37,18 +37,17 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   useEffect(() => {
     const fetchFormAndResponses = async () => {
       try {
-        // Fetch form details and responses simultaneously
         const [formResponse, responsesResponse] = await Promise.all([
           fetch(`/api/forms/${formId}`),
           fetch(`/api/forms/${formId}/responses`),
         ]);
 
         const formData = await formResponse.json();
-        const responsesData: Response[] = await responsesResponse.json();
+        const responsesData = await responsesResponse.json();
 
         setFormTitle(formData?.title ?? 'Untitled Form');
-        setQuestions(formData?.questions ?? []); // Fetch questions from the form
-        setResponses(responsesData); // Set responses directly
+        setQuestions(formData?.questions ?? []);
+        setResponses(Array.isArray(responsesData) ? responsesData : []); 
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -83,9 +82,9 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     setActiveMenu(activeMenu === id ? null : id);
   };
 
-  const filteredResponses = responses?.filter((response) =>
-    filter === 'spam' ? response?.spam : !response?.spam
-  );
+  const filteredResponses = Array.isArray(responses)
+    ? responses.filter((response) => (filter === 'spam' ? response?.spam : !response?.spam))
+    : []; 
 
   if (loading) {
     return (

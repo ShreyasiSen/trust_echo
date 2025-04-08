@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Header2 } from '@/components/header2';
+
 export default function CreateFormPage() {
     const router = useRouter();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [questions, setQuestions] = useState<string[]>(['']);
     const [message, setMessage] = useState('');
+    const [submitting, setSubmitting] = useState(false); // State to track form submission
     const { user } = useUser();
     const userId = user?.id;
 
@@ -31,6 +33,7 @@ export default function CreateFormPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setSubmitting(true); // Disable the button while submitting
         try {
             const response = await fetch('/api/forms', {
                 method: 'POST',
@@ -55,6 +58,8 @@ export default function CreateFormPage() {
         } catch (err) {
             console.error('Error creating form:', err);
             setMessage('⚠️ An error occurred.');
+        } finally {
+            setSubmitting(false); // Re-enable the button after submission
         }
     };
 
@@ -64,11 +69,9 @@ export default function CreateFormPage() {
             <div className="h-16"></div> {/* Spacer for fixed header */}
             <div className="relative w-full min-h-screen">
                 <div
-                    className="absolute inset-0 z-0 bg-cover bg-center  brightness-100"
+                    className="absolute inset-0 z-0 bg-cover bg-center brightness-100"
                     style={{ backgroundImage: "url('/feedback4.jpg')" }}
                 />
-
-
 
                 {/* 🧾 Feedback Form Content */}
                 <div className="relative z-10 flex items-center justify-center px-4 py-24">
@@ -108,7 +111,6 @@ export default function CreateFormPage() {
                                 Create custom feedback forms to gather valuable insights from your customers.
                             </p>
                         </div>
-
 
                         {/* 📝 Right Panel (Form) */}
                         <div className="md:w-1/2 w-full p-10 md:p-14">
@@ -194,9 +196,14 @@ export default function CreateFormPage() {
                                 {/* Submit */}
                                 <button
                                     type="submit"
-                                    className="w-full py-2 text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition"
+                                    className={`w-full py-2 text-lg font-semibold text-white rounded-xl shadow-md transition ${
+                                        submitting
+                                            ? 'bg-gray-400 cursor-not-allowed'
+                                            : 'bg-indigo-600 hover:bg-indigo-700'
+                                    }`}
+                                    disabled={submitting} // Disable button while submitting
                                 >
-                                    Create Form
+                                    {submitting ? 'Creating...' : 'Create Form'}
                                 </button>
 
                                 {/* Message */}
