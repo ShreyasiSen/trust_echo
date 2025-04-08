@@ -3,12 +3,10 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, context: { params: { formId: string } }) {
-  const { params } = context;
-  const { formId } = await params; 
+export async function GET(req: Request, context: { params: Promise<{ formId: string }> }) {
+  const { formId } = await context.params; // Await the params Promise to extract formId
 
   try {
-
     const responses = await prisma.response.findMany({
       where: { formId },
     });

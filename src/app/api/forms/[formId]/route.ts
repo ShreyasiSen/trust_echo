@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, { params }: { params: { formId: string } }) {
-  const { formId } =  await params;
+export async function GET(req: Request, { params }: { params: Promise<{ formId: string }> }) {
+  const { formId } = await params; // Await the params Promise to extract formId
 
   // Validate formId
   if (!formId || formId.length !== 24) {
@@ -27,8 +27,8 @@ export async function GET(req: Request, { params }: { params: { formId: string }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { formId: string } }) {
-  const { formId } = params;
+export async function DELETE(req: Request, { params }: { params: Promise<{ formId: string }> }) {
+  const { formId } = await params; // Await the params Promise to extract formId
 
   // Validate formId
   if (!formId || formId.length !== 24) {
