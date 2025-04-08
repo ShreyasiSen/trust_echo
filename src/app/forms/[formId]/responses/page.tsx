@@ -1,10 +1,21 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FaStar, FaRegStar, FaTrash } from 'react-icons/fa'; 
+import { Header2 } from '@/components/header2'; // Import your Header2 component
+import { FaStar, FaRegStar, FaLink, FaShareAlt, FaDownload, FaTrash } from 'react-icons/fa';
+import { HiOutlineDotsVertical } from 'react-icons/hi';
+import Link from 'next/link'; // Import Link from next/link
+import { FiGrid } from 'react-icons/fi';
+
 
 export default function ResponsesPage({ params }: { params: { formId: string } }) {
   const { formId } = params;
+
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const toggleMenu = (id: string | null) => {
+    setActiveMenu(activeMenu === id ? null : id);
+  };
 
   interface Response {
     id: string;
@@ -114,110 +125,185 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
   }
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-gray-100 p-4 rounded-lg shadow-md">
-        <h2 className="text-lg font-bold mb-4">Filter Responses</h2>
-        <ul className="space-y-2">
-          <li>
+    <div className="min-h-screen text-white ">
+      {/* Header */}
+      <Header2 />
+
+      {/* Content Area */}
+      <div className="flex flex-col lg:flex-row min-h-screen">
+
+        {/* Sidebar */}
+        <div className="w-full lg:w-1/4 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
+            🎛️ Filters
+          </h2>
+
+          <div className="space-y-4">
             <button
               onClick={() => setFilter('text')}
-              className={`w-full text-left px-4 py-2 rounded-md ${
-                filter === 'text' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
-              }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'text'
+                ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
+                : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
+                }`}
             >
-              Text Testimonials
+              ✍️ Text Testimonials
             </button>
-          </li>
-          <li>
+
             <button
               onClick={() => setFilter('spam')}
-              className={`w-full text-left px-4 py-2 rounded-md ${
-                filter === 'spam' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'
-              }`}
-            >
-              Spam
-            </button>
-          </li>
-        </ul>
-      </div>
-
-      {/* Main Content */}
-      <div className="w-3/4 p-6">
-        <h1 className="text-3xl font-bold mb-6">Responses for {formTitle}</h1>
-
-        {filteredResponses?.length === 0 ? (
-          <p className="text-gray-600">
-            {filter === 'spam'
-              ? 'No spam responses found.'
-              : 'No text testimonials found.'}
-          </p>
-        ) : (
-          <ul className="space-y-4">
-            {filteredResponses?.map((response) => (
-              <li
-                key={response?.id}
-                className={`p-4 border rounded-md shadow-sm hover:shadow-md transition-shadow ${
-                  response?.spam ? 'bg-red-100' : 'bg-white'
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'spam'
+                ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
                 }`}
+            >
+              🚫 Spam
+            </button>
+          </div>
+
+          {/* <div className="mt-10 sm:mt-12">
+            <p className="text-gray-500 uppercase text-xs font-medium mb-3 tracking-wider">🧩 Embed Widgets</p>
+            <ul className="text-sm space-y-3 text-gray-600">
+              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
+                ❤️ <span>Wall of Love</span>
+              </li>
+              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
+                💻 <span>Single Testimonial</span>
+              </li>
+              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
+                🏷️ <span>Badge</span>
+              </li>
+              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
+                🧲 <span>Collecting Widget</span>
+              </li>
+            </ul>
+          </div> */}
+        </div>
+
+        {/* Page Content */}
+        <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 mt-10 lg:mt-20">
+          <div className="w-full mb-6 sm:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 border-b border-gray-500 pb-3 sm:pb-4">
+              <span className="italic">{formTitle}</span> – Responses
+            </h1>
+
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 text-sm sm:text-md font-semibold text-indigo-600 hover:text-indigo-800 transition-all"
+            >
+              <FiGrid size={20} />
+              Dashboard
+            </Link>
+          </div>
+
+          {/* Responses */}
+          <div className="w-full flex flex-wrap justify-center gap-6">
+            {filteredResponses.map((response, index) => (
+              <div
+                key={response?.id}
+                className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
               >
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-semibold">
-                    Response from {response?.responderName ?? 'Anonymous'}
-                  </h3>
-                  <button
-                    onClick={() => handleDeleteResponse(response.id)}
-                    className="text-red-500 hover:text-red-700"
-                    title="Delete Response"
-                  >
-                    <FaTrash />
-                  </button>
+                {/* Gradient Background Glow */}
+                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 -z-10 "></div>
+
+                {/* Header Info */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-extrabold text-gray-900  leading-snug">
+                      👤 {response?.responderName ?? 'Anonymous'}
+                    </h3>
+                    <p className="text-md text-gray-600 italic">
+                      📧 {response?.responderEmail ?? 'No Email Provided'}
+                    </p>
+                  </div>
+
+                  {/* Options Menu */}
+                  <div className="relative mt-2 sm:mt-0">
+                    <button
+                      onClick={() => toggleMenu(response.id)}
+                      className="text-gray-500 hover:text-indigo-700 p-2 cursor-pointer rounded-full transition"
+                      title="Options"
+                    >
+                      <HiOutlineDotsVertical size={20} />
+                    </button>
+                    {activeMenu === response.id && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
+                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                          <FaLink className="mr-2" /> Copy Link
+                        </button>
+                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                          <FaShareAlt className="mr-2" /> Share
+                        </button>
+                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                          <FaDownload className="mr-2" /> Download
+                        </button>
+                        <button
+                          onClick={() => handleDeleteResponse(response.id)}
+                          className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+                        >
+                          <FaTrash className="mr-2" /> Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-gray-600">
-                  <strong>Email:</strong> {response?.responderEmail ?? 'N/A'}
-                </p>
-                <p className="text-gray-600">
-                  <strong>Submitted At:</strong>{' '}
-                  {response?.createdAt
+
+                {/* Timestamp */}
+                <p className="text-xs text-gray-400 mb-4">
+                  🕒 {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: false,
-                      }).format(new Date(response.createdAt))
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    }).format(new Date(response.createdAt))
                     : 'Unknown'}
                 </p>
-                <div className="mt-4">
-                  <h4 className="text-lg font-medium">Questions and Answers:</h4>
-                  <ul className="list-disc list-inside">
-                    {questions.map((question, idx) => (
-                      <li key={idx} className="text-gray-600">
-                        <strong>Q:</strong> {question}
-                        <br />
-                        <strong>A:</strong> {response?.answers?.[idx] ?? 'N/A'}
-                      </li>
-                    ))}
-                  </ul>
+
+                {/* Questions and Answers */}
+                <div className="space-y-4 mb-6">
+                  {questions.map((question, idx) => (
+                    <div key={idx}>
+                      <p className="text-sm font-semibold text-gray-800 mb-1">
+                        Q{idx + 1}: <span className="italic">{question}</span>
+                      </p>
+                      <p className="text-sm text-gray-700 bg-gray-100 rounded-md px-3 py-2 border-l-4 border-indigo-400">
+                        A: {response?.answers?.[idx] ?? 'N/A'}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                {response?.spam !== undefined && (
-                  <p className="mt-2 text-sm text-gray-800">
-                    Classification: {response?.spam ? 'Spam' : 'Not Spam'}
-                  </p>
-                )}
+
+                {/* Rating */}
                 {response?.rating !== undefined && (
-                  <div className="mt-2 flex items-center space-x-2">
-                    <span className="text-sm text-gray-800">Rating:</span>
-                    {renderStars(response?.rating)}
+                  <div className="flex items-center gap-2 text-sm text-gray-700 font-medium mb-2">
+                    <span>⭐ Rating:</span>
+                    <div className="flex">
+                      {Array.from({ length: 5 }).map((_, i) =>
+                        i < (response.rating ?? 0) ? (
+                          <FaStar key={i} className="text-yellow-400" />
+                        ) : (
+                          <FaRegStar key={i} className="text-yellow-400" />
+                        )
+                      )}
+                    </div>
                   </div>
                 )}
-              </li>
+
+                {/* Spam Classification */}
+                {response?.spam !== undefined && (
+                  <p className="text-sm italic text-red-400 mt-2">
+                    Classification: {response?.spam ? '🚫 Spam' : '✅ Not Spam'}
+                  </p>
+                )}
+              </div>
             ))}
-          </ul>
-        )}
+          </div>
+
+        </div>
       </div>
     </div>
+
   );
 }

@@ -6,6 +6,8 @@ import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { Feature } from "@/components/feature";
 import { Cover } from "@/components/cover";
+
+
 export default async function Home() {
 
   return (

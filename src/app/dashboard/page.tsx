@@ -142,7 +142,7 @@ export default function Dashboard() {
 
           <div className='flex flex-row gap-14 items-center justify-center mb-2 mt-14'>
             <h2 className="text-2xl sm:text-2xl font-bold text-gray-800 font-playfair tracking-wide">
-              Your <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">Spaces</span>
+              Your <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">Products</span>
             </h2>
 
             <div className="sm:ml-auto sm:mt-0">
@@ -150,7 +150,7 @@ export default function Dashboard() {
                 onClick={() => router.push('/create-form')}
                 className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
               >
-                + Create New Space
+                + Create New Product
               </button>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function Dashboard() {
                         {/* Read Responses Button */}
                         <button
                           onClick={() => router.push(`/forms/${form.id}/responses`)}
-                          className="text-sm text-pink-600 font-semibold hover:text-cyan-700 hover:underline transition"
+                          className="text-sm text-pink-600 font-semibold cursor-pointer hover:text-cyan-700 hover:underline transition"
                         >
                           READ RESPONSES →
                         </button>
