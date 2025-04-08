@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request, context: { params: { formId: string } }) {
   const { params } = context;
-  const { formId } =await params;
+  const { formId } = params;
 
   try {
     const body = await req.json();
