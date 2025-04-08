@@ -88,21 +88,7 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
     }
   };
 
-  const renderStars = (rating: number | undefined) => {
-    if (!rating) return null;
-
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        i <= rating ? (
-          <FaStar key={i} className="text-yellow-500" />
-        ) : (
-          <FaRegStar key={i} className="text-gray-400" />
-        )
-      );
-    }
-    return <div className="flex space-x-1">{stars}</div>;
-  };
+  // Removed unused renderStars function to resolve the compile error.
 
   const filteredResponses = responses?.filter((response) =>
     filter === 'spam' ? response?.spam : !response?.spam
