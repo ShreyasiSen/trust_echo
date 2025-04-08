@@ -7,15 +7,14 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link'; // Import Link from next/link
 import { FiGrid } from 'react-icons/fi';
 
-
 export default function ResponsesPage({ params }: { params: { formId: string } }) {
-  const { formId } = params;
-
+  const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-
-  const toggleMenu = (id: string | null) => {
-    setActiveMenu(activeMenu === id ? null : id);
-  };
+  const [responses, setResponses] = useState<Response[]>([]);
+  const [questions, setQuestions] = useState<string[]>([]); // Store form questions
+  const [formTitle, setFormTitle] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'spam' | 'text'>('text'); // Filter state
 
   interface Response {
     id: string;
@@ -27,12 +26,13 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
     spam?: boolean; // Nullable
   }
 
-  const [responses, setResponses] = useState<Response[]>([]);
-  const [questions, setQuestions] = useState<string[]>([]); // Store form questions
-  const [formTitle, setFormTitle] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'spam' | 'text'>('text'); // Filter state
+  useEffect(() => {
+    const fetchFormId = async () => {
+      const resolvedParams = await params;
+      setFormId(resolvedParams.formId);
+    };
+    fetchFormId();
+  }, [params]);
 
   useEffect(() => {
     const fetchFormAndResponses = async () => {
@@ -43,16 +43,6 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
           fetch(`/api/forms/${formId}/responses`),
         ]);
 
-        if (!formResponse.ok) {
-          setError('Failed to load form details.');
-          return;
-        }
-
-        if (!responsesResponse.ok) {
-          setError('Failed to load responses.');
-          return;
-        }
-
         const formData = await formResponse.json();
         const responsesData: Response[] = await responsesResponse.json();
 
@@ -61,13 +51,14 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
         setResponses(responsesData); // Set responses directly
       } catch (err) {
         console.error('Error fetching data:', err);
-        setError('An error occurred while loading the data.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFormAndResponses();
+    if (formId) {
+      fetchFormAndResponses();
+    }
   }, [formId]);
 
   const handleDeleteResponse = async (responseId: string) => {
@@ -88,6 +79,9 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
     }
   };
 
+  const toggleMenu = (id: string | null) => {
+    setActiveMenu(activeMenu === id ? null : id);
+  };
 
   const filteredResponses = responses?.filter((response) =>
     filter === 'spam' ? response?.spam : !response?.spam
@@ -96,27 +90,18 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-lg">Loading responses...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg text-red-600">{error}</p>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-white ">
+    <div className="min-h-screen text-white">
       {/* Header */}
       <Header2 />
 
       {/* Content Area */}
       <div className="flex flex-col lg:flex-row min-h-screen">
-
         {/* Sidebar */}
         <div className="w-full lg:w-1/4 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
@@ -126,42 +111,26 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
           <div className="space-y-4">
             <button
               onClick={() => setFilter('text')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'text'
-                ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'text'
+                  ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
+              }`}
             >
               ✍️ Text Testimonials
             </button>
 
             <button
               onClick={() => setFilter('spam')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'spam'
-                ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'spam'
+                  ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+              }`}
             >
               🚫 Spam
             </button>
           </div>
-
-          {/* <div className="mt-10 sm:mt-12">
-            <p className="text-gray-500 uppercase text-xs font-medium mb-3 tracking-wider">🧩 Embed Widgets</p>
-            <ul className="text-sm space-y-3 text-gray-600">
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                ❤️ <span>Wall of Love</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                💻 <span>Single Testimonial</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                🏷️ <span>Badge</span>
-              </li>
-              <li className="flex items-center gap-2 hover:text-blue-600 cursor-pointer transition">
-                🧲 <span>Collecting Widget</span>
-              </li>
-            </ul>
-          </div> */}
         </div>
 
         {/* Page Content */}
@@ -188,12 +157,12 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
                 className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
               >
                 {/* Gradient Background Glow */}
-                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 -z-10 "></div>
+                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 -z-10"></div>
 
                 {/* Header Info */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
                   <div>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-gray-900  leading-snug">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 leading-snug">
                       👤 {response?.responderName ?? 'Anonymous'}
                     </h3>
                     <p className="text-md text-gray-600 italic">
@@ -234,15 +203,16 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
 
                 {/* Timestamp */}
                 <p className="text-xs text-gray-400 mb-4">
-                  🕒 {response?.createdAt
+                  🕒{' '}
+                  {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                    }).format(new Date(response.createdAt))
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                      }).format(new Date(response.createdAt))
                     : 'Unknown'}
                 </p>
 
@@ -285,10 +255,8 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>
-
   );
 }

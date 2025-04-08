@@ -32,7 +32,7 @@ export default function Dashboard() {
         const response = await fetch(`/api/users/${user.id}`); // Fetch MongoDB user ID using Clerk ID
         if (response.ok) {
           const data = await response.json();
-          setMongoUserId(data.id); 
+          setMongoUserId(data.id);
         } else {
           console.error('Failed to fetch MongoDB user ID');
         }
@@ -105,7 +105,7 @@ export default function Dashboard() {
   if (!isLoaded) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-lg">Loading...</p>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-lg">Loading your forms...</p>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
       </div>
     );
   }
@@ -129,20 +129,22 @@ export default function Dashboard() {
   return (
     <div>
       <Header2 />
-      <div className='bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen'>
+      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen">
         <div className="w-full px-4 sm:px-10 mx-auto py-8 sm:py-12 mt-20 sm:mt-18">
-
           <h1 className="w-full sm:w-auto absolute left-1/2 -translate-x-1/2 text-2xl sm:text-4xl font-bold text-gray-800 text-center sm:text-left">
             Welcome,
-            <span className='italic font-serif bg-gradient-to-l from-blue-500 via-blue-700 to-blue-900 bg-clip-text text-transparent font-display ml-1'>
+            <span className="italic font-serif bg-gradient-to-l from-blue-500 via-blue-700 to-blue-900 bg-clip-text text-transparent font-display ml-1">
               {user.firstName}
             </span>
             <span className="ml-1">👋</span>
           </h1>
 
-          <div className='flex flex-row gap-14 items-center justify-center mb-2 mt-14'>
+          <div className="flex flex-row gap-14 items-center justify-center mb-2 mt-14">
             <h2 className="text-2xl sm:text-2xl font-bold text-gray-800 font-playfair tracking-wide">
-              Your <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">Products</span>
+              Your{' '}
+              <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">
+                Products
+              </span>
             </h2>
 
             <div className="sm:ml-auto sm:mt-0">
@@ -173,9 +175,16 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredForms.map((form, index) => {
                 const headerColors = [
-                  'bg-red-400', 'bg-green-400', 'bg-blue-400', 'bg-yellow-500',
-                  'bg-pink-400', 'bg-purple-400', 'bg-orange-400', 'bg-teal-400',
-                  'bg-indigo-400', 'bg-emerald-400',
+                  'bg-red-400',
+                  'bg-green-400',
+                  'bg-blue-400',
+                  'bg-yellow-500',
+                  'bg-pink-400',
+                  'bg-purple-400',
+                  'bg-orange-400',
+                  'bg-teal-400',
+                  'bg-indigo-400',
+                  'bg-emerald-400',
                 ];
                 const randomColor = headerColors[index % headerColors.length];
 
@@ -186,7 +195,9 @@ export default function Dashboard() {
                   >
                     {/* Neon Gradient Tag with Left Cut */}
                     <div className="relative flex flex-row justify-between items-center">
-                      <div className={`italic text-center px-4 py-2 text-white text-xl font-bold rounded-tr-2xl rounded-bl-[1.25rem] ${randomColor}`}>
+                      <div
+                        className={`italic text-center px-4 py-2 text-white text-xl font-bold rounded-tr-2xl rounded-bl-[1.25rem] ${randomColor}`}
+                      >
                         {form.title}
                       </div>
 
@@ -203,7 +214,7 @@ export default function Dashboard() {
                       <p className="text-sm opacity-80 mb-3">
                         {form.description || 'No description provided.'}
                       </p>
-                      <div className='flex flex-row items-start justify-between h-full'>
+                      <div className="flex flex-row items-start justify-between h-full">
                         <p className="text-xs font-medium tracking-wider text-blue-800 mb-4">
                           {new Date(form.createdAt).toLocaleDateString('en-GB', {
                             day: '2-digit',
@@ -232,30 +243,27 @@ export default function Dashboard() {
                           />
                           <button
                             onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
-                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${copied === form.id
-                              ? "bg-blue-700 hover:bg-blue-800 text-white"
-                              : "bg-black hover:bg-gray-700 text-white"
-                              }`}
+                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${
+                              copied === form.id
+                                ? 'bg-blue-700 hover:bg-blue-800 text-white'
+                                : 'bg-black hover:bg-gray-700 text-white'
+                            }`}
                           >
-                            {copied === form.id ? "Copied" : "Copy"}
+                            {copied === form.id ? 'Copied' : 'Copy'}
                           </button>
                         </div>
                       </div>
-
                     </div>
                   </div>
-
                 );
               })}
             </div>
           )}
         </div>
-
       </div>
       <footer className="w-full text-center bg-purple-100 py-2 px-8 text-lg text-black mt-auto bottom-0">
         <p>© 2024 FideFeed. All rights reserved.</p>
       </footer>
     </div>
-
   );
 }
