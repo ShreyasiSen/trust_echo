@@ -6,6 +6,7 @@ import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { Feature } from "@/components/feature";
 import { Cover } from "@/components/cover";
+
 export default async function Home() {
 
   return (
@@ -20,7 +21,8 @@ export default async function Home() {
           alt: "Cover Image",
         }}
       />
-      <Feature />
+        <Feature />
+      
       <Faq />
       <Contact />
       <Footer />
