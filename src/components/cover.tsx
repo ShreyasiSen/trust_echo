@@ -37,19 +37,19 @@ const Cover = ({
                 <div className="grid gap-10 md:gap-16 items-center lg:grid-cols-2">
                     <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
                         <motion.h1 
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.4}}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        variants={fadeIn("left", 0.2)}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: false, amount: 0.4 }}
                         className="italic mb-6 text-3xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-fuchsia-600 via-rose-500 to-blue-700 bg-clip-text text-transparent">
                         {heading}
                         </motion.h1>
 
                         <motion.p 
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.2}}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        variants={fadeIn("right", 0.2)}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: false, amount: 0.4 }}
                         className="mb-8 max-w-2xl text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed tracking-wide">
                             {description}
                         </motion.p>
@@ -62,10 +62,10 @@ const Cover = ({
                     </div>
 
                     <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.6}}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    variants={fadeIn("down", 0.2)}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: false, amount: 0.4 }}
                      className="flex justify-center">
                         <img
                             src={image.src}
