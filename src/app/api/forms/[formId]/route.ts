@@ -36,13 +36,19 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ formI
   }
 
   try {
+    // Delete all responses associated with the form
+    await prisma.response.deleteMany({
+      where: { formId },
+    });
+
+    // Delete the form
     await prisma.form.delete({
       where: { id: formId },
     });
 
-    return NextResponse.json({ message: 'Form deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Form and associated responses deleted successfully' }, { status: 200 });
   } catch (err) {
-    console.error('Error deleting form:', err);
-    return NextResponse.json({ error: 'Failed to delete form' }, { status: 500 });
+    console.error('Error deleting form and responses:', err);
+    return NextResponse.json({ error: 'Failed to delete form and responses' }, { status: 500 });
   }
 }
