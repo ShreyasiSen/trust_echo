@@ -10,7 +10,7 @@ import { Cover } from "@/components/cover";
 export default async function Home() {
 
   return (
-    <div >
+    <div className="max-w-[100vw] overflow-x-hidden">
       <Header />
       <Hero />
       <Cover

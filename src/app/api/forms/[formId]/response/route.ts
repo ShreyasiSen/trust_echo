@@ -3,13 +3,12 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request, context: { params: { formId: string } }) {
-  const { params } = context;
-  const { formId } = params;
+export async function POST(req: Request, context: { params: Promise<{ formId: string }> }) {
+  const { formId } = await context.params; 
 
   try {
     const body = await req.json();
-    const { responderName, responderEmail, answers, improvementFeedback ,rating} = body;
+    const { responderName, responderEmail, answers, improvementFeedback, rating } = body;
 
     // Validate request body
     if (!responderName || !responderEmail || !answers || !Array.isArray(answers)) {
@@ -32,7 +31,7 @@ export async function POST(req: Request, context: { params: { formId: string } }
         responderName,
         responderEmail,
         answers,
-        rating,// Store only the answers to the questions
+        rating, // Store only the answers to the questions
         createdAt: new Date(),
       },
     });

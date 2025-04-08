@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function DELETE(req: Request, { params }: { params: { formId: string; responseId: string } }) {
-  const { responseId } = await params;
+export async function DELETE(req: Request, { params }: { params: Promise<{ formId: string; responseId: string }> }) {
+  const { responseId } = await params; // Await the params Promise to extract responseId
 
   try {
     await prisma.response.delete({
