@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa'; // Import star icons from react-icons
 import { motion } from 'framer-motion'; // Import motion for animations
 
-export default function ResponseForm({ params }: { params: { formId: string } }) {
+export default function ResponseForm({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
   const [responderName, setResponderName] = useState('');
   const [responderEmail, setResponderEmail] = useState('');
@@ -19,7 +19,7 @@ export default function ResponseForm({ params }: { params: { formId: string } })
 
   useEffect(() => {
     const fetchFormId = async () => {
-      const resolvedParams = await params;
+      const resolvedParams = await params; // Await the params Promise to extract formId
       setFormId(resolvedParams.formId);
     };
     fetchFormId();

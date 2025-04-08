@@ -7,7 +7,7 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link'; // Import Link from next/link
 import { FiGrid } from 'react-icons/fi';
 
-export default function ResponsesPage({ params }: { params: { formId: string } }) {
+export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> })  {
   const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [responses, setResponses] = useState<Response[]>([]);
