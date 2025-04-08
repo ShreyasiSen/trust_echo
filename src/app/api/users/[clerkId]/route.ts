@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, { params }: { params: { clerkId: string } }) {
-  const { clerkId } =  await params;
+export async function GET(req: Request, { params }: { params: Promise<{ clerkId: string }> }) {
+  const { clerkId } = await params; // Await the params Promise to extract clerkId
 
   try {
     const user = await prisma.user.findUnique({
@@ -15,7 +15,7 @@ export async function GET(req: Request, { params }: { params: { clerkId: string 
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ id: user.id }, { status: 200 }); 
+    return NextResponse.json({ id: user.id }, { status: 200 });
   } catch (err) {
     console.error('Error fetching user:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
