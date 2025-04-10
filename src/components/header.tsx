@@ -21,7 +21,7 @@ const Header = () => {
     { title: "Testimonial", url: "#testimonial" },
     { title: "FAQ", url: "#faq" },
     { title: "Contact", url: "#contact" },
-    { title: "AboutUs", url: "#aboutUs" },
+    { title: "AboutUs", url: "/aboutUs" },
   ];
 
   return (
@@ -41,16 +41,29 @@ const Header = () => {
             <div className="hidden lg:flex ml-8">
               <NavigationMenu>
                 <NavigationMenuList className="flex space-x-4">
-                  {menu.map((item) => (
-                    <NavigationMenuItem key={item.title}>
-                      <NavigationMenuLink
-                        href={item.url}
-                        className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
-                      >
-                        {item.title}
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
+                  {menu.map((item) =>
+                    item.title === "About Us" ? (
+                      <NavigationMenuItem key={item.title}>
+                        <Button
+                          onClick={() => (window.location.href = "/aboutUs")}
+                          className="cursor-pointer bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-5 py-2 font-[Quicksand] text-base transition-all duration-300 hover:scale-105"
+                        >
+                          {item.title}
+                        </Button>
+                      </NavigationMenuItem>
+                    ) : (
+                      <NavigationMenuItem key={item.title}>
+                        <Link href={item.url} passHref legacyBehavior>
+                          <NavigationMenuLink
+                            className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
+                          >
+                            {item.title}
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                    )
+                  )}
+
                 </NavigationMenuList>
               </NavigationMenu>
             </div>

@@ -163,7 +163,7 @@ export default function Dashboard() {
             <div className="sm:ml-auto sm:mt-0">
               <button
                 onClick={() => router.push('/create-form')}
-                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
+                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out cursor-pointer"
               >
                 + Create New Product
               </button>
@@ -279,9 +279,9 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      <footer className="w-full text-center bg-purple-100 py-2 px-8 text-lg text-black mt-auto bottom-0">
-        <p>© 2024 FideFeed. All rights reserved.</p>
-      </footer>
+      <footer className="bg-gray-800 text-white py-4 text-center">
+                <p>&copy; 2025 FideFeed. All rights reserved.</p>
+            </footer>
     </div>
   );
 }
