@@ -59,7 +59,7 @@ const Contact = () => {
           variants={fadeIn("left", 0.2)}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.4 }}
            className="bg-white/80 backdrop-blur-md border border-purple-200 shadow-sm rounded-3xl p-10">
             <form className="space-y-6">
               {/* Name Fields */}
