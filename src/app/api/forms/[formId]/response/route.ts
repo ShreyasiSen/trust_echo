@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const prisma = new PrismaClient();
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request, context: { params: Promise<{ formId: string }> }) {
-  const { formId } = await context.params; 
+  const { formId } = await context.params;
 
   try {
     const body = await req.json();
@@ -24,6 +26,27 @@ export async function POST(req: Request, context: { params: Promise<{ formId: st
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
 
+    // Combine questions and answers for context
+    const content = form.questions
+      .map((q: string, i: number) => `Q: ${q}\nA: ${answers[i] ?? 'N/A'}`)
+      .join('\n\n');
+
+    // Spam classification prompt
+    const spamPrompt = `
+      Determine if the answers provided are related to the questions asked.
+      If any answer is not related to its corresponding question, classify the response as "spam".
+      Otherwise, classify it as "not spam".
+      Questions and Answers:
+      ${content}
+      Provide only "spam" or "not spam" as the result.
+    `;
+    console.log('Spam classification prompt:', spamPrompt);
+    // Send data to Gemini API for spam classification
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const spamResult = await model.generateContent(spamPrompt);
+    const spamText = (await spamResult.response).text().trim().toLowerCase();
+    const isSpam = spamText === 'spam';
+
     // Save the response
     const newResponse = await prisma.response.create({
       data: {
@@ -31,7 +54,8 @@ export async function POST(req: Request, context: { params: Promise<{ formId: st
         responderName,
         responderEmail,
         answers,
-        rating, // Store only the answers to the questions
+        rating,
+        spam: isSpam, // Save the spam classification result
         createdAt: new Date(),
       },
     });

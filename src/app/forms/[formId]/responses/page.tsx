@@ -77,7 +77,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       console.error('Error deleting response:', err);
     }
   };
-
+ 
   const toggleMenu = (id: string | null) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
