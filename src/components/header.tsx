@@ -59,12 +59,12 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton>
-                <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                <Button variant="outline" className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all">
                   Sign In
                 </Button>
               </SignInButton>
               <SignUpButton>
-                <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all">
+                <Button variant="outline" className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all">
                   Sign Up
                 </Button>
               </SignUpButton>
@@ -130,7 +130,7 @@ const Header = () => {
                       <SignInButton>
                         <Button
                           variant="ghost"
-                          className="text-blue-300 border border-blue-300 hover:bg-blue-500/20 hover:text-white transition-all"
+                          className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all"
                         >
                           Sign In
                         </Button>
@@ -138,7 +138,7 @@ const Header = () => {
                       <SignUpButton>
                         <Button
                           variant="ghost"
-                          className="text-green-300 border border-green-300 hover:bg-green-500/20 hover:text-white transition-all"
+                          className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all"
                         >
                           Sign Up
                         </Button>

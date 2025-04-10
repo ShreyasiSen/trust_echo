@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Header2 } from '@/components/header2';
+import { toast } from 'sonner';
 
 export default function CreateFormPage() {
     const router = useRouter();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [questions, setQuestions] = useState<string[]>(['']);
-    const [message, setMessage] = useState('');
     const [submitting, setSubmitting] = useState(false); // State to track form submission
     const { user } = useUser();
     const userId = user?.id;
@@ -47,19 +47,25 @@ export default function CreateFormPage() {
             });
 
             if (response.ok) {
-                setMessage('✅ Form created successfully!');
+                toast.success(' Your product has been created!', {
+                    style: { color: 'green' }, 
+                });
                 setTitle('');
                 setDescription('');
                 setQuestions(['']);
                 router.push('/dashboard');
             } else {
-                setMessage('❌ Failed to create form.');
+                toast.error(' Your product was not created.', {
+                    style: { color: 'red' }, 
+                });
             }
         } catch (err) {
             console.error('Error creating form:', err);
-            setMessage('⚠️ An error occurred.');
+            toast.error('⚠️ An error occurred while creating your product.', {
+                style: { color: 'red' }, 
+            });
         } finally {
-            setSubmitting(false); // Re-enable the button after submission
+            setSubmitting(false); 
         }
     };
 
@@ -205,11 +211,6 @@ export default function CreateFormPage() {
                                 >
                                     {submitting ? 'Creating...' : 'Create Form'}
                                 </button>
-
-                                {/* Message */}
-                                {message && (
-                                    <p className="text-center text-sm text-green-600 mt-4">{message}</p>
-                                )}
                             </form>
                         </div>
                     </div>
