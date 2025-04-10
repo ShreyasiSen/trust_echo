@@ -10,7 +10,7 @@ import { FiGrid } from 'react-icons/fi';
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [responses, setResponses] = useState<Response[]>([]); 
+  const [responses, setResponses] = useState<Response[]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
   const [formTitle, setFormTitle] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
         setFormTitle(formData?.title ?? 'Untitled Form');
         setQuestions(formData?.questions ?? []);
-        setResponses(Array.isArray(responsesData) ? responsesData : []); 
+        setResponses(Array.isArray(responsesData) ? responsesData : []);
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -84,7 +84,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
   const filteredResponses = Array.isArray(responses)
     ? responses.filter((response) => (filter === 'spam' ? response?.spam : !response?.spam))
-    : []; 
+    : [];
 
   if (loading) {
     return (
@@ -110,22 +110,20 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           <div className="space-y-4">
             <button
               onClick={() => setFilter('text')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
-                filter === 'text'
-                  ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
-                  : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
-              }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'text'
+                ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
+                : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
+                }`}
             >
               ✍️ Text Testimonials
             </button>
 
             <button
               onClick={() => setFilter('spam')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
-                filter === 'spam'
-                  ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-              }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'spam'
+                ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                }`}
             >
               🚫 Spam
             </button>
@@ -134,11 +132,10 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
         {/* Page Content */}
         <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 mt-10 lg:mt-20">
-          <div className="w-full mb-6 sm:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="w-full mb-6 sm:mb-10 flex justify-between items-center gap-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 border-b border-gray-500 pb-3 sm:pb-4">
               <span className="italic">{formTitle}</span> – Responses
             </h1>
-
             <Link
               href="/dashboard"
               className="inline-flex items-center gap-2 text-sm sm:text-md font-semibold text-indigo-600 hover:text-indigo-800 transition-all"
@@ -159,7 +156,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                 <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 -z-10"></div>
 
                 {/* Header Info */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
                   <div>
                     <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 leading-snug">
                       👤 {response?.responderName ?? 'Anonymous'}
@@ -170,7 +167,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                   </div>
 
                   {/* Options Menu */}
-                  <div className="relative mt-2 sm:mt-0">
+                  <div className="relative">
                     <button
                       onClick={() => toggleMenu(response.id)}
                       className="text-gray-500 hover:text-indigo-700 p-2 cursor-pointer rounded-full transition"
@@ -205,13 +202,13 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                   🕒{' '}
                   {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,
-                      }).format(new Date(response.createdAt))
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    }).format(new Date(response.createdAt))
                     : 'Unknown'}
                 </p>
 
