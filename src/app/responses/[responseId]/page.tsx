@@ -1,154 +1,317 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { FaStar, FaRegStar } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
+export default function ResponsePage({ params }: { params: Promise<{ responseId: string }> }) {
+  const [embedCode, setEmbedCode] = useState('');
+  const [styles, setStyles] = useState({
+    backgroundColor: '#ffffff',
+    textColor: '#333333',
+    padding: '20',
+    borderRadius: '10',
+    borderColor: '#cccccc',
+    borderWidth: '1',
+    nameFont: 'Arial',
+    nameFontSize: '20',
+    emailFont: 'Arial',
+    emailFontSize: '16',
+    questionFont: 'Arial',
+    questionFontSize: '18',
+    answerFont: 'Arial',
+    answerFontSize: '16',
+    ratingColor: '#ffcc00', // default yellow
+    starColor: '#ffcc00',
 
-export default function ResponsePage({ params }: {  params: Promise<{ responseId: string }> }) {
-  const [response, setResponse] = useState<Response | null>(null);
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
- const[responseId, setResponseId] = useState<string | null>(null);
+  });
+  const [responseId, setResponseId] = useState<string | null>(null);
+
+  // Fetch and resolve the responseId from params
   useEffect(() => {
     const fetchResponseId = async () => {
-      const { responseId } = await params;
-      setResponseId(responseId);
+      try {
+        const resolvedParams = await params;
+        setResponseId(resolvedParams.responseId);
+      } catch (error) {
+        console.error('Error resolving responseId:', error);
+      }
     };
-
     fetchResponseId();
-  }
-  , [params]);
+  }, [params]);
 
-  interface Response {
-    id: string;
-    responderName?: string;
-    responderEmail?: string;
-    answers?: string[];
-    createdAt?: string;
-    rating?: number;
-    spam?: boolean;
-  }
-
+  // Generate the embed code whenever responseId or styles change
   useEffect(() => {
-    if(!responseId) return; 
-    const fetchResponse = async () => {
-      try {
-        console.log('Fetching response with ID:', responseId);
-        const responseRes = await fetch(`/api/responses/${responseId}`);
-        if (responseRes.ok) {
-          const responseData = await responseRes.json();
-          setResponse(responseData.response);
-          setQuestions(responseData.questions || []);
-        } else {
-         console.log("Error fetching response:");
-        }
-      } catch (err) {
-        console.error('Error fetching response:', err);
-      } finally {
-        setLoading(false);
-      }
+    if (!responseId) return;
+
+    const createEmbedCode = () => {
+      const queryParams = new URLSearchParams(styles).toString();
+      const src = `${window.location.origin}/api/embed/${responseId}?${queryParams}`;
+      const code = `<iframe src="${src}" style="width:100%;border:none;overflow:hidden;" frameborder="0" scrolling="no"></iframe>`;
+      setEmbedCode(code);
     };
 
-    fetchResponse();
-  }, [responseId]);
+    createEmbedCode();
+  }, [responseId, styles]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (!response) {
-
-    const fetchResponse = async () => {
-      try {
-        console.log('Fetching response with ID:', responseId);
-        const responseRes = await fetch(`/api/responses/${responseId}`);
-        if (responseRes.ok) {
-          const responseData = await responseRes.json();
-          setResponse(responseData.response);
-          setQuestions(responseData.questions || []);
-        } else {
-         console.log("Error fetching response:");
-        }
-      } catch (err) {
-        console.error('Error fetching response:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResponse();
-    return <div>Error: Response not found</div>;
-  }
+  // Handle style changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setStyles((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50 text-gray-800">
-      <div className="w-full max-w-2xl bg-blue-50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl">
-        {/* Header Info */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-extrabold text-gray-900 leading-snug text-center">
-            👤 {response.responderName ?? 'Anonymous'}
-          </h1>
-          <p className="text-md text-gray-600 italic text-center">
-            📧 {response.responderEmail ?? 'No Email Provided'}
-          </p>
-        </div>
+    <div className="p-6 max-w-3xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">Customize Your Testimonial</h1>
+      <div className="grid grid-cols-2 gap-4">
+        {/* Background Color */}
+        <label>
+          Background Color:
+          <input
+            type="color"
+            name="backgroundColor"
+            value={styles.backgroundColor}
+            onChange={handleChange}
+            className="ml-2"
+          />
+        </label>
 
-        {/* Timestamp */}
-        <p className="text-xs text-gray-400 mb-4 text-center">
-          🕒{' '}
-          {response.createdAt
-            ? new Intl.DateTimeFormat('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              }).format(new Date(response.createdAt))
-            : 'Unknown'}
-        </p>
+        {/* Text Color */}
+        <label>
+          Text Color:
+          <input
+            type="color"
+            name="textColor"
+            value={styles.textColor}
+            onChange={handleChange}
+            className="ml-2"
+          />
+        </label>
 
-        {/* Questions and Answers */}
-        <div className="space-y-4 mb-6">
-          {questions.map((question, idx) => (
-            <div key={idx}>
-              <p className="text-sm font-semibold text-gray-800 mb-1">
-                Q{idx + 1}: <span className="italic">{question}</span>
-              </p>
-              <p className="text-sm text-gray-700 bg-gray-100 rounded-md px-3 py-2 border-l-4 border-indigo-400">
-                A: {response.answers?.[idx] ?? 'N/A'}
-              </p>
-            </div>
-          ))}
-        </div>
+        {/* Padding */}
+        <label>
+          Padding: {styles.padding}px
+          <input
+            type="range"
+            name="padding"
+            min="0"
+            max="50"
+            value={styles.padding}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
 
-        {/* Rating */}
-        {response.rating !== undefined && (
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-700 font-medium mb-2">
-            <span>⭐ Rating:</span>
-            <div className="flex">
-              {Array.from({ length: 5 }).map((_, i) =>
-                i < (response.rating ?? 0) ? (
-                  <FaStar key={i} className="text-yellow-400" />
-                ) : (
-                  <FaRegStar key={i} className="text-yellow-400" />
-                )
-              )}
-            </div>
-          </div>
-        )}
+        {/* Border Radius */}
+        <label>
+          Border Radius: {styles.borderRadius}px
+          <input
+            type="range"
+            name="borderRadius"
+            min="0"
+            max="50"
+            value={styles.borderRadius}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
 
-        {/* Spam Classification */}
-        {response.spam !== undefined && (
-          <p className="text-sm italic text-red-400 mt-2 text-center">
-            Classification: {response.spam ? '🚫 Spam' : '✅ Not Spam'}
-          </p>
-        )}
+        {/* Border Color */}
+        <label>
+          Border Color:
+          <input
+            type="color"
+            name="borderColor"
+            value={styles.borderColor}
+            onChange={handleChange}
+            className="ml-2"
+          />
+        </label>
+
+        {/* Border Width */}
+        <label>
+          Border Width: {styles.borderWidth}px
+          <input
+            type="range"
+            name="borderWidth"
+            min="0"
+            max="10"
+            value={styles.borderWidth}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
+
+        {/* Name Font */}
+        <label>
+          Name Font:
+          <select
+            name="nameFont"
+            value={styles.nameFont}
+            onChange={handleChange}
+            className="ml-2 border border-gray-300 rounded-md px-2 py-1"
+          >
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Lucida Console">Lucida Console</option>
+          </select>
+        </label>
+
+        {/* Name Font Size */}
+        <label>
+          Name Font Size: {styles.nameFontSize}px
+          <input
+            type="range"
+            name="nameFontSize"
+            min="12"
+            max="30"
+            value={styles.nameFontSize}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
+
+        {/* Email Font */}
+        <label>
+          Email Font:
+          <select
+            name="emailFont"
+            value={styles.emailFont}
+            onChange={handleChange}
+            className="ml-2 border border-gray-300 rounded-md px-2 py-1"
+          >
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Lucida Console">Lucida Console</option>
+          </select>
+        </label>
+
+        {/* Email Font Size */}
+        <label>
+          Email Font Size: {styles.emailFontSize}px
+          <input
+            type="range"
+            name="emailFontSize"
+            min="12"
+            max="30"
+            value={styles.emailFontSize}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
+
+        {/* Question Font */}
+        <label>
+          Question Font:
+          <select
+            name="questionFont"
+            value={styles.questionFont}
+            onChange={handleChange}
+            className="ml-2 border border-gray-300 rounded-md px-2 py-1"
+          >
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Lucida Console">Lucida Console</option>
+          </select>
+        </label>
+
+        {/* Question Font Size */}
+        <label>
+          Question Font Size: {styles.questionFontSize}px
+          <input
+            type="range"
+            name="questionFontSize"
+            min="12"
+            max="30"
+            value={styles.questionFontSize}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
+
+        {/* Answer Font */}
+        <label>
+          Answer Font:
+          <select
+            name="answerFont"
+            value={styles.answerFont}
+            onChange={handleChange}
+            className="ml-2 border border-gray-300 rounded-md px-2 py-1"
+          >
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Lucida Console">Lucida Console</option>
+          </select>
+        </label>
+
+        {/* Answer Font Size */}
+        <label>
+          Answer Font Size: {styles.answerFontSize}px
+          <input
+            type="range"
+            name="answerFontSize"
+            min="12"
+            max="30"
+            value={styles.answerFontSize}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </label>
+      
       </div>
+      <div >
+      <h2 className="text-xl font-semibold">Preview</h2>
+      {responseId ? (
+        <div
+          style={{
+            backgroundColor: styles.backgroundColor,
+            color: styles.textColor,
+            padding: `${styles.padding}px`,
+            borderRadius: `${styles.borderRadius}px`,
+            margin: 0,
+            boxSizing: 'border-box',
+          }}
+        >
+
+          <iframe
+            src={`/api/embed/${responseId}?${new URLSearchParams(styles).toString()}`}
+            style={{
+              width: '100%',
+              height: '600px', // or adjust as needed
+              border: 'none',
+              overflow: 'hidden',
+              display: 'block',
+            }}
+          ></iframe>
+
+        </div>
+      ) : (
+        <p>Loading preview...</p>
+      )}
+
+
+      <h2 className="text-xl font-semibold">Embed Code</h2>
+      <textarea
+        readOnly
+        value={embedCode}
+        className="w-full p-2 border border-gray-300 rounded-md font-mono"
+        rows={4}
+      ></textarea>
     </div>
+        </div>
   );
 }

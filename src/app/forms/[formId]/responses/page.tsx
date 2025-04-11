@@ -7,7 +7,7 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
-
+import { useRouter } from 'next/navigation';
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'spam' | 'text'>('text');
   const [deleting, setDeleting] = useState<string | null>(null); // Track which response is being deleted
-
+  const router = useRouter(); // Initialize the router
   interface Response {
     id: string;
     responderName?: string;
@@ -163,6 +163,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
             {filteredResponses.map((response) => (
               <div
                 key={response?.id}
+                onClick={() => router.push(`/responses/${response.id}`)}
                 className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
               >
                 {/* Gradient Background Glow */}
