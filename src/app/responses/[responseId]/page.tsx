@@ -85,70 +85,74 @@ export default function ResponsePage({ params }: {  params: Promise<{ responseId
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50 text-gray-800">
-      <div className="w-full max-w-2xl bg-blue-50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl">
-        {/* Header Info */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-extrabold text-gray-900 leading-snug text-center">
-            👤 {response.responderName ?? 'Anonymous'}
-          </h1>
-          <p className="text-md text-gray-600 italic text-center">
-            📧 {response.responderEmail ?? 'No Email Provided'}
-          </p>
-        </div>
-
-        {/* Timestamp */}
-        <p className="text-xs text-gray-400 mb-4 text-center">
-          🕒{' '}
-          {response.createdAt
-            ? new Intl.DateTimeFormat('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-              }).format(new Date(response.createdAt))
-            : 'Unknown'}
-        </p>
-
-        {/* Questions and Answers */}
-        <div className="space-y-4 mb-6">
-          {questions.map((question, idx) => (
-            <div key={idx}>
-              <p className="text-sm font-semibold text-gray-800 mb-1">
-                Q{idx + 1}: <span className="italic">{question}</span>
-              </p>
-              <p className="text-sm text-gray-700 bg-gray-100 rounded-md px-3 py-2 border-l-4 border-indigo-400">
-                A: {response.answers?.[idx] ?? 'N/A'}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Rating */}
-        {response.rating !== undefined && (
-          <div className="flex items-center justify-center gap-2 text-sm text-gray-700 font-medium mb-2">
-            <span>⭐ Rating:</span>
-            <div className="flex">
-              {Array.from({ length: 5 }).map((_, i) =>
-                i < (response.rating ?? 0) ? (
-                  <FaStar key={i} className="text-yellow-400" />
-                ) : (
-                  <FaRegStar key={i} className="text-yellow-400" />
-                )
-              )}
-            </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-blue-100 text-gray-800 px-4">
+        <div className="w-full max-w-3xl bg-white/70 backdrop-blur-xl border border-gray-300 rounded-2xl px-8 py-6 shadow-2xl transition-all duration-300">
+          {/* Header Info */}
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-gray-900">
+              👤 {response.responderName ?? 'Anonymous'}
+            </h1>
+            <p className="text-md text-gray-600 italic">
+              📧 {response.responderEmail ?? 'No Email Provided'}
+            </p>
           </div>
-        )}
-
-        {/* Spam Classification */}
-        {response.spam !== undefined && (
-          <p className="text-sm italic text-red-400 mt-2 text-center">
-            Classification: {response.spam ? '🚫 Spam' : '✅ Not Spam'}
+    
+          {/* Timestamp */}
+          <p className="text-xs text-gray-500 mb-6 text-center">
+            🕒{' '}
+            {response.createdAt
+              ? new Intl.DateTimeFormat('en-GB', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).format(new Date(response.createdAt))
+              : 'Unknown'}
           </p>
-        )}
+    
+          {/* Questions and Answers */}
+          <div className="space-y-5 mb-6">
+            {questions.map((question, idx) => (
+              <div key={idx}>
+                <p className="text-base font-semibold text-gray-800 mb-1">
+                  Q{idx + 1}: <span className="italic">{question}</span>
+                </p>
+                <div className="bg-gray-100 border-l-4 border-indigo-500 rounded-md px-4 py-3 text-gray-700 text-sm transition hover:bg-gray-200">
+                  A: {response.answers?.[idx] ?? 'N/A'}
+                </div>
+              </div>
+            ))}
+          </div>
+    
+          {/* Rating */}
+          {response.rating !== undefined && (
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-700 font-medium mb-3">
+              <span>⭐ Rating:</span>
+              <div className="flex">
+                {Array.from({ length: 5 }).map((_, i) =>
+                  i < (response.rating ?? 0) ? (
+                    <FaStar key={i} className="text-yellow-400" />
+                  ) : (
+                    <FaRegStar key={i} className="text-yellow-400" />
+                  )
+                )}
+              </div>
+            </div>
+          )}
+    
+          {/* Spam Classification */}
+          {response.spam !== undefined && (
+            <p
+              className={`text-sm italic text-center mt-4 ${
+                response.spam ? 'text-red-500' : 'text-green-600'
+              }`}
+            >
+              Classification: {response.spam ? '🚫 Spam' : '✅ Not Spam'}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
