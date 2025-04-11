@@ -7,6 +7,7 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
+import {useRouter} from 'next/navigation';
 
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'spam' | 'text'>('text');
   const [deleting, setDeleting] = useState<string | null>(null); // Track which response is being deleted
+  const router=useRouter();
 
   interface Response {
     id: string;
@@ -151,9 +153,9 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
             </h1>
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 text-sm sm:text-md font-semibold text-indigo-600 hover:text-indigo-800 transition-all"
+              className="inline-flex items-center gap-2 text-lg sm:text-md font-semibold text-indigo-600 hover:text-indigo-800 transition-all"
             >
-              <FiGrid size={20} />
+              <FiGrid size={25} />
               Dashboard
             </Link>
           </div>
@@ -177,20 +179,19 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                 {activeMenu === response.id && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
                     <button
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
                       onClick={() => {
-                        const publicLink = `${window.location.origin}/responses/${response.id}`;
-                        navigator.clipboard.writeText(publicLink);
-                        toast.success('Public link copied to clipboard!', {
-                          position: 'bottom-right',
-                        });
+                        router.push(`/responses/${response.id}`);
+                        // toast.success('Public link copied to clipboard!', {
+                        //   position: 'bottom-right',
+                        // });
                       }}
                     >
-                      <FaLink className="mr-2" /> Copy Link
+                      <FaLink className="mr-2" /> Embed
                     </button>
                     <button
                       onClick={() => handleDeleteResponse(response.id)}
-                      className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+                      className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full cursor-pointer"
                     >
                       {deleting === response.id ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
@@ -274,7 +275,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
         </div>
       </div>
-      <footer className="bg-gray-800 text-white py-4 text-center">
+      <footer className="bg-pink-200 text-black py-4 text-center">
                 <p>&copy; 2025 FideFeed. All rights reserved.</p>
             </footer>
     </div>

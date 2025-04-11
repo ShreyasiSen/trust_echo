@@ -45,34 +45,125 @@ export async function GET(req: Request, { params }: { params: Promise<{ response
 
     const borderColor= url.searchParams.get('borderColor') || '#333333';
     const html = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testimonial Embed</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"></script>
-  </head>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Testimonial Embed</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.contentWindow.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
 
-  <body style="margin: 0; padding: 0px;">
-    <div style="background-color: ${backgroundColor}; color: ${textColor}; padding: ${padding}px; border-radius: ${borderRadius}px; border: ${borderWidth}px solid ${borderColor}; font-family: Arial, sans-serif; max-width: 600px; margin: auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+<body style="margin: 0; padding: 0; background-color: #f9fafb; font-family: 'Inter', sans-serif;">
+  <div style="
+    background: ${backgroundColor};
+    color: ${textColor};
+    padding: ${padding}px;
+    border-radius: ${borderRadius}px;
+    border: ${borderWidth}px solid ${borderColor};
+    max-width: 680px;
+    margin: 40px auto;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-in-out;
+    transition: all 0.3s ease;
+  ">
 
-      <h2 style="font-family: ${nameFont}; font-size: ${nameFontSize}px; font-weight: bold; margin-bottom: 10px;">👤 ${response.responderName}</h2>
-      <p style="font-family: ${emailFont}; font-size: ${emailFontSize}px; margin-bottom: 10px;">📧 ${response.responderEmail}</p>
-      <div>
-        ${response.answers
-          .map(
-            (answer, idx) => `
-              <p style="font-family: ${questionFont}; font-size: ${questionFontSize}px;"><strong>Q${idx + 1}:</strong> ${response.form.questions[idx]}</p>
-              <p style="font-family: ${answerFont}; font-size: ${answerFontSize}px;"><strong>A:</strong> ${answer}</p>
-            `
-          )
-          .join('')}
+    <!-- Avatar + Name & Email Centered -->
+    <div style="text-align: center; margin-bottom: 28px;">
+      <div style="
+        width: 72px;
+        height: 72px;
+        background-color: #3b82f6;
+        color: white;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 24px;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+      ">
+        ${response.responderName.charAt(0).toUpperCase()}
       </div>
-      <p style="font-family: ${ratingFont}; font-size: ${ratingFontSize}px; color: #ffcc00;">Rating: ${'⭐'.repeat(response.rating || 0)}</p>
+      <h2 style="
+        font-family: ${nameFont};
+        font-size: ${nameFontSize}px;
+        font-weight: 700;
+        margin: 0;
+        color: ${textColor};
+      ">${response.responderName}</h2>
+      <p style="
+        font-family: ${emailFont};
+        font-size: ${emailFontSize}px;
+        margin-top: 4px;
+        color: ${textColor};
+      ">${response.responderEmail}</p>
     </div>
-  </body>
-  </html>
+
+    <!-- QA Section -->
+    <div style="padding: 0 28px;">
+      ${response.answers
+        .map(
+          (answer, idx) => `
+          <div style="margin-bottom: 24px;">
+            <p style="
+              font-family: ${questionFont};
+              font-size: ${questionFontSize}px;
+              font-weight: 600;
+              color: ${textColor};
+              margin-bottom: 6px;
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            "> Q${idx + 1}: <span>${response.form.questions[idx]}</span></p>
+            <div style="
+              font-family: ${answerFont};
+              font-size: ${answerFontSize}px;
+              background-color: #f1f5f9;
+              padding: 14px 20px;
+              border-left: 5px solid #3b82f6;
+              border-radius: 8px;
+              color: ${textColor};
+              transition: background 0.3s;
+            ">${answer}</div>
+          </div>
+        `
+        )
+        .join('')}
+    </div>
+
+    <!-- Rating -->
+    <div style="margin: 30px auto 10px; text-align: center;">
+      <span style="
+        font-family: ${ratingFont};
+        font-size: ${ratingFontSize}px;
+        font-weight: 600;
+        color: ${textColor};
+        background: #fff7ed;
+        padding: 8px 16px;
+        border-radius: 50px;
+        display: inline-block;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      ">${'⭐'.repeat(response.rating || 0)}</span>
+    </div>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</body>
+</html>
 `;
 
 
