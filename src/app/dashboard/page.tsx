@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Header2 } from '@/components/header2';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Loader } from 'lucide-react'; 
+import { toast } from 'sonner';
 
 export default function Dashboard() {
-  const { user, isLoaded } = useUser(); // Ensure user data is fully loaded
+  const { user, isLoaded } = useUser(); 
   const router = useRouter();
 
   interface Form {
@@ -19,17 +20,18 @@ export default function Dashboard() {
 
   const [copied, setCopied] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
-  const [filteredForms, setFilteredForms] = useState<Form[]>([]); // For filtered results
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Search query
+  const [filteredForms, setFilteredForms] = useState<Form[]>([]); 
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoaded || !user) return; // Wait until user data is loaded
+    if (!isLoaded || !user) return; 
 
     const fetchMongoUserId = async () => {
       try {
-        const response = await fetch(`/api/users/${user.id}`); // Fetch MongoDB user ID using Clerk ID
+        const response = await fetch(`/api/users/${user.id}`);
         if (response.ok) {
           const data = await response.json();
           setMongoUserId(data.id);
@@ -45,15 +47,15 @@ export default function Dashboard() {
   }, [isLoaded, user]);
 
   useEffect(() => {
-    if (!mongoUserId) return; // Wait until MongoDB user ID is fetched
+    if (!mongoUserId) return; 
 
     const fetchForms = async () => {
       try {
-        const response = await fetch(`/api/forms/user/${mongoUserId}`); // Use MongoDB user ID to fetch forms
+        const response = await fetch(`/api/forms/user/${mongoUserId}`); 
         if (response.ok) {
           const data = await response.json();
           setForms(data);
-          setFilteredForms(data); // Initialize filtered forms
+          setFilteredForms(data);
         } else {
           console.error('Failed to fetch forms');
         }
@@ -76,6 +78,7 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (formId: string) => {
+    setDeleting(formId); // Set the deleting state to the current form ID
     try {
       const response = await fetch(`/api/forms/${formId}`, {
         method: 'DELETE',
@@ -83,12 +86,22 @@ export default function Dashboard() {
 
       if (response.ok) {
         setForms((prev) => prev.filter((form) => form.id !== formId));
-        setFilteredForms((prev) => prev.filter((form) => form.id !== formId)); // Update filtered results
+        setFilteredForms((prev) => prev.filter((form) => form.id !== formId)); 
+        toast.success('Form deleted successfully!',
+          {
+            style: {
+              color:"red"
+            }
+          }
+        );
       } else {
-        console.error('Failed to delete form');
+        toast.error('Failed to delete the form. Please try again.');
       }
     } catch (err) {
       console.error('Error deleting form:', err);
+      toast.error('An unexpected error occurred.');
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -96,7 +109,7 @@ export default function Dashboard() {
     navigator.clipboard.writeText(link);
     setCopied(formId);
 
-    // Clear the copied state after 2 seconds
+
     setTimeout(() => {
       setCopied(null);
     }, 400);
@@ -150,7 +163,7 @@ export default function Dashboard() {
             <div className="sm:ml-auto sm:mt-0">
               <button
                 onClick={() => router.push('/create-form')}
-                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
+                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out cursor-pointer"
               >
                 + Create New Product
               </button>
@@ -204,8 +217,13 @@ export default function Dashboard() {
                       <button
                         onClick={() => handleDelete(form.id)}
                         className="ml-3 p-2 hover:scale-105 transition"
+                        disabled={deleting === form.id} // Disable button while deleting
                       >
-                        <Trash2 size={22} className="text-red-500" />
+                        {deleting === form.id ? (
+                          <Loader size={22} className="animate-spin text-red-500" />
+                        ) : (
+                          <Trash2 size={22} className="text-red-500" />
+                        )}
                       </button>
                     </div>
 
@@ -243,7 +261,7 @@ export default function Dashboard() {
                           />
                           <button
                             onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
-                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${
+                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm cursor-pointer ${
                               copied === form.id
                                 ? 'bg-blue-700 hover:bg-blue-800 text-white'
                                 : 'bg-black hover:bg-gray-700 text-white'
@@ -261,9 +279,9 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      <footer className="w-full text-center bg-purple-100 py-2 px-8 text-lg text-black mt-auto bottom-0">
-        <p>© 2024 FideFeed. All rights reserved.</p>
-      </footer>
+      <footer className="bg-gray-800 text-white py-4 text-center">
+                <p>&copy; 2025 FideFeed. All rights reserved.</p>
+            </footer>
     </div>
   );
 }

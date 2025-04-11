@@ -21,7 +21,7 @@ const Header = () => {
     { title: "Testimonial", url: "#testimonial" },
     { title: "FAQ", url: "#faq" },
     { title: "Contact", url: "#contact" },
-    { title: "AboutUs", url: "#aboutUs" },
+    { title: "AboutUs", url: "/aboutUs" },
   ];
 
   return (
@@ -41,16 +41,29 @@ const Header = () => {
             <div className="hidden lg:flex ml-8">
               <NavigationMenu>
                 <NavigationMenuList className="flex space-x-4">
-                  {menu.map((item) => (
-                    <NavigationMenuItem key={item.title}>
-                      <NavigationMenuLink
-                        href={item.url}
-                        className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
-                      >
-                        {item.title}
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
+                  {menu.map((item) =>
+                    item.title === "About Us" ? (
+                      <NavigationMenuItem key={item.title}>
+                        <Button
+                          onClick={() => (window.location.href = "/aboutUs")}
+                          className="cursor-pointer bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-5 py-2 font-[Quicksand] text-base transition-all duration-300 hover:scale-105"
+                        >
+                          {item.title}
+                        </Button>
+                      </NavigationMenuItem>
+                    ) : (
+                      <NavigationMenuItem key={item.title}>
+                        <Link href={item.url} passHref legacyBehavior>
+                          <NavigationMenuLink
+                            className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
+                          >
+                            {item.title}
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                    )
+                  )}
+
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -59,12 +72,12 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton>
-                <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                <Button variant="outline" className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all">
                   Sign In
                 </Button>
               </SignInButton>
               <SignUpButton>
-                <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all">
+                <Button variant="outline" className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all">
                   Sign Up
                 </Button>
               </SignUpButton>
@@ -130,7 +143,7 @@ const Header = () => {
                       <SignInButton>
                         <Button
                           variant="ghost"
-                          className="text-blue-300 border border-blue-300 hover:bg-blue-500/20 hover:text-white transition-all"
+                          className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all"
                         >
                           Sign In
                         </Button>
@@ -138,7 +151,7 @@ const Header = () => {
                       <SignUpButton>
                         <Button
                           variant="ghost"
-                          className="text-green-300 border border-green-300 hover:bg-green-500/20 hover:text-white transition-all"
+                          className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all"
                         >
                           Sign Up
                         </Button>

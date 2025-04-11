@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Header2 } from '@/components/header2';
-import { FaStar, FaRegStar, FaLink, FaShareAlt, FaDownload, FaTrash } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaLink, FaTrash } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
+import { toast } from 'sonner'; // Import toast for notifications
 
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -15,6 +16,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   const [formTitle, setFormTitle] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'spam' | 'text'>('text');
+  const [deleting, setDeleting] = useState<string | null>(null); // Track which response is being deleted
 
   interface Response {
     id: string;
@@ -25,7 +27,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     rating?: number;
     spam?: boolean;
   }
-
+  
   useEffect(() => {
     const fetchFormId = async () => {
       const resolvedParams = await params;
@@ -61,6 +63,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   }, [formId]);
 
   const handleDeleteResponse = async (responseId: string) => {
+    setDeleting(responseId); // Set the deleting state to the current response ID
     try {
       const res = await fetch(`/api/forms/${formId}/responses/${responseId}`, {
         method: 'DELETE',
@@ -70,11 +73,19 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         setResponses((prevResponses) =>
           prevResponses.filter((response) => response.id !== responseId)
         );
+        toast.success('Response deleted successfully!', {
+          position: 'bottom-right',
+          style: {
+            color: 'red',
+          },
+        }); // Show success toast
       } else {
         console.error('Failed to delete response.');
       }
     } catch (err) {
       console.error('Error deleting response:', err);
+    } finally {
+      setDeleting(null); // Reset the deleting state
     }
   };
 
@@ -110,20 +121,22 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           <div className="space-y-4">
             <button
               onClick={() => setFilter('text')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'text'
-                ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'text'
+                  ? 'bg-gradient-to-r from-blue-400 to-indigo-600 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-indigo-500 hover:scale-105'
+              }`}
             >
               ✍️ Text Testimonials
             </button>
 
             <button
               onClick={() => setFilter('spam')}
-              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${filter === 'spam'
-                ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-                }`}
+              className={`w-full cursor-pointer px-4 py-2 sm:px-5 sm:py-3 rounded-xl text-sm sm:text-md font-semibold tracking-wide transition-all duration-300 shadow-md ${
+                filter === 'spam'
+                  ? 'bg-gradient-to-r from-pink-600 to-red-500 text-white scale-105'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+              }`}
             >
               🚫 Spam
             </button>
@@ -153,7 +166,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                 className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
               >
                 {/* Gradient Background Glow */}
-                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 -z-10"></div>
+                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 "></div>
 
                 {/* Header Info */}
                 <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
@@ -177,20 +190,29 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                     </button>
                     {activeMenu === response.id && (
                       <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
-                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                        <button
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                          onClick={() => {
+                            const publicLink = `${window.location.origin}/responses/${response.id}`;
+                            navigator.clipboard.writeText(publicLink);
+                            toast.success('Public link copied to clipboard!', {
+                              position: 'bottom-right',
+                            });
+                          }}
+                        >
                           <FaLink className="mr-2" /> Copy Link
-                        </button>
-                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
-                          <FaShareAlt className="mr-2" /> Share
-                        </button>
-                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
-                          <FaDownload className="mr-2" /> Download
                         </button>
                         <button
                           onClick={() => handleDeleteResponse(response.id)}
                           className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
                         >
-                          <FaTrash className="mr-2" /> Delete
+                          {deleting === response.id ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
+                          ) : (
+                            <>
+                              <FaTrash className="mr-2" /> Delete
+                            </>
+                          )}
                         </button>
                       </div>
                     )}
@@ -199,16 +221,16 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
                 {/* Timestamp */}
                 <p className="text-xs text-gray-400 mb-4">
-                  🕒{' '}
+                  Submitted at: 🕒{' '}
                   {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                    }).format(new Date(response.createdAt))
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                      }).format(new Date(response.createdAt))
                     : 'Unknown'}
                 </p>
 

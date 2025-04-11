@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Header2 } from '@/components/header2';
+import { toast } from 'sonner';
 
 export default function CreateFormPage() {
     const router = useRouter();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [questions, setQuestions] = useState<string[]>(['']);
-    const [message, setMessage] = useState('');
     const [submitting, setSubmitting] = useState(false); // State to track form submission
     const { user } = useUser();
     const userId = user?.id;
@@ -47,19 +47,25 @@ export default function CreateFormPage() {
             });
 
             if (response.ok) {
-                setMessage('✅ Form created successfully!');
+                toast.success(' Your product has been created!', {
+                    style: { color: 'green' }, 
+                });
                 setTitle('');
                 setDescription('');
                 setQuestions(['']);
                 router.push('/dashboard');
             } else {
-                setMessage('❌ Failed to create form.');
+                toast.error(' Your product was not created.', {
+                    style: { color: 'red' }, 
+                });
             }
         } catch (err) {
             console.error('Error creating form:', err);
-            setMessage('⚠️ An error occurred.');
+            toast.error('⚠️ An error occurred while creating your product.', {
+                style: { color: 'red' }, 
+            });
         } finally {
-            setSubmitting(false); // Re-enable the button after submission
+            setSubmitting(false); 
         }
     };
 
@@ -187,7 +193,7 @@ export default function CreateFormPage() {
                                     <button
                                         type="button"
                                         onClick={handleAddQuestion}
-                                        className="text-sm text-indigo-600 hover:underline mt-2"
+                                        className="text-sm text-indigo-600 hover:underline mt-2 cursor-pointer"
                                     >
                                         + Add another question
                                     </button>
@@ -196,7 +202,7 @@ export default function CreateFormPage() {
                                 {/* Submit */}
                                 <button
                                     type="submit"
-                                    className={`w-full py-2 text-lg font-semibold text-white rounded-xl shadow-md transition ${
+                                    className={`w-full py-2 text-lg font-semibold text-white rounded-xl shadow-md transition cursor-pointer ${
                                         submitting
                                             ? 'bg-gray-400 cursor-not-allowed'
                                             : 'bg-indigo-600 hover:bg-indigo-700'
@@ -205,18 +211,13 @@ export default function CreateFormPage() {
                                 >
                                     {submitting ? 'Creating...' : 'Create Form'}
                                 </button>
-
-                                {/* Message */}
-                                {message && (
-                                    <p className="text-center text-sm text-green-600 mt-4">{message}</p>
-                                )}
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <footer className="w-full text-center py-2 px-8 text-lg text-black mt-auto bottom-0">
-                <p>© 2024 FideFeed. All rights reserved.</p>
+            <footer className="bg-gray-800 text-white py-4 text-center">
+                <p>&copy; 2025 FideFeed. All rights reserved.</p>
             </footer>
         </div>
     );
