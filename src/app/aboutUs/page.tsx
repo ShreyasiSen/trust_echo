@@ -4,19 +4,19 @@ import { Header2 } from '@/components/header2';
 const teamMembers = [
     {
         name: 'Shreyasi Sen',
-        role: 'Frontend Developer',
+        role: 'FullStack Developer',
         bio: ' I’m a web developer who is passionate about learning new technologies and grow.I’m also invested in developing my skills in UI/UX design.',
         image: '/Shreyasi.jpg',
     },
     {
         name: 'Chayan Ghosh',
-        role: 'Backend Developer',
+        role: 'FullStack Developer',
         bio: 'Bob specializes in building robust backend systems and API integrations. He loves working with Node.js and PostgreSQL.',
         image: '/Chayan.png',
     },
     {
         name: 'Soham Chatterjee',
-        role: 'Product Designer',
+        role: 'UI/UX and Marketing',
         bio: 'Carol focuses on user-centered design with a knack for creating beautiful and functional digital products.',
         image: '/Soham2.png',
     },
@@ -48,15 +48,16 @@ const AboutUs: FC = () => {
                         </section>
 
                     </div>
-                    <div className="md:w-1/2">
-                        <iframe
-                            className="w-full h-64 md:h-80"
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                            title="About Video"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
+                    <div className="md:w-1/2 w-full p-6 flex items-center justify-center text-center min-h-[200px] sm:min-h-[250px] md:min-h-[300px] relative overflow-hidden group transition-all duration-500 hover:shadow-lg hover:scale-[1.01]">
+                    
+
+                        {/* Content */}
+                        <div className="relative z-10">
+                            <p className="text-xl sm:text-2xl font-semibold text-blue-700">🎥 Video uploading soon...</p>
+                            <p className="text-sm text-gray-500 mt-2">Stay tuned! We&apos;ll be adding an awesome video here shortly.</p>
+                        </div>
                     </div>
+
                 </section>
 
                 {/* How It Works */}
@@ -110,7 +111,7 @@ const AboutUs: FC = () => {
                                 />
                                 <h3 className="mt-4 text-xl font-semibold text-gray-800">{member.name}</h3>
                                 <p className="text-fuchsia-600 font-medium">{member.role}</p>
-                                <p className="text-gray-600 text-sm mt-2">{member.bio}</p>
+                                {/* <p className="text-gray-600 text-sm mt-2">{member.bio}</p> */}
                             </div>
                         ))}
                     </div>

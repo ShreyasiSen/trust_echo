@@ -7,7 +7,7 @@ import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
-import { useRouter } from 'next/navigation';
+
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'spam' | 'text'>('text');
   const [deleting, setDeleting] = useState<string | null>(null); // Track which response is being deleted
-  const router = useRouter(); // Initialize the router
+
   interface Response {
     id: string;
     responderName?: string;
@@ -159,123 +159,124 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
 
           {/* Responses */}
-          <div className="w-full flex flex-wrap justify-center gap-6">
+          <div className="w-full flex flex-wrap justify-center">
             {filteredResponses.map((response) => (
               <div
-                key={response?.id}
-                onClick={() => router.push(`/responses/${response.id}`)}
-                className="w-full sm:w-[48%] max-w-xl bg-white/50 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-5 shadow-xl transition-transform transform hover:scale-[1.01] hover:shadow-2xl duration-[800ms] relative group animate-fade-in-slow"
-              >
-                {/* Gradient Background Glow */}
-                <div className="absolute top-0 left-0 w-full h-full rounded-2xl bg-blue-300 opacity-20 "></div>
-
-                {/* Header Info */}
-                <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 leading-snug">
-                      👤 {response?.responderName ?? 'Anonymous'}
-                    </h3>
-                    <p className="text-md text-gray-600 italic">
-                      📧 {response?.responderEmail ?? 'No Email Provided'}
-                    </p>
-                  </div>
-
-                  {/* Options Menu */}
-                  <div className="relative">
+              key={response?.id}
+              className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-8 mb-10 border border-gray-200 relative hover:shadow-lg hover:scale-[1.01] transition-all duration-300 ease-in-out"
+            >
+              {/* Options Menu (Three Dots) */}
+              <div className="absolute top-4 right-4">
+                <button
+                  onClick={() => toggleMenu(response.id)}
+                  className="text-gray-500 hover:text-indigo-700 p-2 cursor-pointer rounded-full transition"
+                  title="Options"
+                >
+                  <HiOutlineDotsVertical size={20} />
+                </button>
+                {activeMenu === response.id && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
                     <button
-                      onClick={() => toggleMenu(response.id)}
-                      className="text-gray-500 hover:text-indigo-700 p-2 cursor-pointer rounded-full transition"
-                      title="Options"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                      onClick={() => {
+                        const publicLink = `${window.location.origin}/responses/${response.id}`;
+                        navigator.clipboard.writeText(publicLink);
+                        toast.success('Public link copied to clipboard!', {
+                          position: 'bottom-right',
+                        });
+                      }}
                     >
-                      <HiOutlineDotsVertical size={20} />
+                      <FaLink className="mr-2" /> Copy Link
                     </button>
-                    {activeMenu === response.id && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
-                        <button
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
-                          onClick={() => {
-                            const publicLink = `${window.location.origin}/responses/${response.id}`;
-                            navigator.clipboard.writeText(publicLink);
-                            toast.success('Public link copied to clipboard!', {
-                              position: 'bottom-right',
-                            });
-                          }}
-                        >
-                          <FaLink className="mr-2" /> Copy Link
-                        </button>
-                        <button
-                          onClick={() => handleDeleteResponse(response.id)}
-                          className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
-                        >
-                          {deleting === response.id ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
-                          ) : (
-                            <>
-                              <FaTrash className="mr-2" /> Delete
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Timestamp */}
-                <p className="text-xs text-gray-400 mb-4">
-                  Submitted at: 🕒{' '}
-                  {response?.createdAt
-                    ? new Intl.DateTimeFormat('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,
-                      }).format(new Date(response.createdAt))
-                    : 'Unknown'}
-                </p>
-
-                {/* Questions and Answers */}
-                <div className="space-y-4 mb-6">
-                  {questions.map((question, idx) => (
-                    <div key={idx}>
-                      <p className="text-sm font-semibold text-gray-800 mb-1">
-                        Q{idx + 1}: <span className="italic">{question}</span>
-                      </p>
-                      <p className="text-sm text-gray-700 bg-gray-100 rounded-md px-3 py-2 border-l-4 border-indigo-400">
-                        A: {response?.answers?.[idx] ?? 'N/A'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Rating */}
-                {response?.rating !== undefined && (
-                  <div className="flex items-center gap-2 text-sm text-gray-700 font-medium mb-2">
-                    <span>⭐ Rating:</span>
-                    <div className="flex">
-                      {Array.from({ length: 5 }).map((_, i) =>
-                        i < (response.rating ?? 0) ? (
-                          <FaStar key={i} className="text-yellow-400" />
-                        ) : (
-                          <FaRegStar key={i} className="text-yellow-400" />
-                        )
+                    <button
+                      onClick={() => handleDeleteResponse(response.id)}
+                      className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+                    >
+                      {deleting === response.id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
+                      ) : (
+                        <>
+                          <FaTrash className="mr-2" /> Delete
+                        </>
                       )}
-                    </div>
+                    </button>
                   </div>
-                )}
-
-                {/* Spam Classification */}
-                {response?.spam !== undefined && (
-                  <p className="text-sm italic text-red-400 mt-2">
-                    Classification: {response?.spam ? '🚫 Spam' : '✅ Not Spam'}
-                  </p>
                 )}
               </div>
+            
+              {/* Two-Column Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left Column: Name, Email, Time */}
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    👤 {response?.responderName ?? 'Anonymous'}
+                  </h3>
+                  <p className="text-gray-600">
+                    📧 {response?.responderEmail ?? 'No Email Provided'}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    🕒{' '}
+                    {response?.createdAt
+                      ? new Intl.DateTimeFormat('en-GB', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false,
+                        }).format(new Date(response.createdAt))
+                      : 'Unknown'}
+                  </p>
+                </div>
+            
+                {/* Right Column: Rating + Q&A + Spam */}
+                <div className="space-y-6">
+                  {/* Rating */}
+                  {response?.rating !== undefined && (
+                    <div className="flex items-center text-sm text-gray-700 font-medium">
+                      Rating:&nbsp;
+                      <div className="flex">
+                        {Array.from({ length: 5 }).map((_, i) =>
+                          i < (response.rating ?? 0) ? (
+                            <FaStar key={i} className="text-yellow-400" />
+                          ) : (
+                            <FaRegStar key={i} className="text-yellow-400" />
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+            
+                  {/* Questions and Answers */}
+                  <div className="space-y-4">
+                    {questions.map((question, idx) => (
+                      <div key={idx}>
+                        <p className="text-base font-semibold text-gray-800">
+                          Q{idx + 1}: <span className="italic">{question}</span>
+                        </p>
+                        <p className="text-base text-gray-700 ml-2 mt-1">
+                          A: {response?.answers?.[idx] ?? 'N/A'}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+            
+                  {/* Spam Info */}
+                  {response?.spam !== undefined && (
+                    <p className="text-sm text-red-500 italic">
+                      {response?.spam ? '🚫 Spam' : '✅ Not Spam'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
             ))}
           </div>
         </div>
       </div>
+      <footer className="bg-gray-800 text-white py-4 text-center">
+                <p>&copy; 2025 FideFeed. All rights reserved.</p>
+            </footer>
     </div>
   );
 }
