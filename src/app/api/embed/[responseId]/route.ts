@@ -39,11 +39,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ response
     const ratingFontSize = parseInt(url.searchParams.get('ratingFontSize') || '18', 10);
     const answerFont = url.searchParams.get('answerFont') || 'Arial';
     const answerFontSize = parseInt(url.searchParams.get('answerFontSize') || '14', 10);
-    const borderWidth= parseInt(url.searchParams.get('borderWidth') || '1', 10);
+    const borderWidth = parseInt(url.searchParams.get('borderWidth') || '1', 10);
     // Generate the HTML content for the iframe
-   
 
-    const borderColor= url.searchParams.get('borderColor') || '#333333';
+
+    const borderColor = url.searchParams.get('borderColor') || '#333333';
     const html = `
  <!DOCTYPE html>
 <html lang="en">
