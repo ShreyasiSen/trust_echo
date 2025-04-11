@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, { params }: { params: { responseId: string } }) {
-  const { responseId } = params;
+export async function GET(req: Request, { params }: { params: Promise<{ responseId: string }> })  {
+  const { responseId } =  await params;
 
   try {
     // Fetch the response data from the database
