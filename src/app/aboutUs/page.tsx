@@ -42,7 +42,7 @@ const AboutUs: FC = () => {
                             </p>
                             <p className="text-lg text-gray-700 leading-relaxed max-w-3xl">
                                 <span className='text-gray-900 font-bold'>Our mission</span> is simple: <span className="font-medium text-gray-900">help you build trust</span> through real stories that speak for your brand.
-                                Whether you're a <span className="font-medium">local brand</span> or a <span className="font-medium">solo creator</span>,
+                                Whether you&apos;re a <span className="font-medium">local brand</span> or a <span className="font-medium">solo creator</span>,
                                 FideFeed turns your happy customers into your most powerful marketing tool.
                             </p>
                         </section>
@@ -128,7 +128,7 @@ const AboutUs: FC = () => {
                             To <span className="font-semibold text-gray-900">empower every business</span>, big or small, to build authentic trust through the voices of <span className="italic text-gray-800">real customers</span>.
                         </p>
                         <p className="mt-4 text-lg text-gray-700 leading-relaxed">
-                            We’re here to <span className="font-medium text-gray-900">simplify testimonials</span> — turning them into your brand’s <span className="text-fuchsia-600 font-semibold">most impactful growth engine</span>.
+                            We&apos;re here to <span className="font-medium text-gray-900">simplify testimonials</span> — turning them into your brand&apos;s <span className="text-fuchsia-600 font-semibold">most impactful growth engine</span>.
                         </p>
                     </div>
                 </section>
@@ -141,7 +141,7 @@ const AboutUs: FC = () => {
                         </span>
                     </h2>
                     <p className="text-lg text-gray-700">
-                        Interested in partnering or have questions? We're happy to reply — just drop us a line at
+                        Interested in partnering or have questions? We&apos;re happy to reply — just drop us a line at
                         <a
                             href="mailto:info@example.com"
                             className="text-indigo-600 font-medium underline hover:text-purple-600 transition-colors duration-200 ml-1"
