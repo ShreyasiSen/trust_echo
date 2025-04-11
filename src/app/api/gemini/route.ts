@@ -20,12 +20,13 @@ export async function POST(req: Request) {
 
     // Spam classification prompt
     const spamPrompt = `
-      Determine if the answers provided are related to the questions asked.
-      If any answer is not related to its corresponding question, classify the response as "spam".
-      Otherwise, classify it as "not spam".
+      You are a spam detection AI. Your task is to classify the following content as "spam" or "not spam".
+      You will be provided with a list of questions and answers.
+      Each question is followed by its corresponding answer.
+      Your goal is to determine if the answers are spam or not based on the content provided.
+      You should only respond with "spam" or "not spam" as the result.
       Questions and Answers:
       ${content}
-      Provide only "spam" or "not spam" as the result.
     `;
 
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); // Use a free or lower-tier model
