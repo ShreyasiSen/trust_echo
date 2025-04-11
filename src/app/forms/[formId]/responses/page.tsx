@@ -221,7 +221,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
                 {/* Timestamp */}
                 <p className="text-xs text-gray-400 mb-4">
-                  🕒{' '}
+                  Submitted at: 🕒{' '}
                   {response?.createdAt
                     ? new Intl.DateTimeFormat('en-GB', {
                         day: '2-digit',

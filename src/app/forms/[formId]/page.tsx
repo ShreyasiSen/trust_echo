@@ -266,7 +266,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${
+                  className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer ${
                     submitting
                       ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
                       : 'bg-indigo-600 hover:bg-indigo-700 text-white'

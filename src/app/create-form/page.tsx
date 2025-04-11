@@ -193,7 +193,7 @@ export default function CreateFormPage() {
                                     <button
                                         type="button"
                                         onClick={handleAddQuestion}
-                                        className="text-sm text-indigo-600 hover:underline mt-2"
+                                        className="text-sm text-indigo-600 hover:underline mt-2 cursor-pointer"
                                     >
                                         + Add another question
                                     </button>
@@ -202,7 +202,7 @@ export default function CreateFormPage() {
                                 {/* Submit */}
                                 <button
                                     type="submit"
-                                    className={`w-full py-2 text-lg font-semibold text-white rounded-xl shadow-md transition ${
+                                    className={`w-full py-2 text-lg font-semibold text-white rounded-xl shadow-md transition cursor-pointer ${
                                         submitting
                                             ? 'bg-gray-400 cursor-not-allowed'
                                             : 'bg-indigo-600 hover:bg-indigo-700'

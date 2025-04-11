@@ -261,7 +261,7 @@ export default function Dashboard() {
                           />
                           <button
                             onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
-                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm ${
+                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm cursor-pointer ${
                               copied === form.id
                                 ? 'bg-blue-700 hover:bg-blue-800 text-white'
                                 : 'bg-black hover:bg-gray-700 text-white'
