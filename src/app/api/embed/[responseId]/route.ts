@@ -168,7 +168,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ response
 
 
     return new Response(html, {
-      headers: { 'Content-Type': 'text/html' },
+      headers: {
+        'Content-Type': 'text/html',
+        // Allow this content to be embedded in an iframe on any domain:
+        'Content-Security-Policy': 'frame-ancestors *'
+      },
     });
   } catch (error) {
     console.error('Error fetching response:', error);
