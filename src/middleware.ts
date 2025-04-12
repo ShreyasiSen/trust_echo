@@ -4,7 +4,7 @@ const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/create-form(.*)',
   '/forms/[formId]/responses(.*)',
-  '/responses/[responseId](.*)',
+
 ]);
 
 
