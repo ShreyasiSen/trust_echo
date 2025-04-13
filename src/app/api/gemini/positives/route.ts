@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 
@@ -12,23 +11,23 @@ export async function POST(req: Request) {
     // Combine the Q&A strings into a single formatted block
     const formattedQanda = questionsAndAnswers.join('\n\n');
 
-    const painPointPrompt = `
-        You will give detail about the pain points of the user based on the following Q&A.
-        You will be provided with a list of questions and answers.
-        Each question is followed by its corresponding answer.
-        Your goal is to determine the pain points based on the content provided.
-        The result should be descriptive and should include bullet points.
-        Do not give subpoints as inside parent  points and make the subpoints appear seperately as different points 
+    const positiveImpactPrompt = `
+    You will provide detailed feedback about the positive impact of the product on the user based on the following Q&A.
+    You will be provided with a list of questions and answers.
+    Each question is followed by its corresponding answer.
+    Your goal is to identify and highlight only the positive aspects and benefits based on the content provided.
+    Do not include any negative feedback or issues in the result.
+    The result should be descriptive, focused on the positive impact, and should include bullet points.
+    Do not give subpoints as inside parent  points and make the subpoints appear seperately as different points 
         You can  shortly explain each points but do not give any nested point and you should as many number of points as possible without any subpoints 
-        Here is the Q&A:
-        ${formattedQanda}
-    `;
+    Here is the Q&A:
+    ${formattedQanda}
+`;
 
-    console.log('Pain Point Prompt:', painPointPrompt);
 
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        const painPointResult = await model.generateContent(painPointPrompt);
+        const painPointResult = await model.generateContent(positiveImpactPrompt);
         const painPointText = (await painPointResult.response).text().trim();
         console.log('Pain Point Result:', painPointText);
 

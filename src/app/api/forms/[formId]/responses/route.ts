@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 export async function GET(req: Request, context: { params: Promise<{ formId: string }> }) {
   const { formId } = await context.params; // Await the params Promise to extract formId
-
+  if(!formId) {
+    return NextResponse.json({ error: 'Form ID is required' }, { status: 400 });
+  }
   try {
     const responses = await prisma.response.findMany({
       where: { formId },
