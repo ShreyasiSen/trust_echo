@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Header2 } from '@/components/header2';
 import Link from 'next/link';
 import { FiGrid, FiCopy } from 'react-icons/fi';
+import { useSearchParams } from 'next/navigation';
 
 // Define a type for the testimonial
 interface Testimonial {
@@ -22,8 +23,10 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   const [bgColor, setBgColor] = useState('#f9f9f9');
   const [fontSize, setFontSize] = useState(16);
   const [textColor, setTextColor] = useState('#333');
-  const [margin, setMargin] = useState(20);
-  const [alignment, setAlignment] = useState<'center' | 'left'>('center'); // Alignment option
+  // const [margin, setMargin] = useState(20);
+  // const [alignment, setAlignment] = useState<'center' | 'left'>('center'); // Alignment option
+  const searchParams = useSearchParams();
+  const layout = searchParams.get('layout') || '1'; // Default to layout 1
 
   useEffect(() => {
     const fetchResponseId = async () => {
@@ -53,7 +56,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   }, [params]);
 
   const embedCode = responseId
-    ? `<div class="custom-embed" data-response-id="${responseId}" style="width:100%; background-color: ${bgColor}; font-size: ${fontSize}px; color: ${textColor}; text-align: ${alignment};"></div>
+    ? `<div class="custom-embed" data-response-id="${responseId}" data-layout="${layout}" style="width:100%; background-color: ${bgColor}; font-size: ${fontSize}px; color: ${textColor};"></div>
 <script src="${process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000'}/utils/customEmbed.js" defer></script>`
     : '';
 
@@ -66,144 +69,158 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   };
 
   return (
-    <div>
+    <div className="bg-white min-h-screen  flex flex-col font-sans">
       <Header2 />
-      <div className="min-h-screen font-sans">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex flex-col lg:flex-row gap-10">
-            <div className="lg:w-2/3 w-full space-y-10 font-mono text-sm mt-20">
-              <div className="w-full mb-6 sm:mb-10 flex justify-between items-center gap-2 flex-wrap">
-                <h2 className="text-3xl font-bold text-black tracking-wide">Live Preview</h2>
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center gap-2 text-lg sm:text-md font-semibold text-indigo-600 hover:text-indigo-800 transition-all"
-                >
-                  <FiGrid size={25} />
-                  Dashboard
-                </Link>
-              </div>
+      <main className="flex-grow">
+      <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
 
-              {/* Customization Options */}
-              <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg mb-6">
-                <h3 className="font-semibold text-lg mb-2">Customize Preview</h3>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Background Color</label>
-                    <input
-                      type="color"
-                      value={bgColor}
-                      onChange={(e) => setBgColor(e.target.value)}
-                      className="mt-1 block w-16 h-8 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Font Size</label>
-                    <input
-                      type="number"
-                      value={fontSize}
-                      onChange={(e) => setFontSize(Number(e.target.value))}
-                      className="mt-1 block w-20 border border-gray-300 rounded"
-                      min={12}
-                      max={24}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Text Color</label>
-                    <input
-                      type="color"
-                      value={textColor}
-                      onChange={(e) => setTextColor(e.target.value)}
-                      className="mt-1 block w-16 h-8 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Margin</label>
-                    <input
-                      type="number"
-                      value={margin}
-                      onChange={(e) => setMargin(Number(e.target.value))}
-                      className="mt-1 block w-20 border border-gray-300 rounded"
-                      min={0}
-                      max={50}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Alignment</label>
-                    <select
-                      value={alignment}
-                      onChange={(e) => setAlignment(e.target.value as 'center' | 'left')}
-                      className="mt-1 block w-full border border-gray-300 rounded"
-                    >
-                      <option value="center">Center</option>
-                      <option value="left">Left</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+        {/* Top Bar */}
+        <div className="flex justify-between items-center mb-8 border-b pb-4">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900"> Live Preview</h2>
+          <Link
+            href="/dashboard"
+            className="cursor-pointer inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 text-sm font-medium transition"
+          >
+            <FiGrid size={18} />
+            Go to Dashboard
+          </Link>
+        </div>
 
-              {responseId ? (
-                <>
-                  <div
-                    className="custom-embed"
-                    data-response-id={responseId}
-                    style={{ width: '100%' }}
-                  ></div>
-
-                  {/* Show the Testimonial */}
-                  {testimonial && (
-                    <div
-                      className="mt-6 p-4 border border-gray-200 rounded-lg"
-                      style={{
-                        backgroundColor: bgColor,
-                        fontSize: `${fontSize}px`,
-                        color: textColor,
-                        margin: `${margin}px`,
-                        textAlign: alignment,
-                      }}
-                    >
-                      <img
-                        src={`https://via.placeholder.com/100?text=Avatar`} // Placeholder for profile picture
-                        alt="Profile"
-                        style={{
-                          borderRadius: '50%',
-                          margin: alignment === 'center' ? '0 auto' : '0',
-                          display: 'block',
-                        }}
-                      />
-                      <p className="font-bold mt-4">{testimonial.responderName}</p>
-                      <p className="text-sm text-gray-500">{testimonial.responderEmail}</p>
-                      <p className="italic mt-4">"{testimonial.answers.join(' ')}"</p>
-                      <p className="text-yellow-500 mt-4">{testimonial.ratingStars}</p>
-                    </div>
-                  )}
-
-                  {/* Embed Code */}
-                  <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg mt-6 relative">
-                    <h3 className="font-semibold text-lg mb-2">Embed this response:</h3>
-                    <pre className="text-xs whitespace-pre-wrap bg-white p-2 rounded overflow-x-auto border border-dashed border-gray-300">
-                      {embedCode}
-                    </pre>
-                    <button
-                      onClick={handleCopy}
-                      className="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
-                    >
-                      <FiCopy size={18} />
-                      {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="text-gray-400 text-lg text-center py-12">
-                  <span className="animate-pulse">Loading preview...</span>
-                </div>
-              )}
+        {/* Configuration Panel */}
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 shadow-sm mb-10">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4"> Customize Your Embed</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Background Color</label>
+              <input
+                type="color"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                className="w-14 h-8 border border-gray-300 rounded shadow"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Font Size</label>
+              <input
+                type="number"
+                value={fontSize}
+                onChange={(e) => setFontSize(Number(e.target.value))}
+                className="w-20 border border-gray-300 rounded px-2 py-1 shadow-sm"
+                min={12}
+                max={23}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Text Color</label>
+              <input
+                type="color"
+                value={textColor}
+                onChange={(e) => setTextColor(e.target.value)}
+                className="w-14 h-8 border border-gray-300 rounded shadow"
+              />
             </div>
           </div>
         </div>
+
+        {/* Live Preview */}
+        {responseId ? (
+          <>
+            <div
+              className="custom-embed animate-fade-in"
+              data-response-id={responseId}
+              style={{ width: '100%' }}
+            ></div>
+
+            {testimonial && (
+              <div className="mt-8">
+                {layout === '1' && (
+                  <div
+                    className="p-6 bg-white rounded-xl shadow-md text-center transition-all duration-300 hover:shadow-lg"
+                    style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                  >
+                    <img
+                      src="https://i.pravatar.cc/100?img=32"
+                      className="mx-auto w-20 h-20 rounded-full border object-cover mb-3"
+                      alt="Avatar"
+                    />
+                    <h3 className=" font-semibold">{testimonial.responderName}</h3>
+                    <p className="text-sm text-gray-700">{testimonial.responderEmail}</p>
+                    <div className="my-2 text-yellow-500 text-lg">{testimonial.ratingStars}</div>
+                    <p className="italic">“{testimonial.answers.join(' ')}”</p>
+                  </div>
+                )}
+
+                {layout === '2' && (
+                  <div
+                    className="px-6 py-8 bg-white rounded-xl shadow-md text-center"
+                    style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                  >
+                    <p className="italic mb-6">“{testimonial.answers.join(' ')}”</p>
+                    <img
+                      src="https://i.pravatar.cc/80"
+                      alt="Reviewer"
+                      className="mx-auto w-16 h-16 rounded-full border object-cover mb-2"
+                    />
+                    <p className="font-semibold">{testimonial.responderName}</p>
+                    <p className="text-xs text-blue-600">{testimonial.responderRole || 'Reviewer'}</p>
+                  </div>
+                )}
+
+                {layout === '3' && (
+                  <div
+                    className="p-6 bg-white rounded-xl shadow-md text-left mx-auto"
+                    style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                    >
+                    <p className="leading-relaxed mb-4">“{testimonial.answers.join(' ')}”</p>
+                    <div className="flex items-center gap-4">
+                      <img
+                        src="https://i.pravatar.cc/100?img=32"
+                        alt="Avatar"
+                        className="w-12 h-12 rounded-full border object-cover"
+                      />
+                      <div>
+                        <p className=" font-semibold">{testimonial.responderName}</p>
+                        <p className="text-xs text-gray-500">{testimonial.responderRole || 'Reviewer'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Embed Code Box */}
+            <div className="mt-10 bg-[#0f1117] border border-gray-800 rounded-xl p-5 relative shadow-md">
+              <h4 className="font-semibold text-green-400 text-sm mb-3 tracking-wide uppercase flex items-center gap-2">
+                <span>🧩</span> Embed Snippet
+              </h4>
+
+              <div className="bg-[#1a1c23] text-green-300 text-sm rounded-md px-4 py-3 font-mono overflow-x-auto border border-gray-700">
+                <pre className="whitespace-pre-wrap">{embedCode}</pre>
+              </div>
+
+              <button
+                onClick={handleCopy}
+                className="cursor-pointer absolute top-5 right-5 bg-[#1a1c23] border border-gray-600 text-green-400 hover:bg-green-600 hover:text-white transition-all px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1"
+              >
+                <FiCopy size={14} />
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+
+          </>
+        ) : (
+          <div className="text-center text-gray-500 py-20 text-2xl">
+            <span className="animate-pulse">Loading preview...</span>
+          </div>
+        )}
       </div>
+      </main>
+      {/* Footer */}
       <footer className="bg-pink-50 text-black py-4 text-center">
         <p>&copy; 2025 FideFeed. All rights reserved.</p>
       </footer>
     </div>
+
+
   );
 }

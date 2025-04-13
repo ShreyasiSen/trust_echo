@@ -1,34 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const embeds = document.querySelectorAll('.custom-embed');
-  
-    embeds.forEach((el) => {
-      const responseId = el.getAttribute('data-response-id');
-  
-      if (responseId) {
-        // Fetching testimonial data from the API
-        fetch(`/api/responses/${responseId}`)
-          .then((res) => res.json())
-          .then((data) => {
-            // Combine answers into a single string
-            const answers = data.answers.join(' ');
-  
-            // Format the rating as stars
-            const ratingStars = '★'.repeat(data.rating || 0) + '☆'.repeat(5 - (data.rating || 0));
-  
-            // Create the testimonial HTML
-            const testimonialHTML = `
-              <div style="border: 1px solid #ddd; background-color: ${el.style.backgroundColor || '#f9f9f9'}; font-size: ${el.style.fontSize || '16px'}; color: ${el.style.color || '#333'};">
-                <p style="font-style: italic; font-size: 1.1em;">"${answers}"</p>
-                <p style="text-align: right; font-weight: bold; margin-top: 10px;">– ${data.responderName}</p>
-                <p style="text-align: right; color: gold; margin-top: 5px;">${ratingStars}</p>
+  // Inject Tailwind CDN dynamically into the head of the document
+  const tailwindScript = document.createElement('script');
+  tailwindScript.src = 'https://cdn.tailwindcss.com';
+  document.head.appendChild(tailwindScript);
+
+  const embeds = document.querySelectorAll('.custom-embed');
+
+  embeds.forEach((el) => {
+    const responseId = el.getAttribute('data-response-id');
+    const layout = el.getAttribute('data-layout') || '1';
+
+    if (responseId) {
+      fetch(`/api/responses/${responseId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const answers = data.answers.join(' ');
+          const ratingStars = '★'.repeat(data.rating || 0) + '☆'.repeat(5 - (data.rating || 0));
+
+          let html = '';
+
+          if (layout === '1') {
+            html = `
+              <div class="text-center p-4 rounded shadow border bg-white"
+                   style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
+                <div class="flex justify-center">
+                  <img src="https://i.pravatar.cc/100?img=32" class="w-20 h-20 rounded-full border object-cover" />
+                </div>
+                <h3 class=" font-semibold">${data.responderName}</h3>
+                <p class=" text-gray-800">${data.responderEmail}</p>
+                <div class="text-yellow-400 text-sm">${ratingStars}</div>
+                <p class=" italic">“${answers}”</p>
               </div>
             `;
-            el.innerHTML = testimonialHTML;
-          })
-          .catch((err) => {
-            el.innerHTML = `<p style="color:red;">Error loading testimonial.</p>`;
-            console.error('Error fetching testimonial:', err);
-          });
-      }
-    });
+          }
+
+          else if (layout === '2') {
+            html = `
+              <div class="text-center p-4 px-6 py-8 rounded shadow border bg-white"
+                   style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
+                <p class="italic mb-6">“${answers}”</p>
+                <div class="flex justify-center mb-2">
+                  <img src="https://i.pravatar.cc/80" class="w-16 h-16 rounded-full border-2 border-gray-300 object-cover" />
+                </div>
+                <p class=" font-semibold">${data.responderName}</p>
+                <p class="text-xs text-blue-600 font-medium">${data.responderRole || 'Reviewer'}</p>
+              </div>
+            `;
+          }
+
+          else if (layout === '3') {
+            html = `
+              <div class="p-6 rounded shadow border bg-white text-left"
+                   style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
+                <p class="italic mb-6 leading-relaxed">“${answers}”</p>
+                <div class="flex items-center gap-4">
+                  <img src="https://i.pravatar.cc/100?img=32" class="w-12 h-12 rounded-full border border-gray-300 object-cover" />
+                  <div>
+                    <p class=" font-semibold">${data.responderName}</p>
+                    <p class="text-xs text-gray-500">${data.responderRole || 'Reviewer'}</p>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          el.innerHTML = html;
+        })
+        .catch((err) => {
+          el.innerHTML = `<p class="text-red-600 text-sm">Error loading testimonial.</p>`;
+          console.error('Error fetching testimonial:', err);
+        });
+    }
   });
+});
