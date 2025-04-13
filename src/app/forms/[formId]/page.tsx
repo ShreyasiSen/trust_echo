@@ -3,6 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa'; // Import star icons from react-icons
 import { motion } from 'framer-motion'; // Import motion for animations
+import { z } from 'zod'; 
+
+
+const responseSchema = z.object({
+  responderName: z.string().min(1, 'Name is required'),
+  responderEmail: z.string().email('Invalid email address'),
+  answers: z.array(z.string().min(1, 'Answer is required')),
+  rating: z.number().min(1, 'Rating is required'),
+});
 
 export default function ResponseForm({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -16,6 +25,8 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
   const [formTitle, setFormTitle] = useState('');
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState<Record<string, string>>({}); // Track validation errors
+  const [submitting, setSubmitting] = useState(false); // Track submission state
 
   useEffect(() => {
     const fetchFormId = async () => {
@@ -55,18 +66,17 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form inputs
-    if (!responderName || !responderEmail || answers.length !== questions.length || answers.some((a) => !a)) {
-      console.error('Please fill out all required fields.');
-      return;
-    }
-
-    if (!rating) {
-      console.error('Please provide a star rating.');
-      return;
-    }
-
+    // Validate form inputs using Zod
     try {
+      responseSchema.parse({
+        responderName,
+        responderEmail,
+        answers,
+        rating,
+      });
+
+      // If validation passes, submit the form
+      setSubmitting(true); // Set submitting state to true
       const response = await fetch(`/api/forms/${formId}/response`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,7 +95,20 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
         console.error('Failed to submit the response.');
       }
     } catch (err) {
-      console.error('Error submitting response:', err);
+      if (err instanceof z.ZodError) {
+        // Map Zod errors to a format suitable for displaying
+        const fieldErrors: Record<string, string> = {};
+        err.errors.forEach((error) => {
+          if (error.path[0]) {
+            fieldErrors[error.path[0] as string] = error.message;
+          }
+        });
+        setErrors(fieldErrors);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    } finally {
+      setSubmitting(false); // Reset submitting state
     }
   };
 
@@ -116,7 +139,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
 
   if (success) {
     return (
-      <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-md text-center">
+      <div className="max-w-2xl m-auto p-6 bg-white shadow-md rounded-md text-center">
         <h1 className="text-2xl font-bold mb-4">{success}</h1>
         <p className="text-gray-600">We appreciate your feedback!</p>
       </div>
@@ -179,6 +202,9 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
                 />
+                {errors.responderName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.responderName}</p>
+                )}
               </div>
 
               <div>
@@ -192,6 +218,9 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
                 />
+                {errors.responderEmail && (
+                  <p className="text-red-500 text-sm mt-1">{errors.responderEmail}</p>
+                )}
               </div>
 
               {questions.map((question, idx) => (
@@ -210,6 +239,9 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                     rows={3}
                     required
                   />
+                  {errors.answers && (
+                    <p className="text-red-500 text-sm mt-1">{errors.answers}</p>
+                  )}
                 </div>
               ))}
 
@@ -218,6 +250,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                   Rate our services <span className="text-red-600">*</span>
                 </label>
                 <div className="flex items-center space-x-2">{renderStars()}</div>
+                {errors.rating && <p className="text-red-500 text-sm mt-1">{errors.rating}</p>}
               </div>
 
               <div>
@@ -233,9 +266,14 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-28 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer ${
+                    submitting
+                      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                      : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  }`}
+                  disabled={submitting}
                 >
-                  Submit
+                  {submitting ? 'Submitting...' : 'Submit'}
                 </button>
               </div>
             </form>
