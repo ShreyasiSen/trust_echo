@@ -4,11 +4,18 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Header2 } from '@/components/header2';
-import { Trash2, Loader } from 'lucide-react'; 
 import { toast } from 'sonner';
+import { MoreVertical, Pen, Brain, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu"; // Make sure you have shadcn/ui set up
+
 
 export default function Dashboard() {
-  const { user, isLoaded } = useUser(); 
+  const { user, isLoaded } = useUser();
   const router = useRouter();
 
   interface Form {
@@ -16,18 +23,66 @@ export default function Dashboard() {
     title: string;
     description?: string;
     createdAt: string;
+    questions?: string[];
   }
 
   const [copied, setCopied] = useState<string | null>(null);
   const [forms, setForms] = useState<Form[]>([]);
-  const [filteredForms, setFilteredForms] = useState<Form[]>([]); 
+  const [filteredForms, setFilteredForms] = useState<Form[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [editFormId, setEditFormId] = useState<string | null>(null);
+  const [editQuestions, setEditQuestions] = useState<string[]>([]);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+
+  const handleEditClick = (form: Form) => {
+    setEditFormId(form.id);
+    setEditQuestions(form.questions || []);
+    setEditTitle(form.title || '');
+    setEditDescription(form.description || '');
+  };
+
+  const handleUpdate = async () => {
+    try {
+      console.log('Updating form with ID:', editFormId);
+      await fetch(`/api/forms/${editFormId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questions: editQuestions
+        }),
+      });
+      setEditFormId(null); // Close the popup
+      window.location.reload(); // Refresh the page to reflect updates
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
+  };
+
+  const handleAddQuestion = () => {
+    setEditQuestions([...editQuestions, '']);
+  };
+
+  const handleRemoveQuestion = (index: number) => {
+    const updated = [...editQuestions];
+    updated.splice(index, 1);
+    setEditQuestions(updated);
+  };
+
+  const handleQuestionChange = (index: number, value: string) => {
+    const updated = [...editQuestions];
+    updated[index] = value;
+    setEditQuestions(updated);
+  };
+
 
   useEffect(() => {
-    if (!isLoaded || !user) return; 
+    if (!isLoaded || !user) return;
 
     const fetchMongoUserId = async () => {
       try {
@@ -47,11 +102,11 @@ export default function Dashboard() {
   }, [isLoaded, user]);
 
   useEffect(() => {
-    if (!mongoUserId) return; 
+    if (!mongoUserId) return;
 
     const fetchForms = async () => {
       try {
-        const response = await fetch(`/api/forms/user/${mongoUserId}`); 
+        const response = await fetch(`/api/forms/user/${mongoUserId}`);
         if (response.ok) {
           const data = await response.json();
           setForms(data);
@@ -86,11 +141,11 @@ export default function Dashboard() {
 
       if (response.ok) {
         setForms((prev) => prev.filter((form) => form.id !== formId));
-        setFilteredForms((prev) => prev.filter((form) => form.id !== formId)); 
+        setFilteredForms((prev) => prev.filter((form) => form.id !== formId));
         toast.success('Form deleted successfully!',
           {
             style: {
-              color:"red"
+              color: "red"
             }
           }
         );
@@ -113,6 +168,12 @@ export default function Dashboard() {
     setTimeout(() => {
       setCopied(null);
     }, 400);
+    toast.success('Link copied to clipboard!', {
+      style: {
+        color: 'green',
+      },
+
+    });
   };
 
   if (!isLoaded) {
@@ -213,18 +274,36 @@ export default function Dashboard() {
                       >
                         {form.title}
                       </div>
-
-                      <button
-                        onClick={() => handleDelete(form.id)}
-                        className="ml-3 p-2 hover:scale-105 transition"
-                        disabled={deleting === form.id} // Disable button while deleting
-                      >
-                        {deleting === form.id ? (
-                          <Loader size={22} className="animate-spin text-red-500" />
-                        ) : (
-                          <Trash2 size={22} className="text-red-500" />
-                        )}
-                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1 hover:bg-gray-100 cursor-pointer rounded-full">
+                            <MoreVertical className="w-4 h-4 text-gray-600" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem
+                            onClick={() => handleEditClick(form)}
+                            className="cursor-pointer"
+                          >
+                            <Pen className="mr-2 h-4 w-4 text-blue-500" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => router.push(`/forms/${form.id}/ai-analysis`)}
+                            className="cursor-pointer"
+                          >
+                            <Brain className="mr-2 h-4 w-4 text-purple-500" />
+                            AI Analysis
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(form.id)}
+                            className="cursor-pointer text-red-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
 
                     {/* Card Body */}
@@ -261,11 +340,10 @@ export default function Dashboard() {
                           />
                           <button
                             onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
-                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm cursor-pointer ${
-                              copied === form.id
-                                ? 'bg-blue-700 hover:bg-blue-800 text-white'
-                                : 'bg-black hover:bg-gray-700 text-white'
-                            }`}
+                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm cursor-pointer ${copied === form.id
+                              ? 'bg-blue-700 hover:bg-blue-800 text-white'
+                              : 'bg-black hover:bg-gray-700 text-white'
+                              }`}
                           >
                             {copied === form.id ? 'Copied' : 'Copy'}
                           </button>
@@ -279,9 +357,95 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      <footer className="bg-gray-800 text-white py-4 text-center">
-                <p>&copy; 2025 FideFeed. All rights reserved.</p>
-            </footer>
+      <footer className="bg-pink-50 text-black py-4 text-center">
+        <p>&copy; 2025 FideFeed. All rights reserved.</p>
+      </footer>
+      {editFormId && (
+        <div className="fixed inset-0 z-50 bg-opacity-20 backdrop-blur-xs flex items-center justify-center">
+          <div className="bg-gradient-to-r from-indigo-100 to-purple-200 rounded-3xl w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-6 sm:p-8 relative shadow-xl transform transition-all ease-in-out duration-500 max-h-[90vh] overflow-y-auto">
+
+            {/* Close button (cross) */}
+            <button
+              onClick={() => setEditFormId(null)}
+              className="cursor-pointer absolute top-4 right-4 text-4xl text-gray-800 hover:text-gray-600 focus:outline-black transition duration-200"
+              aria-label="Close"
+              
+            >
+              &times;
+            </button>
+
+            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center font-sans">Edit Product</h3>
+
+            <label className="block text-base font-medium text-gray-700 mb-3">Title</label>
+            <div className="relative mb-8">
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="w-full px-6 py-4 border border-gray-300 bg-gray-100 text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-not-allowed font-mono"
+                readOnly
+              />
+              <span className="absolute right-14 top-1/2 transform -translate-y-1/2 text-sm text-gray-400">
+                [Read Only]
+              </span>
+            </div>
+
+            <label className="block text-base font-medium text-gray-700 mb-3">Description</label>
+            <div className="relative mb-8">
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                rows={3}
+                className="w-full px-6 py-4 border border-gray-300 bg-gray-100 text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-not-allowed font-mono"
+                readOnly
+              />
+              <span className="absolute right-14 top-1/2 transform -translate-y-1/2 text-sm text-gray-400">
+                [Read Only]
+              </span>
+            </div>
+
+            <label className="block text-base font-medium text-gray-700 mb-3">Questions</label>
+            {editQuestions.map((question, index) => (
+              <div key={index} className="flex items-center mb-6 gap-4">
+                <input
+                  type="text"
+                  value={question}
+                  onChange={(e) => handleQuestionChange(index, e.target.value)}
+                  className="flex-1 px-6 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-sans"
+                />
+                <button
+                  onClick={() => handleRemoveQuestion(index)}
+                  className="text-red-600 text-sm font-semibold hover:underline cursor-pointer"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+
+            <button
+              onClick={handleAddQuestion}
+              className="text-sm text-indigo-600 mb-6 hover:underline font-sans cursor-pointer"
+            >
+              + Add Question
+            </button>
+
+            <div className="flex justify-end gap-6 mt-8">
+              <button
+                onClick={() => setEditFormId(null)}
+                className="cursor-pointer px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none transition ease-in-out duration-200 font-sans"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="cursor-pointer px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-800 focus:outline-none transition ease-in-out duration-200 font-sans"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

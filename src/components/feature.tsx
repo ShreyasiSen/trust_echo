@@ -26,7 +26,7 @@ const Feature = () => {
   ];
 
   return (
-    <section className="py-10 bg-gradient-to-b mt-20 from-pink-50 via-purple-100 to-purple-50" id="features">
+    <section className="py-10 bg-gradient-to-b mt-20 from-pink-50 via-purple-100 to-purple-50 max-w-7xl mx-auto" id="features">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

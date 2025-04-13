@@ -1,42 +1,23 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
+import { PrismaClient } from '@prisma/client'; // Ensure you have a Prisma client instance
 const prisma = new PrismaClient();
-
-export async function GET(req: Request, { params }: { params: Promise<{ responseId: string }>  }) {
-  const { responseId } =  await params;
-
+export async function GET(req: Request, { params }: { params: Promise<{ responseId: string }> }) {
   try {
-   
-    const response = await prisma.response.findUnique({
+    // Await the params Promise to resolve the responseId
+    const { responseId } = await params;
+
+    // Fetch the testimonial from the database using Prisma
+    const testimonial = await prisma.response.findUnique({
       where: { id: responseId },
-      include: {
-        form: {
-          select: {
-            questions: true, 
-          },
-        },
-      },
     });
 
-    if (!response) {
-      return NextResponse.json({ error: 'Response not found' }, { status: 404 });
+    if (!testimonial) {
+      return NextResponse.json({ error: 'Testimonial not found' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      response: {
-        id: response.id,
-        responderName: response.responderName,
-        responderEmail: response.responderEmail,
-        answers: response.answers,
-        createdAt: response.createdAt,
-        rating: response.rating,
-        spam: response.spam,
-      },
-      questions: response.form.questions, // Include the questions from the form
-    });
+    return NextResponse.json(testimonial);
   } catch (error) {
-    console.error('Error fetching response:', error);
+    console.error('Error fetching testimonial:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
+}   

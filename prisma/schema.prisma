@@ -37,6 +37,7 @@ model Response {
   createdAt DateTime? @default(now())
   responderName String
   responderEmail String
+  questions   String[]
   answers String[] 
   rating Int?
   spam Boolean? @default(false)

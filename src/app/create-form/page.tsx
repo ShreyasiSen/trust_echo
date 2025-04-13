@@ -216,7 +216,7 @@ export default function CreateFormPage() {
                     </div>
                 </div>
             </div>
-            <footer className="bg-gray-800 text-white py-4 text-center">
+            <footer className="bg-pink-50 text-black py-4 text-center">
                 <p>&copy; 2025 FideFeed. All rights reserved.</p>
             </footer>
         </div>

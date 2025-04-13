@@ -55,7 +55,7 @@ const Hero = () => {
               </p>
               <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
                 <Button
-                  className="bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-8 py-4 font-[Quicksand] text-lg transition-all duration-300 hover:scale-105 sm:w-auto w-[60%] mx-auto sm:mx-0"
+                  className="cursor-pointer bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-8 py-4 font-[Quicksand] text-lg transition-all duration-300 hover:scale-105 sm:w-auto w-[60%] mx-auto sm:mx-0"
                   onClick={() => (window.location.href = "/dashboard")}
                 >
                   Go to Dashboard
@@ -64,6 +64,7 @@ const Hero = () => {
                 <Button
                   variant="ghost"
                   className="bg-white/80 text-gray-800 border-2 border-gray-400 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 cursor-pointer rounded-full px-8 py-4 font-[Quicksand] text-lg shadow-md hover:shadow-lg sm:w-auto w-[60%] mx-auto sm:mx-0"
+                  onClick={() => (window.location.href = "/aboutUs")}
                 >
                   Learn more
                   <ChevronRight className="ml-2 h-5" />
