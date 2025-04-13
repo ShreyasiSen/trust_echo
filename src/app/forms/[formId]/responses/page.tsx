@@ -281,8 +281,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
             <h2 className="text-4xl font-mono text-black font-semibold mb-8 text-center tracking-tight">
               Choose Embed Layout
             </h2>
-
-
             {/* Layout Options */}
             <div className="flex space-x-8 justify-center">
               {/* Layout 1 – Full Width Review with Centered Avatar */}
@@ -354,7 +352,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
               >
                 {/* Review Content */}
                 <p className="text-sm text-gray-700 mb-6">
-                  "Shadcn UI Kit for Figma has completely transformed our design process. It's incredibly intuitive and saves us so much time. The components are beautifully crafted and customizable."
+                  &quot;Shadcn UI Kit for Figma has completely transformed our design process. It&apos;s incredibly intuitive and saves us so much time. The components are beautifully crafted and customizable.&quot;
                 </p>
 
                 {/* Avatar + Info */}
