@@ -147,7 +147,7 @@ const AboutUs: FC = () => {
                             href="mailto:info@example.com"
                             className="text-indigo-600 font-medium underline hover:text-purple-600 transition-colors duration-200 ml-1"
                         >
-                            info@example.com
+                            justaisehi03@example.com
                         </a>
                     </p>
                 </section>

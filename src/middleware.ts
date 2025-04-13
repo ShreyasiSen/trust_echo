@@ -10,7 +10,7 @@ export default clerkMiddleware(async (auth, req) => {
   const pathname = req.nextUrl.pathname;
 
   // ✅ Skip authentication for embed API route
-  if (pathname.startsWith('/api/embed')) return;
+  if (pathname.startsWith('/api/responses')) return;
 
   if (isProtectedRoute(req)) await auth.protect();
 });

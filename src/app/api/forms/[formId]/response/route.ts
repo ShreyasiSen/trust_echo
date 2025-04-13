@@ -10,10 +10,10 @@ export async function POST(req: Request, context: { params: Promise<{ formId: st
 
   try {
     const body = await req.json();
-    const { responderName, responderEmail, answers, improvementFeedback, rating } = body;
+    const { responderName, responderEmail,questions, answers, improvementFeedback, rating } = body;
 
     // Validate request body
-    if (!responderName || !responderEmail || !answers || !Array.isArray(answers)) {
+    if (!responderName || !responderEmail || !questions || !answers || !Array.isArray(answers)) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
@@ -27,15 +27,14 @@ export async function POST(req: Request, context: { params: Promise<{ formId: st
     }
 
     // Combine questions and answers for context
-    const content = form.questions
+    const content = questions
       .map((q: string, i: number) => `Q: ${q}\nA: ${answers[i] ?? 'N/A'}`)
       .join('\n\n');
 
     // Spam classification prompt
     const spamPrompt = `
-      Determine if the answers provided are related to the questions asked.
-      If any answer is not related to its corresponding question, classify the response as "spam".
-      Otherwise, classify it as "not spam".
+      You are a spam detection system. Your task is to classify the provided content as "spam" or "not spam".
+      The content consists of questions and answers from a form submission.
       Questions and Answers:
       ${content}
       Provide only "spam" or "not spam" as the result.
@@ -53,6 +52,7 @@ export async function POST(req: Request, context: { params: Promise<{ formId: st
         formId,
         responderName,
         responderEmail,
+        questions,
         answers,
         rating,
         spam: isSpam, // Save the spam classification result

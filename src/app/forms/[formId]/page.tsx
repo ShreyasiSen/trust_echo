@@ -83,6 +83,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
         body: JSON.stringify({
           responderName,
           responderEmail,
+          questions,
           answers,
           rating,
           improvements: improvementFeedback,

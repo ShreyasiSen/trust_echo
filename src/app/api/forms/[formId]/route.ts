@@ -52,3 +52,38 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ formI
     return NextResponse.json({ error: 'Failed to delete form and responses' }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request, { params }: { params: Promise<{ formId: string }> }) {
+  const { formId } = await params; // Await the params Promise to extract formId
+
+  // Validate formId
+  if (!formId || formId.length !== 24) {
+    return NextResponse.json({ error: 'Invalid form ID' }, { status: 400 });
+  }
+
+  try {
+    // Parse the request body to get the updated form data
+    const body = await req.json();
+    const { questions } = body;
+
+    // Prepare updated data for the form
+  
+    // Check if new questions are provided, and add them
+    const updatedFormData = {
+      ...body,
+      questions: questions ? questions : undefined,
+    };
+
+    // Update the form with the new title, description, and potentially new questions
+    const updatedForm = await prisma.form.update({
+      where: { id: formId },
+      data: updatedFormData,
+    });
+
+    // Return the updated form with the new questions
+    return NextResponse.json(updatedForm, { status: 200 });
+  } catch (err) {
+    console.error('Error updating form:', err);
+    return NextResponse.json({ error: 'Failed to update form' }, { status: 500 });
+  }
+}
