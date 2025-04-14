@@ -5,12 +5,12 @@ import { FaStar } from 'react-icons/fa'; // Import star icons from react-icons
 import { motion } from 'framer-motion'; // Import motion for animations
 import { z } from 'zod'; 
 
-
 const responseSchema = z.object({
   responderName: z.string().min(1, 'Name is required'),
   responderEmail: z.string().email('Invalid email address'),
   answers: z.array(z.string().min(1, 'Answer is required')),
   rating: z.number().min(1, 'Rating is required'),
+  image: z.instanceof(File).optional(), // Optional image validation
 });
 
 export default function ResponseForm({ params }: { params: Promise<{ formId: string }> }) {
@@ -25,12 +25,14 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
   const [formTitle, setFormTitle] = useState('');
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState<Record<string, string>>({}); // Track validation errors
-  const [submitting, setSubmitting] = useState(false); // Track submission state
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [image, setImage] = useState<File | null>(null); // State for the image
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
 
   useEffect(() => {
     const fetchFormId = async () => {
-      const resolvedParams = await params; // Await the params Promise to extract formId
+      const resolvedParams = await params;
       setFormId(resolvedParams.formId);
     };
     fetchFormId();
@@ -43,7 +45,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
         if (response.ok) {
           const data = await response.json();
           setQuestions(data.questions || []);
-          setFormName(data.title || 'Feedback'); // fallback
+          setFormName(data.title || 'Feedback');
           setFormTitle(
             data.description ||
               'Your input helps us improve. Please take a moment to share your experience with our services. All feedback is appreciated!'
@@ -63,31 +65,41 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
     }
   }, [formId]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file)); // Generate a preview URL for the image
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form inputs using Zod
     try {
       responseSchema.parse({
         responderName,
         responderEmail,
         answers,
         rating,
+        image,
       });
 
-      // If validation passes, submit the form
-      setSubmitting(true); // Set submitting state to true
+      setSubmitting(true);
+      const formData = new FormData();
+      formData.append('responderName', responderName);
+      formData.append('responderEmail', responderEmail);
+      formData.append('questions', JSON.stringify(questions));
+      formData.append('answers', JSON.stringify(answers));
+      formData.append('rating', String(rating));
+      formData.append('improvements', improvementFeedback);
+      if (image) {
+        formData.append('image', image); // Append the image file
+      }
+
       const response = await fetch(`/api/forms/${formId}/response`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          responderName,
-          responderEmail,
-          questions,
-          answers,
-          rating,
-          improvements: improvementFeedback,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -97,7 +109,6 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
-        // Map Zod errors to a format suitable for displaying
         const fieldErrors: Record<string, string> = {};
         err.errors.forEach((error) => {
           if (error.path[0]) {
@@ -109,7 +120,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
         console.error('Unexpected error:', err);
       }
     } finally {
-      setSubmitting(false); // Reset submitting state
+      setSubmitting(false);
     }
   };
 
@@ -252,6 +263,25 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                 </label>
                 <div className="flex items-center space-x-2">{renderStars()}</div>
                 {errors.rating && <p className="text-red-500 text-sm mt-1">{errors.rating}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1">Upload Your Image (Optional)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+                {imagePreview && (
+                  <div className="mt-4">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-24 h-24 rounded-full object-cover mx-auto shadow-md"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Inject Tailwind CDN dynamically into the head of the document
+  // ✅ Inject Tailwind via CDN script tag
   const tailwindScript = document.createElement('script');
   tailwindScript.src = 'https://cdn.tailwindcss.com';
   document.head.appendChild(tailwindScript);
@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then((data) => {
           const answers = data.answers.join(' ');
           const ratingStars = '★'.repeat(data.rating || 0) + '☆'.repeat(5 - (data.rating || 0));
-
+          const imageUrl = data.imageUrl;
+          const responderName = data.responderName || 'Anonymous';
+          const avatarInitial = responderName.charAt(0).toUpperCase(); // Get the first character of the name
           let html = '';
 
           if (layout === '1') {
@@ -24,39 +26,53 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="text-center p-4 rounded shadow border bg-white"
                    style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
                 <div class="flex justify-center">
-                  <img src="https://i.pravatar.cc/100?img=32" class="w-20 h-20 rounded-full border object-cover" />
+                  ${
+                    imageUrl
+                      ? `<img src="${imageUrl}" class="w-20 h-20 rounded-full border object-cover" />`
+                      : `<div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold text-xl border">
+                          ${avatarInitial}
+                        </div>`
+                  }
                 </div>
-                <h3 class=" font-semibold">${data.responderName}</h3>
-                <p class=" text-gray-800">${data.responderEmail}</p>
+                <h3 class="font-semibold">${responderName}</h3>
+                <p class="text-gray-800">${data.responderEmail}</p>
                 <div class="text-yellow-400 text-sm">${ratingStars}</div>
-                <p class=" italic">“${answers}”</p>
+                <p class="italic">“${answers}”</p>
               </div>
             `;
-          }
-
-          else if (layout === '2') {
+          } else if (layout === '2') {
             html = `
               <div class="text-center p-4 px-6 py-8 rounded shadow border bg-white"
                    style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
                 <p class="italic mb-6">“${answers}”</p>
                 <div class="flex justify-center mb-2">
-                  <img src="https://i.pravatar.cc/80" class="w-16 h-16 rounded-full border-2 border-gray-300 object-cover" />
+                  ${
+                    imageUrl
+                      ? `<img src="${imageUrl}" class="w-16 h-16 rounded-full border-2 border-gray-300 object-cover" />`
+                      : `<div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg border-2 border-gray-300">
+                          ${avatarInitial}
+                        </div>`
+                  }
                 </div>
-                <p class=" font-semibold">${data.responderName}</p>
+                <p class="font-semibold">${responderName}</p>
                 <p class="text-xs text-blue-600 font-medium">${data.responderRole || 'Reviewer'}</p>
               </div>
             `;
-          }
-
-          else if (layout === '3') {
+          } else if (layout === '3') {
             html = `
               <div class="p-6 rounded shadow border bg-white text-left"
                    style="background-color: ${el.style.backgroundColor}; font-size: ${el.style.fontSize}; color: ${el.style.color};">
                 <p class="italic mb-6 leading-relaxed">“${answers}”</p>
                 <div class="flex items-center gap-4">
-                  <img src="https://i.pravatar.cc/100?img=32" class="w-12 h-12 rounded-full border border-gray-300 object-cover" />
+                  ${
+                    imageUrl
+                      ? `<img src="${imageUrl}" class="w-12 h-12 rounded-full border border-gray-300 object-cover" />`
+                      : `<div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold text-sm border">
+                          ${avatarInitial}
+                        </div>`
+                  }
                   <div>
-                    <p class=" font-semibold">${data.responderName}</p>
+                    <p class="font-semibold">${responderName}</p>
                     <p class="text-xs text-gray-500">${data.responderRole || 'Reviewer'}</p>
                   </div>
                 </div>
