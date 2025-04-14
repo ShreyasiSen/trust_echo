@@ -1,6 +1,44 @@
-<script type="text/javascript" src="https://testimonial.to/js/iframeResizer.min.js"></script>
-<iframe id="testimonialto-embed-text--ONfoF0XlD1y6ADJSs-7" src="https://embed-v2.testimonial.to/text/-ONfoF0XlD1y6ADJSs-7" frameborder="0" scrolling="no" width="100%"></iframe>
-<script type="text/javascript">iFrameResize({log: false, checkOrigin: false}, "#testimonialto-embed-text--ONfoF0XlD1y6ADJSs-7");</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Testimonial Embed</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
 
-<div class="custom-embed" data-response-id="67fbd36da02e236641debc5e" data-layout="3" style="width:100%; background-color: #f9f9f9; font-size: 17px; color: #333;"></div>
-<script src="http://localhost:3000/utils/customEmbed.js" defer></script>
+    .embed-wrapper {
+      background-color: #b08787;
+      color: #f1e9e9;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 80%;
+      max-width: 700px;
+      font-size: 16px;
+    }
+
+    .custom-embed {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="embed-wrapper">
+    <div class="custom-embed"
+      data-response-id="67fbd36da02e236641debc5e"
+      data-layout="2"
+    ></div>
+    <script src="http://localhost:3000/utils/customEmbed.js" defer></script>
+  </div>
+</body>
+</html>

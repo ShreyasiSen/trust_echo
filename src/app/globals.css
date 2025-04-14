@@ -24,6 +24,21 @@
   }
 }
 
+@keyframes slideUp {
+  0% {
+    transform: translateY(100px); /* Start from below */
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0); /* Slide into place */
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease-out;
+}
+
 
 @custom-variant dark (&:is(.dark *));
 

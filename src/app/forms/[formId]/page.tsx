@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa'; // Import star icons from react-icons
 import { motion } from 'framer-motion'; // Import motion for animations
 import { z } from 'zod'; 
+import { useRouter } from 'next/navigation';
 
 
 const responseSchema = z.object({
@@ -63,6 +64,8 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
     }
   }, [formId]);
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -92,7 +95,10 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
 
       if (response.ok) {
         setSuccess('Thank you for your response!');
-      } else {
+        router.push('/thankYou'); // Navigate after setting success
+      }
+      
+       else {
         console.error('Failed to submit the response.');
       }
     } catch (err) {
