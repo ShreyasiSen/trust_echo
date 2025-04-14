@@ -45,7 +45,7 @@ export default function PainPointsPage({ params }: { params: Promise<{ formId: s
                         .join('\n\n')
                 );
 
-                const geminiResponse = await fetch('/api/gemini/painpoints', {
+                const geminiResponse = await fetch('/api/gemini/positives', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ questionsAndAnswers: combinedStrings }),

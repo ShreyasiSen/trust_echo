@@ -18,5 +18,9 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
+module.exports = {
+  images: {
+    domains: ['baidyabatibookings.s3.ap-south-1.amazonaws.com'], // Replace with your S3 bucket domain
+  },
+};
 export default nextConfig;
