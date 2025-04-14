@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa'; // Import star icons from react-icons
 import { motion } from 'framer-motion'; // Import motion for animations
-import { z } from 'zod'; 
-
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 const responseSchema = z.object({
   responderName: z.string().min(1, 'Name is required'),
   responderEmail: z.string().email('Invalid email address'),
@@ -29,7 +29,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
   const [submitting, setSubmitting] = useState(false);
   const [image, setImage] = useState<File | null>(null); // State for the image
   const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
-
+  const router=useRouter();
   useEffect(() => {
     const fetchFormId = async () => {
       const resolvedParams = await params;
@@ -48,7 +48,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
           setFormName(data.title || 'Feedback');
           setFormTitle(
             data.description ||
-              'Your input helps us improve. Please take a moment to share your experience with our services. All feedback is appreciated!'
+            'Your input helps us improve. Please take a moment to share your experience with our services. All feedback is appreciated!'
           );
         } else {
           console.error('Failed to load form questions.');
@@ -104,8 +104,11 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
 
       if (response.ok) {
         setSuccess('Thank you for your response!');
-      } else {
-        console.error('Failed to submit the response.');
+        router.push('/thankYou');
+      }
+      else
+      {
+        console.log("Error in response:", response.statusText);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -297,11 +300,10 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer ${
-                    submitting
+                  className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer ${submitting
                       ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
                       : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                  }`}
+                    }`}
                   disabled={submitting}
                 >
                   {submitting ? 'Submitting...' : 'Submit'}
