@@ -10,7 +10,8 @@ const responseSchema = z.object({
   responderEmail: z.string().email('Invalid email address'),
   answers: z.array(z.string().min(1, 'Answer is required')),
   rating: z.number().min(1, 'Rating is required'),
-  image: z.instanceof(File).optional(), // Optional image validation
+  image: z.union([z.instanceof(File), z.null()]).optional(),  
+  responderRole: z.string().optional(), 
 });
 
 export default function ResponseForm({ params }: { params: Promise<{ formId: string }> }) {
@@ -23,13 +24,13 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
   const [questions, setQuestions] = useState<string[]>([]);
   const [formName, setFormName] = useState('');
   const [formTitle, setFormTitle] = useState('');
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [image, setImage] = useState<File | null>(null); // State for the image
   const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
-  const router=useRouter();
+  const [responderRole, setResponderRole] = useState<string | null>('Customer');
+  const router = useRouter();
   useEffect(() => {
     const fetchFormId = async () => {
       const resolvedParams = await params;
@@ -83,6 +84,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
         answers,
         rating,
         image,
+        responderRole
       });
 
       setSubmitting(true);
@@ -93,6 +95,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
       formData.append('answers', JSON.stringify(answers));
       formData.append('rating', String(rating));
       formData.append('improvements', improvementFeedback);
+      formData.append('responderRole', responderRole || 'Customer'); // Append the responder role
       if (image) {
         formData.append('image', image); // Append the image file
       }
@@ -103,11 +106,9 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
       });
 
       if (response.ok) {
-        setSuccess('Thank you for your response!');
         router.push('/thankYou');
       }
-      else
-      {
+      else {
         console.log("Error in response:", response.statusText);
       }
     } catch (err) {
@@ -152,14 +153,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
     );
   }
 
-  if (success) {
-    return (
-      <div className="max-w-2xl m-auto p-6 bg-white shadow-md rounded-md text-center">
-        <h1 className="text-2xl font-bold mb-4">{success}</h1>
-        <p className="text-gray-600">We appreciate your feedback!</p>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen font-sans bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
@@ -268,22 +262,41 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                 {errors.rating && <p className="text-red-500 text-sm mt-1">{errors.rating}</p>}
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold mb-1">Upload Your Image (Optional)</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                />
-                {imagePreview && (
-                  <div className="mt-4">
+              <div className="space-y-4">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Upload Your Image (Optional)
+                </label>
+                <div className="flex items-center space-x-4">
+                  {imagePreview ? (
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="w-24 h-24 rounded-full object-cover mx-auto shadow-md"
+                      className="w-16 h-16 rounded-full object-cover shadow-md border border-gray-300 dark:border-gray-600"
                     />
-                  </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 font-semibold text-lg shadow-md">
+                      <span>+</span>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="block w-full text-sm text-gray-600 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Mention the role in your organization (Eg:- Product Designer,Zeta)
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => setResponderRole(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+                {errors.responderRole && (
+                  <p className="text-red-500 text-sm mt-1">{errors.responderRole}</p>
                 )}
               </div>
 
@@ -301,8 +314,8 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                 <button
                   type="submit"
                   className={`w-28 font-semibold py-2 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer ${submitting
-                      ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                      : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                    : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   disabled={submitting}
                 >

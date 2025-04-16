@@ -42,6 +42,7 @@ model Response {
   rating         Int?
   spam           Boolean?  @default(false)
   imageUrl       String?
+  responderRole  String?
 }
 
 model ContactForm {

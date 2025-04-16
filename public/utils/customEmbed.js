@@ -29,15 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
                   ${
                     imageUrl
                       ? `<img src="${imageUrl}" class="w-20 h-20 rounded-full border object-cover" />`
-                      : `<div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold text-xl border">
+                      : `<div class="w-20 h-20 rounded-full bg-blue-600  flex items-center justify-center text-white font-bold text-xl border">
                           ${avatarInitial}
                         </div>`
                   }
                 </div>
-                <h3 class="font-semibold">${responderName}</h3>
-                <p class="text-gray-800">${data.responderEmail}</p>
-                <div class="text-yellow-400 text-sm">${ratingStars}</div>
-                <p class="italic">“${answers}”</p>
+                <h3 class="font-semibold text-lg mt-1 font-serif">${responderName}</h3>
+                <p class="text-gray-700 italic
+                text-xs">${data.responderRole}</p>
+                <div class="text-yellow-400 text-sm my-2">${ratingStars}</div>
+                <p class="leading-tight">“${answers}”</p>
               </div>
             `;
           } else if (layout === '2') {
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                 </div>
                 <p class="font-semibold">${responderName}</p>
-                <p class="text-xs text-blue-600 font-medium">${data.responderRole || 'Reviewer'}</p>
+                <p class="text-xs ">${data.responderRole || 'Customer'}</p>
               </div>
             `;
           } else if (layout === '3') {
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   ${
                     imageUrl
                       ? `<img src="${imageUrl}" class="w-12 h-12 rounded-full border border-gray-300 object-cover" />`
-                      : `<div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold text-sm border">
+                      : `<div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm border">
                           ${avatarInitial}
                         </div>`
                   }

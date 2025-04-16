@@ -13,6 +13,7 @@ interface Testimonial {
   answers: string[];
   ratingStars: string;
   imageUrl?: string; // Rating in star format
+  responderRole?: string; // Optional role
 }
 
 export default function ResponsePage({ params }: { params: Promise<{ responseId: string }> }) {
@@ -48,7 +49,9 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
           responderEmail: data.responderEmail,
           answers: data.answers,
           ratingStars,
-          imageUrl: data.imageUrl// Placeholder image URL
+          imageUrl: data.imageUrl,
+          responderRole: data.responderRole,
+
         });
       } catch (error) {
         console.error('Error resolving responseId or fetching testimonial:', error);
@@ -139,7 +142,8 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                 <div className="mt-8">
                   {layout === '1' && (
                     <div
-                      className="p-6 bg-white rounded-xl shadow-md text-center transition-all duration-300 hover:shadow-lg"
+                      className="p-6 bg-white rounded-xl shadow-md text-center mx-auto
+                       w-full max-w-md transition-all duration-300 hover:shadow-lg"
                       style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
                     >
                       {testimonial.imageUrl ? (
@@ -155,7 +159,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                       )}
 
                       <h3 className=" font-semibold">{testimonial.responderName}</h3>
-                      <p className="text-sm text-gray-700">{testimonial.responderEmail}</p>
+                      <p className="text-sm text-gray-700">{testimonial.responderRole}</p>
                       <div className="my-2 text-yellow-500 text-lg">{testimonial.ratingStars}</div>
                       <p className="italic">“{testimonial.answers.join(' ')}”</p>
                     </div>
@@ -163,7 +167,9 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
 
                   {layout === '2' && (
                     <div
-                      className="px-6 py-8 bg-white rounded-xl shadow-md text-center"
+                      className="px-6 py-8 bg-white rounded-xl shadow-md text-center
+                      mx-auto
+                       w-full max-w-md transition-all duration-300 hover:shadow-lg"
                       style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
                     >
                       <p className="italic mb-6">“{testimonial.answers.join(' ')}”</p>
@@ -180,13 +186,14 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                       )}
 
                       <p className="font-semibold">{testimonial.responderName}</p>
-                      <p className="text-xs text-blue-600">{testimonial.responderRole || 'Reviewer'}</p>
+                      <p className="text-xs ">{testimonial.responderRole || 'Reviewer'}</p>
                     </div>
                   )}
 
                   {layout === '3' && (
                     <div
-                      className="p-6 bg-white rounded-xl shadow-md text-left mx-auto"
+                      className="p-6 bg-white rounded-xl shadow-md text-left mx-auto
+                      w-full max-w-md transition-all duration-300 hover:shadow-lg"
                       style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
                     >
                       <p className="leading-relaxed mb-4">“{testimonial.answers.join(' ')}”</p>
@@ -194,11 +201,11 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                         {testimonial.imageUrl ? (
                           <img
                             src={testimonial.imageUrl}
-                            className="mx-auto w-20 h-20 rounded-full border object-cover mb-3"
+                            className=" w-20 h-20 rounded-full border object-cover mb-3"
                             alt="Avatar"
                           />
                         ) : (
-                          <div className="mx-auto w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl border mb-3">
+                          <div className=" w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl border mb-3">
                             {testimonial.responderName.charAt(0).toUpperCase()}
                           </div>
                         )}
