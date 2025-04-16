@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Quicksand:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Space+Grotesk:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
 @tailwind base;
 @tailwind components;

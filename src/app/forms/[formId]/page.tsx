@@ -94,7 +94,6 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
       });
 
       if (response.ok) {
-        setSuccess('Thank you for your response!');
         router.push('/thankYou'); // Navigate after setting success
       }
       

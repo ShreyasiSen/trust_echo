@@ -45,9 +45,12 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       try {
         const responsesResponse = await fetch(`/api/forms/${formId}/responses`);
         const responsesData = await responsesResponse.json();
+        const formResponse = await fetch(`/api/forms/${formId}`);
+        const formData = await formResponse.json();
 
+        setFormTitle(formData?.title ?? 'Untitled Form');
         setResponses(Array.isArray(responsesData) ? responsesData : []);
-        setFormTitle(responsesData?.[0]?.formTitle ?? 'Untitled Form'); // Assuming formTitle is part of the response
+        // setFormTitle(responsesData?.[0]?.formTitle ?? 'Untitled Form'); // Assuming formTitle is part of the response
       } catch (err) {
         console.error('Error fetching responses:', err);
       } finally {
@@ -111,7 +114,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       {/* Content Area */}
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Sidebar */}
-        <div className="w-full lg:w-1/4 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
+        <div className="w-full lg:w-1/5 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
             🎛️ Filters
           </h2>
@@ -277,7 +280,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       </footer>
       {showEmbedModal && selectedResponse && (
         <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500  text-white rounded-2xl p-8 max-w-5xl w-full shadow-2xl transform transition-all duration-300 ease-in-out">
+          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400  text-white rounded-2xl p-8 max-w-5xl w-full shadow-2xl transform transition-all duration-300 ease-in-out">
             <h2 className="text-4xl font-mono text-black font-semibold mb-8 text-center tracking-tight">
               Choose Embed Layout
             </h2>
