@@ -18,66 +18,56 @@ import { DialogTitle } from "@radix-ui/react-dialog"; // Import DialogTitle from
 const Header = () => {
   const menu = [
     { title: "Features", url: "#features" },
-    // { title: "Testimonial", url: "#testimonial" },
+    { title: "Testimonials", url: "#testimonials" },
+    { title: "About", url: "#about" },
+    { title: "Pricing", url: "#pricing" },
     { title: "FAQ", url: "#faq" },
-    // { title: "Contact", url: "#contact" },
-    { title: "AboutUs", url: "/aboutUs" },
+    { title: "Contact", url: "#contact" },
   ];
 
   return (
-    <section className="py-6 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
+    <section className="py-6 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-md">
       <div className="container mx-auto">
-        <nav className="lg:flex justify-between items-center hidden lg:block">
-          <div className="flex items-center">
-            <div className="flex items-center font-bold tracking-tight text-white text-4xl sm:text-5xl mr-10">
-              <Link href="/" className="flex items-center">
-                <span className="italic bg-gradient-to-r from-indigo-600 via-violet-700 to-pink-600 bg-clip-text text-transparent font-display">
-                  Fide
-                </span>
-                <span className="text-blue-900 italic font-light ml-1">Feed</span>
-              </Link>
-            </div>
-
-            <div className="hidden lg:flex ml-8">
-              <NavigationMenu>
-                <NavigationMenuList className="flex space-x-4">
-                  {menu.map((item) =>
-                    item.title === "About Us" ? (
-                      <NavigationMenuItem key={item.title}>
-                        <Button
-                          onClick={() => (window.location.href = "/aboutUs")}
-                          className="cursor-pointer bg-gradient-to-r from-fuchsia-600 to-rose-400 text-white font-semibold shadow-pink-300 shadow-lg hover:shadow-xl rounded-full px-5 py-2 font-[Quicksand] text-base transition-all duration-300 hover:scale-105"
-                        >
-                          {item.title}
-                        </Button>
-                      </NavigationMenuItem>
-                    ) : (
-                      <NavigationMenuItem key={item.title}>
-                        <Link href={item.url} passHref legacyBehavior>
-                          <NavigationMenuLink
-                            className="text-gray-600 hover:text-blue-600 text-lg transition-colors duration-200"
-                          >
-                            {item.title}
-                          </NavigationMenuLink>
-                        </Link>
-                      </NavigationMenuItem>
-                    )
-                  )}
-
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
+        <nav className="hidden lg:flex items-center justify-between">
+          {/* Left - Logo */}
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <span className="italic bg-gradient-to-r from-indigo-600 via-violet-700 to-pink-600 bg-clip-text text-transparent font-display text-4xl sm:text-5xl font-bold tracking-tight">
+                Fide
+              </span>
+              <span className="text-blue-900 italic font-light ml-1 text-4xl sm:text-5xl">Feed</span>
+            </Link>
           </div>
 
+          {/* Center - Navigation Menu */}
+          <div className="flex-grow flex justify-center">
+            <NavigationMenu>
+              <NavigationMenuList className="flex space-x-2">
+                {menu.map((item) => (
+                  <NavigationMenuItem key={item.title}>
+                    <Link href={item.url} passHref legacyBehavior>
+                      <NavigationMenuLink
+                        className="text-gray-700 hover:text-blue-600 font-medium text-lg transition duration-300 ease-in-out hover:underline hover:underline-offset-4"
+                      >
+                        {item.title}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+
+          {/* Right - Auth Buttons / User */}
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton>
-                <Button variant="outline" className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all">
+                <Button variant="outline" className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 transition duration-300">
                   Sign In
                 </Button>
               </SignInButton>
               <SignUpButton>
-                <Button variant="outline" className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all">
+                <Button variant="outline" className="text-white bg-green-500 border-green-800 hover:bg-green-700 transition duration-300">
                   Sign Up
                 </Button>
               </SignUpButton>
@@ -88,10 +78,10 @@ const Header = () => {
           </div>
         </nav>
 
-        {/* Mobile Header Only (lg:hidden) */}
+
+        {/* Mobile Header */}
         <div className="block lg:hidden w-full">
           <div className="flex items-center justify-between px-4">
-            {/* Company Name (Left) */}
             <div className="font-bold tracking-tight text-white text-4xl">
               <Link href="/" className="flex items-center">
                 <span className="italic bg-gradient-to-r from-indigo-600 via-violet-700 to-pink-600 bg-clip-text text-transparent font-display">
@@ -101,7 +91,6 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Hamburger Menu (Right) */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -117,53 +106,46 @@ const Header = () => {
                 side="left"
                 className="w-[280px] backdrop-blur-sm bg-white/50 text-black px-0 pt-0 pb-6 rounded-l-xl shadow-xl border-r border-white/10 transition-all duration-300"
               >
-                {/* Add DialogTitle for accessibility */}
-                <DialogTitle className="sr-only">Menu</DialogTitle> {/* Use sr-only to hide it visually */}
+                <DialogTitle className="sr-only">Menu</DialogTitle>
 
-                <div className="flex justify-between items-center w-full px-4 py-4 bg-pink-100">
+                <div className="flex justify-between items-center w-full px-4 py-4 bg-gradient-to-r from-pink-100 to-rose-200 shadow-sm">
                   <span className="text-4xl font-bold tracking-wider text-blue-800 drop-shadow-sm">
                     Menu
                   </span>
                 </div>
 
-                {/* Menu Items */}
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-5 mt-4">
                   {menu.map((item) => (
                     <a
                       key={item.title}
                       href={item.url}
-                      className="ml-6 text-xl font-medium text-gray-900 hover:text-white hover:pl-3 rounded-md py-2 px-3 transition-all duration-300"
+                      className="ml-6 text-xl font-medium text-gray-900 hover:text-blue-600 hover:pl-4 rounded-md py-2 px-3 transition-all duration-300 ease-in-out"
                     >
                       {item.title}
                     </a>
                   ))}
 
                   <SignedOut>
-                    <div className="flex flex-col gap-3 mt-8">
+                    <div className="flex flex-col gap-3 mt-8 px-6">
                       <SignInButton>
-                        <Button
-                          variant="ghost"
-                          className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 hover:text-white cursor-pointer transition-all"
-                        >
+                        <Button className="text-white bg-blue-500 border-blue-800 hover:bg-blue-700 transition duration-300">
                           Sign In
                         </Button>
                       </SignInButton>
                       <SignUpButton>
-                        <Button
-                          variant="ghost"
-                          className="text-white bg-green-500 border-green-800 hover:bg-green-700 hover:text-white cursor-pointer transition-all"
-                        >
+                        <Button className="text-white bg-green-500 border-green-800 hover:bg-green-700 transition duration-300">
                           Sign Up
                         </Button>
                       </SignUpButton>
                     </div>
                   </SignedOut>
+
                   <SignedIn>
                     <div className="absolute bottom-4 right-4">
                       <UserButton
                         appearance={{
                           elements: {
-                            userButtonAvatarBox: "w-28 h-28 hover:scale-110 transition-transform duration-300 ring-2 ring-white",
+                            userButtonAvatarBox: "w-24 h-24 hover:scale-105 transition-transform duration-300 ring-2 ring-white",
                           },
                         }}
                       />

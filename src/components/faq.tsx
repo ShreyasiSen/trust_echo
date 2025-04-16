@@ -34,24 +34,19 @@ const Faq = ({
     {
       question: "Can I collect video testimonials?",
       answer:
-        "Absolutely! Our platform supports video testimonials, allowing your customers to share their feedback in a more personal way.",
+        "Absolutely! Our platform supports video testimonials, allowing your customers to share their feedback in a more personal way.But currently we are not providing the video testimonial feature.",
     },
     {
       question: "What insights can I get from testimonials?",
       answer:
-        "You can access detailed analytics, including sentiment analysis and graphs, to better understand customer feedback.",
-    },
-    {
-      question: "Is the platform customizable?",
-      answer:
-        "Yes, being open source, you can customize the platform to suit your specific needs and requirements.",
+        "You can access detailed Ai analytics, including graphs, to better understand customer feedback.",
     },
   ],
 }: Faq1Props) => {
   return (
     <motion.section
       id="faq"
-      className="py-32 bg-gradient-to-b from-purple-50 via-purple-100 to-pink-50 relative overflow-hidden"
+      className="py-24 bg-gradient-to-b from-pink-50 to-blue-50 relative overflow-hidden"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
@@ -59,7 +54,7 @@ const Faq = ({
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-200/20 via-white to-white"></div>
 
       <div className="container mx-auto max-w-4xl px-6 sm:px-12 lg:px-0">
-        <h2 className="text-center text-4xl font-semibold font-['Playfair_Display'] text-gray-800 relative mb-16">
+        <h2 className="text-center text-4xl font-bold tracking-tight  text-gray-800 relative mb-16">
           {heading}
           <span className="block h-1 w-24 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 mx-auto mt-3 rounded-full animate-pulse" />
         </h2>

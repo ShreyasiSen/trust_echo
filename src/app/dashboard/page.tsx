@@ -13,7 +13,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"; // Make sure you have shadcn/ui set up
 
-
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
@@ -37,6 +36,7 @@ export default function Dashboard() {
   const [editQuestions, setEditQuestions] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleEditClick = (form: Form) => {
     setEditFormId(form.id);
@@ -167,7 +167,7 @@ export default function Dashboard() {
 
     setTimeout(() => {
       setCopied(null);
-    }, 400);
+    }, 1000);
     toast.success('Link copied to clipboard!', {
       style: {
         color: 'green',
@@ -203,77 +203,87 @@ export default function Dashboard() {
   return (
     <div>
       <Header2 />
-      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen">
-        <div className="w-full px-4 sm:px-10 mx-auto py-8 sm:py-12 mt-20 sm:mt-18">
-          <h1 className="w-full sm:w-auto absolute left-1/2 -translate-x-1/2 text-2xl sm:text-4xl font-bold text-gray-800 text-center sm:text-left">
-            Welcome,
-            <span className="italic font-serif bg-gradient-to-l from-blue-500 via-blue-700 to-blue-900 bg-clip-text text-transparent font-display ml-1">
-              {user.firstName}
-            </span>
-            <span className="ml-1">👋</span>
-          </h1>
+      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen py-20 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+          {/* Header Section */}
+          <div className="relative flex flex-col mb-10">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 text-center mb-8">
+              Welcome, <span className="italic font-serif text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-pink-700">{user.firstName}</span>
+            </h1>
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full max-w-8xl gap-3">
+              <h2 className="text-2xl font-medium text-gray-800 tracking-tight">
+                <span className="text-indigo-700 italic">Your Products</span>
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  className="cursor-pointer inline-flex items-center bg-indigo-50 text-indigo-700 text-sm font-medium py-2 px-3 rounded-md shadow-sm hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 border border-indigo-200 transition-colors duration-200"
+                // onClick={handleAnalyticsClick}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
+                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-8zM7 8a1 1 0 011-1h2a1 1 0 011 1v11a1 1 0 01-1 1H8a1 1 0 01-1-1V8zM12 4a1 1 0 011-1h2a1 1 0 011 1v15a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM17 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1h-2a1 1 0 01-1-1v-8z" />
+                  </svg>
+                  Analytics
+                </button>
+                <button
+                  onClick={() => router.push('/create-form')}
+                  className="cursor-pointer inline-flex items-center bg-blue-50 text-blue-700 text-sm font-medium py-2 px-3 rounded-md shadow-sm hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 border border-blue-200 transition-colors duration-200"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  Create New
+                </button>
+              </div>
+            </div>
 
-          <div className="flex flex-row gap-14 items-center justify-center mb-2 mt-14">
-            <h2 className="text-2xl sm:text-2xl font-bold text-gray-800 font-playfair tracking-wide">
-              Your{' '}
-              <span className="text-blue-800 italic underline decoration-blue-300 underline-offset-4">
-                Products
-              </span>
-            </h2>
-
-            <div className="sm:ml-auto sm:mt-0">
-              <button
-                onClick={() => router.push('/create-form')}
-                className="px-2 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold bg-gradient-to-br from-blue-400 to-blue-800 text-white rounded-xl shadow-[0_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-100 active:shadow-[0_4px_6px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out cursor-pointer"
-              >
-                + Create New Product
-              </button>
+            {/* Search Bar */}
+            <div className="mt-4 w-full max-w-2xl">
+              <div className="relative rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-6a7 7 0 10-14 0 7 7 0 0014 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search your forms..."
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="mb-6">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search spaces by name..."
-              className="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Product List */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredForms.map((form, index) => {
+              const headerColors = [
+                'bg-gradient-to-r from-red-300 to-red-500',
+                'bg-gradient-to-r from-green-300 to-green-500',
+                'bg-gradient-to-r from-blue-300 to-blue-500',
+                'bg-gradient-to-r from-yellow-300 to-yellow-500',
+                'bg-gradient-to-r from-pink-300 to-pink-500',
+                'bg-gradient-to-r from-purple-300 to-purple-500',
+                'bg-gradient-to-r from-orange-300 to-orange-500',
+                'bg-gradient-to-r from-teal-300 to-teal-500',
+                'bg-gradient-to-r from-indigo-300 to-indigo-500',
+                'bg-gradient-to-r from-emerald-300 to-emerald-500',
+              ];
+              const randomColor = headerColors[index % headerColors.length];
+              const titleFontClass = 'font-semibold tracking-tight font-serif italic text-gray-700'; // Font styles for the title
 
-          <div className="border-b-2 border-gray-300 pb-2 tracking-wide w-full mb-6" />
-          {filteredForms.length === 0 ? (
-            <p className="text-gray-500 italic text-center">No spaces match your search.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredForms.map((form, index) => {
-                const headerColors = [
-                  'bg-red-400',
-                  'bg-green-400',
-                  'bg-blue-400',
-                  'bg-yellow-500',
-                  'bg-pink-400',
-                  'bg-purple-400',
-                  'bg-orange-400',
-                  'bg-teal-400',
-                  'bg-indigo-400',
-                  'bg-emerald-400',
-                ];
-                const randomColor = headerColors[index % headerColors.length];
+              return (
+                <div
+                  key={form.id}
+                  className="relative rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg border border-gray-100 flex flex-col overflow-hidden"
+                >
+                  {/* Gradient Header */}
+                  <div className={`h-6 ${randomColor} rounded-t-lg`} />
 
-                return (
-                  <div
-                    key={form.id}
-                    className="relative rounded-2xl bg-white transition-all duration-300 shadow-2xl hover:shadow-gray-300 "
-                  >
-                    {/* Neon Gradient Tag with Left Cut */}
-                    <div className="relative flex flex-row justify-between items-center">
-                      <div
-                        className={`italic text-center px-4 py-2 text-white text-xl font-bold rounded-tr-2xl rounded-bl-[1.25rem] ${randomColor}`}
-                      >
-                        {form.title}
-                      </div>
+                  <div className="p-5 flex-grow">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className={`text-xl ${titleFontClass} line-clamp-1`}>{form.title}</h3> {/* Applied font styles to title */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="p-1 hover:bg-gray-100 cursor-pointer rounded-full">
@@ -281,80 +291,63 @@ export default function Dashboard() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem
-                            onClick={() => handleEditClick(form)}
-                            className="cursor-pointer"
-                          >
-                            <Pen className="mr-2 h-4 w-4 text-blue-500" />
-                            Edit
+                          <DropdownMenuItem onClick={() => handleEditClick(form)} className="cursor-pointer">
+                            <Pen className="mr-2 h-4 w-4 text-blue-500" /> Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => router.push(`/forms/${form.id}/ai-analysis`)}
-                            className="cursor-pointer"
-                          >
-                            <Brain className="mr-2 h-4 w-4 text-purple-500" />
-                            AI Analysis
+                          <DropdownMenuItem onClick={() => router.push(`/forms/${form.id}/ai-analysis`)} className="cursor-pointer">
+                            <Brain className="mr-2 h-4 w-4 text-purple-500" /> AI Analysis
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(form.id)}
-                            className="cursor-pointer text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                          <DropdownMenuItem onClick={() => handleDelete(form.id)} className="cursor-pointer text-red-600">
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-
-                    {/* Card Body */}
-                    <div className="p-5 text-black">
-                      <p className="text-sm opacity-80 mb-3">
-                        {form.description || 'No description provided.'}
+                    <p
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className={`text-sm text-gray-700 mb-4 cursor-pointer transition-all duration-200 ${isExpanded ? '' : 'line-clamp-2'
+                        }`}
+                      title={isExpanded ? 'Click to collapse' : 'Click to expand'}
+                    >
+                      {form.description || 'No description provided.'}
+                    </p>
+                    <div className="flex justify-between items-center mt-auto">
+                      <p className="text-xs text-gray-500">
+                        Created{' '}
+                        {new Date(form.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>
-                      <div className="flex flex-row items-start justify-between h-full">
-                        <p className="text-xs font-medium tracking-wider text-blue-800 mb-4">
-                          {new Date(form.createdAt).toLocaleDateString('en-GB', {
-                            day: '2-digit',
-                            month: 'long',
-                            year: 'numeric',
-                          })}
-                        </p>
-                        {/* Read Responses Button */}
-                        <button
-                          onClick={() => router.push(`/forms/${form.id}/responses`)}
-                          className="text-sm text-pink-600 font-semibold cursor-pointer hover:text-cyan-700 hover:underline transition"
-                        >
-                          READ RESPONSES →
-                        </button>
-                      </div>
-                      {/* Shareable Link Section */}
-                      <div className="mt-6">
-                        <p className="text-sm font-semibold text-indigo-500 mb-2">Shareable Link</p>
-
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-white border border-gray-300 rounded-lg px-3 py-2 shadow-sm">
-                          <input
-                            type="text"
-                            value={`${window.location.origin}/forms/${form.id}`}
-                            readOnly
-                            className="w-full sm:flex-1 text-sm text-gray-800 px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          />
-                          <button
-                            onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
-                            className={`text-sm font-medium px-4 py-2 rounded-md transition shadow-sm cursor-pointer ${copied === form.id
-                              ? 'bg-blue-700 hover:bg-blue-800 text-white'
-                              : 'bg-black hover:bg-gray-700 text-white'
-                              }`}
-                          >
-                            {copied === form.id ? 'Copied' : 'Copy'}
-                          </button>
-                        </div>
-                      </div>
+                      <button
+                        onClick={() => router.push(`/forms/${form.id}/responses`)}
+                        className="text-sm text-indigo-700 font-medium cursor-pointer hover:text-indigo-900 transition"
+                      >
+                        View Responses →
+                      </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
+
+                  {/* Shareable Link Section - Always at the bottom */}
+                  <div className="p-4 border-t border-gray-200">
+                    <p className="text-sm font-semibold text-indigo-600 mb-2">Share Link</p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={`${window.location.origin}/forms/${form.id}`}
+                        readOnly
+                        className="flex-grow text-sm text-gray-800 px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                      <button
+                        onClick={() => handleCopy(form.id, `${window.location.origin}/forms/${form.id}`)}
+                        className={`text-sm font-medium px-3 py-2 rounded-md transition shadow-sm cursor-pointer ${copied === form.id ? 'bg-indigo-700 hover:bg-indigo-800 text-white' : 'bg-blue-700 hover:bg-blue-900 text-white'
+                          }`}
+                      >
+                        {copied === form.id ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <footer className="bg-pink-50 text-black py-4 text-center">
@@ -369,7 +362,7 @@ export default function Dashboard() {
               onClick={() => setEditFormId(null)}
               className="cursor-pointer absolute top-4 right-4 text-4xl text-gray-800 hover:text-gray-600 focus:outline-black transition duration-200"
               aria-label="Close"
-              
+
             >
               &times;
             </button>
