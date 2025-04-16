@@ -96,7 +96,7 @@ export default function PainPointsPage({ params }: { params: Promise<{ formId: s
         point.content = point.content.slice(2);
     }))
 
-    if(painPoints.length === 0) {
+    if (painPoints.length === 0) {
         return (
             <div className="text-center py-10">
                 <h1 className="text-2xl font-bold text-gray-800">No pain points noted as of now by the user.</h1>
@@ -105,14 +105,27 @@ export default function PainPointsPage({ params }: { params: Promise<{ formId: s
     }
     return (
         <div>
-            <div className="text-center text-3xl md:text-4xl font-bold text-gray-800 mt-8 mb-4">
-                💡 Key Insights from User Feedback
-            </div>
-            <div className="text-center text-lg text-gray-500 mb-6">
-                Subtly surfacing the challenges that matter most.
+            <div className="relative mt-8 mb-6 px-4">
+                <div className="text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold text-red-600">
+                        🚨 User Pain Points Identified
+                    </h2>
+                    <p className="mt-2 text-lg text-gray-600">
+                        Highlighting the key challenges and concerns raised by users.
+                    </p>
+                </div>
+                <span
+                    onClick={() => router.push(`/forms/${formId}/ai-analysis`)}
+                    className="absolute top-0 right-0 mt-2 mr-4 text-sm text-pink-600 hover:underline cursor-pointer"
+                >
+                    ← Back to AI Analysis
+                </span>
             </div>
 
-            <div className="px-4 flex flex-col items-center gap-8">
+
+
+
+            <div className="px-4 flex flex-col items-center gap-8 " >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
                     {painPoints?.map((point, index) => (
                         <motion.div
@@ -122,25 +135,17 @@ export default function PainPointsPage({ params }: { params: Promise<{ formId: s
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.15 }}
                         >
-                            <h3 className="text-xl font-semibold text-indigo-700 mb-2 text-center">{point.title}</h3>
+                            <h3 className="text-xl font-semibold text-pink-700 mb-2 text-center">{point.title}</h3>
                             <p className="text-gray-700">{point.content}</p>
                         </motion.div>
                     ))}
                 </div>
 
-                
+
             </div>
 
-            <div className="mt-12 text-center" onClick={() => router.push(`/forms/${formId}/ai-analysis`)}>
 
-                < motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-full shadow-md hover:shadow-lg transition duration-300"
-                >
-                    ⬅ Back to AI Analysis
-                </motion.button>
-            </div >
+
         </div >
     );
 }

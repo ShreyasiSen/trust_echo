@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
+import nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -26,6 +27,15 @@ const s3 = new S3Client({
   region: process.env.AWS_REGION,
 });
 
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Use your email provider (e.g., Gmail, SMTP, etc.)
+  auth: {
+    user: process.env.EMAIL_USER, // Your email address
+    pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password
+  },
+});
+
 export async function POST(
   req: Request,
   context: { params: Promise<{ formId: string }> }
@@ -42,6 +52,7 @@ export async function POST(
     const answers = JSON.parse(bodyData.get('answers') as string);
     const improvementFeedback = bodyData.get('improvementFeedback') as string | null;
     const rating = parseInt(bodyData.get('rating') as string);
+    const responderRole = bodyData.get('responderRole') as string | null;
 
     let imageUrl: string | null = null;
 
@@ -66,7 +77,11 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
-    const form = await prisma.form.findUnique({ where: { id: formId } });
+    const form = await prisma.form.findUnique({
+      where: { id: formId },
+      include: { user: true }, // Include the user who owns the form
+    });
+
     if (!form) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
@@ -99,6 +114,7 @@ export async function POST(
         spam: isSpam,
         imageUrl,
         createdAt: new Date(),
+        responderRole,
       },
     });
 
@@ -111,6 +127,41 @@ export async function POST(
           },
         },
       });
+    }
+
+    // Send notification email to the form owner
+    if (form.user?.email) {
+      const mailOptions = {
+        from: process.env.EMAIL_USER, // Sender email address
+        to: form.user.email, // Recipient email address (form owner)
+        subject: `🎉 New Feedback Received for "${form.title}"!`,
+        text: `
+Hello ${form.user.name},
+
+Great news! You’ve just received new feedback on your form "${form.title}".
+
+📋 Feedback Summary
+👤 Responder Name: ${responderName}
+📧 Responder Email: ${responderEmail}
+⭐ Rating: ${rating}
+✍️ Suggestions for Improvement: ${improvementFeedback || 'N/A'}
+
+💬 Questions & Answers
+${content}
+
+You can view and manage this feedback anytime on your dashboard. Plus, showcase it beautifully on your website using customizable layouts.
+
+👉 Visit your dashboard: https://fidefeed.com/dashboard
+
+Thanks for using Fidefeed!
+
+Best regards,  
+The Fidefeed Team
+`
+        ,
+      };
+
+      await transporter.sendMail(mailOptions);
     }
 
     return NextResponse.json(newResponse, { status: 201 });
