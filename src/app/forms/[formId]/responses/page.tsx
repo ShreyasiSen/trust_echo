@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -30,6 +31,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     createdAt?: string;
     rating?: number;
     spam?: boolean;
+    imageUrl?: string;
   }
 
   useEffect(() => {
@@ -60,6 +62,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
     if (formId) {
       fetchResponses();
+     
     }
   }, [formId]);
 
@@ -181,11 +184,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                           setSelectedResponse(response);
                           setShowEmbedModal(true);
                         }}
-
-                      // router.push(`/responses/${response.id}`);
-                      // toast.success('Public link copied to clipboard!', {
-                      //   position: 'bottom-right',
-                      // });
                       >
                         <FaLink className="mr-2" /> Embed
                       </button>
@@ -208,26 +206,42 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                 {/* Two-Column Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Left Column: Name, Email, Time */}
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      👤 {response?.responderName ?? 'Anonymous'}
-                    </h3>
-                    <p className="text-gray-600">
-                      📧 {response?.responderEmail ?? 'No Email Provided'}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      🕒{' '}
-                      {response?.createdAt
-                        ? new Intl.DateTimeFormat('en-GB', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: false,
-                        }).format(new Date(response.createdAt))
-                        : 'Unknown'}
-                    </p>
+                  <div className="space-y-2 flex items-center">
+                    {/* Image Preview */}
+                    {response.imageUrl ? (
+                      <img
+                        src={response.imageUrl}
+                        alt={response?.responderName ?? 'Anonymous'}
+                        className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                        👤
+                      </div>
+                    )}
+
+                    {/* Text Details */}
+                    <div className="ml-4">
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {response?.responderName ?? 'Anonymous'}
+                      </h3>
+                      <p className="text-gray-600">
+                        📧 {response?.responderEmail ?? 'No Email Provided'}
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        🕒{' '}
+                        {response?.createdAt
+                          ? new Intl.DateTimeFormat('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                          }).format(new Date(response.createdAt))
+                          : 'Unknown'}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Right Column: Rating + Q&A + Spam */}
@@ -387,8 +401,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
         </div>
       )}
-
-
     </div>
   );
 }
