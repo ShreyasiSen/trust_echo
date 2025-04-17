@@ -25,6 +25,7 @@
   }
 }
 
+
 @keyframes slideUp {
   0% {
     transform: translateY(100px); /* Start from below */

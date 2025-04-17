@@ -31,12 +31,12 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
   const [editFormId, setEditFormId] = useState<string | null>(null);
   const [editQuestions, setEditQuestions] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedDescription, setSelectedDescription] = useState<string | null>(null);
 
   const handleEditClick = (form: Form) => {
     setEditFormId(form.id);
@@ -80,6 +80,15 @@ export default function Dashboard() {
     setEditQuestions(updated);
   };
 
+  const handleDescriptionClick = (description: string) => {
+    setSelectedDescription(description);
+    setIsExpanded(true);
+  };
+
+  const closeModal = () => {
+    setIsExpanded(false);
+    setSelectedDescription(null);
+  };
 
   useEffect(() => {
     if (!isLoaded || !user) return;
@@ -133,7 +142,6 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (formId: string) => {
-    setDeleting(formId); // Set the deleting state to the current form ID
     try {
       const response = await fetch(`/api/forms/${formId}`, {
         method: 'DELETE',
@@ -155,8 +163,6 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Error deleting form:', err);
       toast.error('An unexpected error occurred.');
-    } finally {
-      setDeleting(null);
     }
   };
 
@@ -203,8 +209,8 @@ export default function Dashboard() {
   return (
     <div>
       <Header2 />
-      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen py-20 sm:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen mt-10 ">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 ">
           {/* Header Section */}
           <div className="relative flex flex-col mb-10">
             <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 text-center mb-8">
@@ -304,13 +310,13 @@ export default function Dashboard() {
                       </DropdownMenu>
                     </div>
                     <p
-                      onClick={() => setIsExpanded(!isExpanded)}
-                      className={`text-sm text-gray-700 mb-4 cursor-pointer transition-all duration-200 ${isExpanded ? '' : 'line-clamp-2'
-                        }`}
-                      title={isExpanded ? 'Click to collapse' : 'Click to expand'}
+                      onClick={() => handleDescriptionClick(form.description || 'No description provided.')}
+                      className="text-sm text-gray-700 mb-4 cursor-pointer transition-all duration-200 line-clamp-2"
+                      title="Click to view full description"
                     >
                       {form.description || 'No description provided.'}
                     </p>
+
                     <div className="flex justify-between items-center mt-auto">
                       <p className="text-xs text-gray-500">
                         Created{' '}
@@ -324,7 +330,25 @@ export default function Dashboard() {
                       </button>
                     </div>
                   </div>
+                  {isExpanded && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                      <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-lg relative">
+                        {/* Close Icon */}
+                        <button
+                          onClick={closeModal}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+                          aria-label="Close"
+                        >
+                          &times;
+                        </button>
 
+                        {/* Modal Heading */}
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">Full Description</h2>
+                        {/* Modal Content */}
+                        <p className="text-gray-700">{selectedDescription}</p>
+                      </div>
+                    </div>
+                  )}
                   {/* Shareable Link Section - Always at the bottom */}
                   <div className="p-4 border-t border-gray-200">
                     <p className="text-sm font-semibold text-indigo-600 mb-2">Share Link</p>
@@ -439,6 +463,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -11,7 +11,7 @@ interface Testimonial {
   responderName: string;
   responderEmail: string;
   answers: string[];
-  ratingStars: string;
+  rating: number; // Rating in star format
   imageUrl?: string; // Rating in star format
   responderRole?: string; // Optional role
 }
@@ -20,13 +20,16 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   const [responseId, setResponseId] = useState<string | null>(null);
   const [testimonial, setTestimonial] = useState<Testimonial | null>(null); // Store testimonial data
   const [copied, setCopied] = useState(false);
-
+  const [rating, setRating] = useState(3); // Current rating
+  const [starColor, setStarColor] = useState('#FFD700');
   // Customization options
   const [bgColor, setBgColor] = useState('#f9f9f9');
   const [fontSize, setFontSize] = useState(16);
   const [textColor, setTextColor] = useState('#333');
   // const [margin, setMargin] = useState(20);
   // const [alignment, setAlignment] = useState<'center' | 'left'>('center'); // Alignment option
+  const [shadowThickness, setShadowThickness] = useState(4); // New: Shadow thickness
+  const [borderRadius, setBorderRadius] = useState(12);
   const searchParams = useSearchParams();
   const layout = searchParams.get('layout') || '1'; // Default to layout 1
 
@@ -42,13 +45,27 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
         console.log('Fetched testimonial:', data); // Log the fetched testimonial data
 
         // Format the rating as stars
-        const ratingStars = '★'.repeat(data.rating || 0) + '☆'.repeat(5 - (data.rating || 0));
+        <div className="flex items-center">
+          {Array.from({ length: 5 }, (_, index) => (
+            <span
+              key={index}
+              onClick={() => setRating(index + 1)} // Set rating on click
+              style={{
+                cursor: 'pointer',
+                color: index < rating ? starColor : '#ccc', // Dynamic color
+                fontSize: '24px',
+              }}
+            >
+              ★
+            </span>
+          ))}
+        </div>
 
         setTestimonial({
           responderName: data.responderName,
           responderEmail: data.responderEmail,
           answers: data.answers,
-          ratingStars,
+          rating: data.rating,
           imageUrl: data.imageUrl,
           responderRole: data.responderRole,
 
@@ -63,7 +80,8 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   const embedCode = responseId
     ? `<div class="custom-embed"
      data-response-id="${responseId}"
-      data-layout="${layout}" style="width:100%; background-color: ${bgColor}; font-size: ${fontSize}px; color: ${textColor}; "></div>
+      data-star-color="${starColor}"
+      data-layout="${layout}"   style="width:100%; background-color: ${bgColor}; font-size: ${fontSize}px; color: ${textColor}; border-radius: ${borderRadius}px; box-shadow: 0 ${shadowThickness}px ${shadowThickness * 2}px rgba(0, 0, 0, 0.1);"></div>
 <script src="${process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000'}/utils/customEmbed.js" defer></script>`
     : '';
 
@@ -79,7 +97,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
     <div className="bg-white min-h-screen  flex flex-col font-sans">
       <Header2 />
       <main className="flex-grow">
-        <div className="max-w-6xl mx-auto px-6 pt-28 pb-16">
+        <div className="max-w-6xl mx-auto px-6 pt-10 pb-16">
 
           {/* Top Bar */}
           <div className="flex justify-between items-center mb-8 border-b pb-4">
@@ -93,9 +111,8 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
             </Link>
           </div>
 
-          {/* Configuration Panel */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 shadow-sm mb-10">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4"> Customize Your Embed</h3>
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm mb-10">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Customize Your Embed</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Background Color</label>
@@ -126,6 +143,39 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                   className="w-14 h-8 border border-gray-300 rounded shadow"
                 />
               </div>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">Shadow Thickness</label>
+                <input
+                  type="number"
+                  value={shadowThickness}
+                  onChange={(e) => setShadowThickness(Number(e.target.value))}
+                  className="w-20 border border-gray-300 rounded px-2 py-1 shadow-sm"
+                  min={0}
+                  max={20}
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">Border Radius</label>
+                <input
+                  type="number"
+                  value={borderRadius}
+                  onChange={(e) => setBorderRadius(Number(e.target.value))}
+                  className="w-20 border border-gray-300 rounded px-2 py-1 shadow-sm"
+                  min={0}
+                  max={50}
+                />
+              </div>
+              {layout === '1' && (
+                <div>
+                  <label className="block text-sm text-gray-600 mb-1">Star Color</label>
+                  <input
+                    type="color"
+                    value={starColor}
+                    onChange={(e) => setStarColor(e.target.value)}
+                    className="w-14 h-8 border border-gray-300 rounded shadow"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -144,7 +194,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                     <div
                       className="p-6 bg-white rounded-xl shadow-md text-center mx-auto
                        w-full max-w-md transition-all duration-300 hover:shadow-lg"
-                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}`, borderRadius: `${borderRadius}px`, boxShadow: `0 ${shadowThickness}px ${shadowThickness * 2}px rgba(0, 0, 0, 0.1)` }}
                     >
                       {testimonial.imageUrl ? (
                         <img
@@ -160,7 +210,19 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
 
                       <h3 className=" font-semibold">{testimonial.responderName}</h3>
                       <p className="text-sm text-gray-700">{testimonial.responderRole}</p>
-                      <div className="my-2 text-yellow-500 text-lg">{testimonial.ratingStars}</div>
+                      <div className="flex justify-center items-center mt-2">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <span
+                            key={index}
+                            style={{
+                              color: index < testimonial.rating ? starColor : '#ccc', // Dynamic star color
+                              fontSize: '24px',
+                            }}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
                       <p className="italic">“{testimonial.answers.join(' ')}”</p>
                     </div>
                   )}
@@ -168,9 +230,9 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                   {layout === '2' && (
                     <div
                       className="px-6 py-8 bg-white rounded-xl shadow-md text-center
-                      mx-auto
+                      mx-auto 
                        w-full max-w-md transition-all duration-300 hover:shadow-lg"
-                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}`, borderRadius: `${borderRadius}px`, boxShadow: `0 ${shadowThickness}px ${shadowThickness * 2}px rgba(0, 0, 0, 0.1)` }}
                     >
                       <p className="italic mb-6">“{testimonial.answers.join(' ')}”</p>
                       {testimonial.imageUrl ? (
@@ -194,7 +256,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                     <div
                       className="p-6 bg-white rounded-xl shadow-md text-left mx-auto
                       w-full max-w-md transition-all duration-300 hover:shadow-lg"
-                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}` }}
+                      style={{ backgroundColor: `${bgColor}`, fontSize: `${fontSize}px`, color: `${textColor}`, borderRadius: `${borderRadius}px`, boxShadow: `0 ${shadowThickness}px ${shadowThickness * 2}px rgba(0, 0, 0, 0.1)` }}
                     >
                       <p className="leading-relaxed mb-4">“{testimonial.answers.join(' ')}”</p>
                       <div className="flex items-center gap-4">
@@ -211,8 +273,8 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                         )}
 
                         <div>
-                          <p className=" font-semibold">{testimonial.responderName}</p>
-                          <p className="text-xs text-gray-500">{testimonial.responderRole || 'Reviewer'}</p>
+                          <p className=" font-semibold text-black">{testimonial.responderName}</p>
+                          <p className="text-xs text-gray-700 ">{testimonial.responderRole || 'Reviewer'}</p>
                         </div>
                       </div>
                     </div>
