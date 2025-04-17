@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -62,7 +62,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
     if (formId) {
       fetchResponses();
-     
+
     }
   }, [formId]);
 
@@ -103,11 +103,49 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+      <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 flex flex-col justify-center items-center z-50">
+        <motion.div
+          className="relative w-20 h-20 rounded-full border-4 border-dashed border-indigo-600"
+          variants={{
+            start: {
+              rotate: 0,
+              scale: 1,
+            },
+            end: {
+              rotate: 360,
+              scale: 1.2,
+              transition: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              },
+            },
+          }}
+          animate="end"
+        />
+        <motion.p
+          className="text-xl text-indigo-700 font-semibold mt-6"
+          variants={{
+            initial: { y: 20, opacity: 0 },
+            animate: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.5,
+                delay: 0.2,
+                ease: 'easeOut',
+              },
+            },
+          }}
+          initial="initial"
+          animate="animate"
+        >
+          Fetching responses...
+        </motion.p>
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen text-white">
@@ -117,7 +155,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       {/* Content Area */}
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Sidebar */}
-        <div className="w-full lg:w-1/5 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
+        <div className="w-full lg:w-1/5 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-1">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
             🎛️ Filters
           </h2>
@@ -146,7 +184,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         </div>
 
         {/* Page Content */}
-        <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 mt-10 lg:mt-20">
+        <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 ">
           <div className="w-full mb-6 sm:mb-10 flex justify-between items-center gap-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 border-b border-gray-500 pb-3 sm:pb-4">
               <span className="italic">{formTitle}</span> – Responses

@@ -208,7 +208,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                         </div>
                       )}
 
-                      <h3 className=" font-semibold">{testimonial.responderName}</h3>
+                      <h3 className=" font-semibold text-black">{testimonial.responderName}</h3>
                       <p className="text-sm text-gray-700">{testimonial.responderRole}</p>
                       <div className="flex justify-center items-center mt-2">
                         {Array.from({ length: 5 }, (_, index) => (
@@ -247,8 +247,8 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
                         </div>
                       )}
 
-                      <p className="font-semibold">{testimonial.responderName}</p>
-                      <p className="text-xs ">{testimonial.responderRole || 'Reviewer'}</p>
+                      <p className="font-semibold text-black">{testimonial.responderName}</p>
+                      <p className="text-xs text-gray-700 ">{testimonial.responderRole || 'Reviewer'}</p>
                     </div>
                   )}
 
