@@ -31,7 +31,7 @@ const features = [
     title: "Analytics dashboard to track performance",
     desc: "Track the performance of your testimonials with our integrated analytics dashboard. Summarize performance of products. See how they impact your business.",
     cta: "Try it for free",
-    image: "/F4.jpg",
+    image: "/F4.jpeg",
   },
   {
     subtitle: "Seamless experience",
@@ -55,8 +55,6 @@ const Feature = () => {
       className="py-16 md:py-24 bg-gradient-to-b from-blue-50 to-pink-50 text-gray-800 relative overflow-hidden"
       id="features"
     >
-
-
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
