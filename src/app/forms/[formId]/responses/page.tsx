@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
 import { toast } from 'sonner'; // Import toast for notifications
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function ResponsesPage({ params }: { params: Promise<{ formId: string }> }) {
   const [formId, setFormId] = useState<string | null>(null);
@@ -101,13 +101,50 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     ? responses.filter((response) => (filter === 'spam' ? response?.spam : !response?.spam))
     : [];
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-      </div>
-    );
-  }
+    if (loading) {
+      return (
+        <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 flex flex-col justify-center items-center z-50">
+          <motion.div
+            className="relative w-20 h-20 rounded-full border-4 border-dashed border-indigo-600"
+            variants={{
+              start: {
+                rotate: 0,
+                scale: 1,
+              },
+              end: {
+                rotate: 360,
+                scale: 1.2,
+                transition: {
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                },
+              },
+            }}
+            animate="end"
+          />
+          <motion.p
+            className="text-xl text-indigo-700 font-semibold mt-6"
+            variants={{
+              initial: { y: 20, opacity: 0 },
+              animate: {
+                y: 0,
+                opacity: 1,
+                transition: {
+                  duration: 0.5,
+                  delay: 0.2,
+                  ease: 'easeOut',
+                },
+              },
+            }}
+            initial="initial"
+            animate="animate"
+          >
+            Fetching responses...
+          </motion.p>
+        </div>
+      );
+    }
 
   return (
     <div className="min-h-screen text-white">

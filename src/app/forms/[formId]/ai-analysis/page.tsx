@@ -79,7 +79,7 @@ const AIAnalysisPage = ({ params }: { params: Promise<{ formId: string }> }) => 
     },
     tap: { scale: 0.97 },
   };
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-200 via-orange-50 to-blue-300 text-slate-700 font-sans flex items-center justify-center px-4 py-2 overflow-hidden">
       <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md z-0" />

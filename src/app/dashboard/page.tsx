@@ -11,7 +11,132 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"; // Make sure you have shadcn/ui set up
+} from "@/components/ui/dropdown-menu";
+import { motion, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+
+const loadingPhrases = [
+  "Loading your dashboard...",
+  "Fetching your forms...",
+  "Preparing your data...",
+  "Setting up your workspace...",
+  "Almost ready...",
+];
+
+const backgroundColors = ["#0f172a", "#1e293b", "#334155", "#475569", "#64748b"]; // Darker, developer-esque palette
+
+const DashboardLoading = () => {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [bgIndex, setBgIndex] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const phraseTimer = setInterval(() => {
+      setPhraseIndex((prev) => (prev + 1) % loadingPhrases.length);
+    }, 2200); // Slightly faster phrase cycle
+
+    const bgTimer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgroundColors.length);
+    }, 4500); // Smooth background transition
+
+    return () => {
+      clearInterval(phraseTimer);
+      clearInterval(bgTimer);
+    };
+  }, []);
+
+  const backgroundColor = backgroundColors[bgIndex];
+  const phrase = loadingPhrases[phraseIndex];
+
+  const pulse = useSpring(1, {
+    damping: 15,
+    stiffness: 120,
+    mass: 0.6,
+  });
+
+  const scalePulse = useTransform(pulse, [0.9, 1.1], [1, 1.05]);
+  const opacityPulse = useTransform(pulse, [0.8, 1], [0.7, 1]);
+  // Removed unused 'glow' variable
+
+  return (
+    <motion.div
+      className="fixed inset-0 flex flex-col justify-center items-center z-50 overflow-hidden"
+      style={{ backgroundColor: isMounted ? backgroundColor : backgroundColors[0] }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
+      {/* Subtle Background Animation - Moving Lines */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={i}
+          className={`absolute w-full h-0.5 bg-blue-500 opacity-10 blur-sm`}
+          style={{ top: `${(i + 1) * 20}%` }}
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ repeat: Infinity, duration: 8 + i * 2, ease: "linear" }}
+        />
+      ))}
+      {[...Array(2)].map((_, i) => (
+        <motion.div
+          key={`v-${i}`}
+          className={`absolute w-0.5 h-full bg-purple-400 opacity-10 blur-sm`}
+          style={{ left: `${(i + 1) * 30}%` }}
+          animate={{ y: ["-100%", "100%"] }}
+          transition={{ repeat: Infinity, duration: 7 + i * 2, ease: "linear" }}
+        />
+      ))}
+
+      {/* Sleek Loading Icon - Code Snippet Effect */}
+      <motion.div
+        className="relative w-24 h-16 mb-8 flex items-center justify-center"
+        style={{ perspective: 200 }}
+      >
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-6 h-6 rounded-md bg-cyan-400"
+            style={{
+              originX: 0,
+              originY: 0,
+              z: i * 10,
+              scale: scalePulse.get(), // Extract value using .get()
+              opacity: opacityPulse.get(), // Extract value using .get()
+            }}
+            animate={{
+              rotateX: [0, 90, 0],
+              translateX: [0, i * 10 - 10, 0],
+              translateY: [0, -5 + i * 5, 0],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.6,
+              delay: i * 0.2,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Elegant Loading Text with Subtle Glow */}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={phrase}
+          className="text-lg sm:text-xl text-gray-300 font-mono font-semibold tracking-wide text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          style={{ textShadow: "0 0 6px rgba(59, 130, 246, 0.6)" }}
+        >
+          {phrase}
+        </motion.p>
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+
 
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
@@ -183,11 +308,7 @@ export default function Dashboard() {
   };
 
   if (!isLoaded) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-      </div>
-    );
+    return <DashboardLoading />;
   }
 
   if (!user) {
@@ -199,11 +320,7 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-      </div>
-    );
+    return <DashboardLoading />;
   }
 
   return (
