@@ -9,7 +9,7 @@ import { Speciality } from "@/components/speciality";
 import PlatformGrid  from "@/components/platformGrid";
 import AboutUs from "@/components/about";
 import  Video  from "@/components/video";
-import {Pricing} from "@/components/basicPricing";
+
 
 export default async function Home() {
 
@@ -24,7 +24,7 @@ export default async function Home() {
       <Speciality />
         <Feature />
       <PlatformGrid />
-      <Pricing/>
+  
       <AboutUs/>
       <Faq />
       <Contact />
