@@ -21,7 +21,7 @@ const platforms = [
   
   export default function PlatformGrid() {
     return (
-      <section className="bg-gradient-to-b from-pink-50 to-blue-50 text-center py-20 px-6">
+      <section className="bg-gradient-to-b from-pink-50 to-blue-50 text-center py-24 px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-800 animate-fade-in-down">
           Integrate with any <span className="text-pink-600">platform</span>
         </h1>
