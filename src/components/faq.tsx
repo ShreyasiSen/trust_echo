@@ -24,29 +24,55 @@ const Faq = ({
     {
       question: "Is this platform free to use?",
       answer:
-        "Yes, our testimonial platform is completely free and open source. You can use it without any cost.",
+        "Yes, our testimonial platform is entirely free and open source. You can use it without any charges or limitations.",
     },
     {
-      question: "How do I collect testimonials?",
+      question: "How can I collect testimonials from users?",
       answer:
-        "You can generate a custom link with questions and share it with your customers to collect testimonials.",
+        "You can create a personalized link with predefined questions and share it with your customers to gather testimonials seamlessly.",
     },
     {
-      question: "Can I collect video testimonials?",
+      question: "Is the platform compatible with no-code tools?",
       answer:
-        "Absolutely! Our platform supports video testimonials, allowing your customers to share their feedback in a more personal way.But currently we are not providing the video testimonial feature.",
+        "Absolutely. Our platform is built with no-code compatibility in mind, allowing effortless integration into your existing tools and workflows.",
     },
     {
-      question: "What insights can I get from testimonials?",
+      question: "With so many testimonial platforms available, why should I choose this one?",
       answer:
-        "You can access detailed Ai analytics, including graphs, to better understand customer feedback.",
+        "Unlike most platforms, we are completely free and allow unlimited testimonials and spaces. Our AI-driven system categorizes responses into strengths and areas for improvement, providing actionable insights.",
     },
-  ],
+    {
+      question: "How does the platform utilize AI?",
+      answer:
+        "Our AI analyzes the content of testimonials to detect customer sentiment and highlight key themes, enabling you to make informed decisions based on authentic feedback.",
+    },
+    {
+      question: "What is the role of visual analytics on the platform?",
+      answer:
+        "Visual analytics provide a clear overview of how your testimonials perform. You can track sentiment trends and feedback impact through intuitive data visualizations.",
+    },
+    {
+      question: "Can I customize the HTML code of the testimonials?",
+      answer:
+        "Yes, the platform offers full HTML customization, allowing you to tailor the design and layout to match your brand identity.",
+    },
+    {
+      question: "Are spam responses filtered from the analytics?",
+      answer:
+        "Yes, our system includes built-in spam detection mechanisms to ensure only authentic responses are included in your analytics.",
+    },
+    {
+      question: "Will I receive email notifications for new testimonials?",
+      answer:
+        "Yes, you will be notified via email instantly whenever a new testimonial is submitted to your dashboard.",
+    }
+  ]
+  
 }: Faq1Props) => {
   return (
     <motion.section
       id="faq"
-      className="py-24 bg-gradient-to-b from-pink-50 to-blue-50 relative overflow-hidden"
+      className="py-24 bg-gradient-to-b from-blue-50 to-pink-50 relative overflow-hidden"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}

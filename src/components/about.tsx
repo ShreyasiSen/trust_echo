@@ -27,7 +27,7 @@ const steps = [
 
 export default function AboutUs() {
   return (
-    <main className="bg-gradient-to-b from-blue-50 to-pink-50 text-gray-900" id="about">
+    <main className="bg-gradient-to-b from-pink-50 to-blue-50 text-gray-900" id="about">
       {/* HOW IT WORKS */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto text-center">

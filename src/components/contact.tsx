@@ -8,7 +8,7 @@ import { fadeIn } from "../../variants";
 
 const Contact = () => {
   return (
-    <section className="bg-gradient-to-b from-blue-50 to-pink-50 py-20 px-6" id="contact">
+    <section className="bg-gradient-to-b from-pink-50 to-blue-50 py-20 px-6" id="contact">
       <div className="max-w-4xl mx-auto text-center">
         <motion.h2
           variants={fadeIn("up", 0.1)}
