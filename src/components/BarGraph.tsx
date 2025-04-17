@@ -47,9 +47,7 @@ export const BarGraph: React.FC<BarGraphProps> = ({ data }) => {
     responsive: true,
     plugins: {
       legend: {
-        
-          display: false,
-      
+        display: false,
       },
     },
     scales: {
@@ -78,12 +76,18 @@ export const BarGraph: React.FC<BarGraphProps> = ({ data }) => {
         ticks: {
           color: 'black',
           stepSize: 0.5,
-          callback: (value: number) => value.toFixed(1),
+          callback: function (value: string | number) {
+            if (typeof value === 'number') {
+              return value.toFixed(1);
+            }
+            return value;
+          },
         },
         beginAtZero: true,
       },
     },
   };
+
 
   return <Bar data={chartData} options={options} />;
 };
