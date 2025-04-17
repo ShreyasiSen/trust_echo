@@ -82,7 +82,7 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
      data-response-id="${responseId}"
       data-star-color="${starColor}"
       data-layout="${layout}"   style="width:100%; background-color: ${bgColor}; font-size: ${fontSize}px; color: ${textColor}; border-radius: ${borderRadius}px; box-shadow: 0 ${shadowThickness}px ${shadowThickness * 2}px rgba(0, 0, 0, 0.1);"></div>
-<script src="${process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000'}/utils/customEmbed.js" defer></script>`
+<script src="${process.env.NODE_ENV === 'production' ? 'https://www.fidefeed.com' : 'http://localhost:3000'}/utils/customEmbed.js" defer></script>`
     : '';
 
   const handleCopy = async () => {
