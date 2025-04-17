@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const starColor = el.getAttribute('data-star-color') || '#FFD700'; // Default star color (gold)
 
     if (responseId) {
-      fetch(`/api/responses/${responseId}`)
+      fetch(`https://www.fidefeed.com/api/responses/${responseId}`)
         .then((res) => res.json())
         .then((data) => {
           const answers = data.answers.join(' ');
