@@ -223,7 +223,7 @@ export default function Dashboard() {
               <div className="flex gap-2">
                 <button
                   className="cursor-pointer inline-flex items-center bg-indigo-50 text-indigo-700 text-sm font-medium py-2 px-3 rounded-md shadow-sm hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 border border-indigo-200 transition-colors duration-200"
-                // onClick={handleAnalyticsClick}
+                  onClick={() => router.push('/analytics')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
                     <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-8zM7 8a1 1 0 011-1h2a1 1 0 011 1v11a1 1 0 01-1 1H8a1 1 0 01-1-1V8zM12 4a1 1 0 011-1h2a1 1 0 011 1v15a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM17 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1h-2a1 1 0 01-1-1v-8z" />

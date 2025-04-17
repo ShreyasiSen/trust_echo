@@ -5,11 +5,11 @@ import { Faq } from "@/components/faq";
 import { Contact } from "@/components/contact";
 // import { Footer } from "@/components/footer";
 import { Feature } from "@/components/feature";
-import { Cover } from "@/components/cover";
 import { Speciality } from "@/components/speciality";
 import PlatformGrid  from "@/components/platformGrid";
 import AboutUs from "@/components/about";
 import  Video  from "@/components/video";
+import {Pricing} from "@/components/basicPricing";
 
 export default async function Home() {
 
@@ -24,6 +24,7 @@ export default async function Home() {
       <Speciality />
         <Feature />
       <PlatformGrid />
+      <Pricing/>
       <AboutUs/>
       <Faq />
       <Contact />

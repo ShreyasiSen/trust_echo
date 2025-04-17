@@ -17,18 +17,73 @@ interface BarGraphProps {
 }
 
 export const BarGraph: React.FC<BarGraphProps> = ({ data }) => {
+  // Define a set of distinct colors
+  const colors = [
+    'rgba(255, 99, 132, 0.6)',   // red
+    'rgba(54, 162, 235, 0.6)',   // blue
+    'rgba(255, 206, 86, 0.6)',   // yellow
+    'rgba(75, 192, 192, 0.6)',   // teal
+    'rgba(153, 102, 255, 0.6)',  // purple
+    'rgba(255, 159, 64, 0.6)',   // orange
+    'rgba(0, 200, 83, 0.6)',     // green
+  ];
+
+  const borderColors = colors.map(color => color.replace('0.6', '1')); // full opacity for borders
+
   const chartData = {
     labels: data.map((item) => item.formTitle),
     datasets: [
       {
-        label: 'Average Rating',
+        label: '',
         data: data.map((item) => item.averageRating),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: colors.slice(0, data.length),
+        borderColor: borderColors.slice(0, data.length),
         borderWidth: 1,
       },
     ],
   };
 
-  return <Bar data={chartData} />;
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        
+          display: false,
+      
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Forms',
+          color: 'blue',
+          font: {
+            size: 14,
+          },
+        },
+        ticks: {
+          color: 'black',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Average Rating',
+          color: 'blue',
+          font: {
+            size: 14,
+          },
+        },
+        ticks: {
+          color: 'black',
+          stepSize: 0.5,
+          callback: (value: number) => value.toFixed(1),
+        },
+        beginAtZero: true,
+      },
+    },
+  };
+
+  return <Bar data={chartData} options={options} />;
 };
