@@ -27,12 +27,12 @@ const steps = [
 
 export default function AboutUs() {
   return (
-    <main className="bg-gradient-to-b from-blue-50 to-pink-50 text-gray-900" id="about">
+    <main className="bg-gradient-to-b from-pink-50 to-blue-50 text-gray-900" id="about">
       {/* HOW IT WORKS */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800">How Our Website Works</h2>
-          <p className="text-lg text-gray-600 mt-4 italic">Using <span className="text-blue-600 font-semibold">FideFeed</span> is as simple as it gets:</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800">How <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-700 to-pink-600">FideFeed</span> Works</h2>
+          <p className="text-lg text-gray-600 mt-4 italic">Getting started is as easy as<span className="text-purple-500 font-semibold"> 1-2-3-4</span>:</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-10 mt-14 max-w-6xl mx-auto px-4">

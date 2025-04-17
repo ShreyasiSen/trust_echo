@@ -28,10 +28,10 @@ export async function GET(request: Request) {
       where: { userId: mongoUserId }, // Filter forms by MongoDB user ID
       include: {
         responses: {
+          where: { spam: false }, // Include only non-spam responses
           select: {
-            createdAt: true, 
+            createdAt: true,
             rating: true,
-            spam:false
           },
         },
       },

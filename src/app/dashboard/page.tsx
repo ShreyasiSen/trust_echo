@@ -31,12 +31,12 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [mongoUserId, setMongoUserId] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
   const [editFormId, setEditFormId] = useState<string | null>(null);
   const [editQuestions, setEditQuestions] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedDescription, setSelectedDescription] = useState<string | null>(null);
 
   const handleEditClick = (form: Form) => {
     setEditFormId(form.id);
@@ -80,6 +80,15 @@ export default function Dashboard() {
     setEditQuestions(updated);
   };
 
+  const handleDescriptionClick = (description: string) => {
+    setSelectedDescription(description);
+    setIsExpanded(true);
+  };
+
+  const closeModal = () => {
+    setIsExpanded(false);
+    setSelectedDescription(null);
+  };
 
   useEffect(() => {
     if (!isLoaded || !user) return;
@@ -133,7 +142,6 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (formId: string) => {
-    setDeleting(formId); // Set the deleting state to the current form ID
     try {
       const response = await fetch(`/api/forms/${formId}`, {
         method: 'DELETE',
@@ -155,8 +163,6 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Error deleting form:', err);
       toast.error('An unexpected error occurred.');
-    } finally {
-      setDeleting(null);
     }
   };
 
@@ -217,7 +223,7 @@ export default function Dashboard() {
               <div className="flex gap-2">
                 <button
                   className="cursor-pointer inline-flex items-center bg-indigo-50 text-indigo-700 text-sm font-medium py-2 px-3 rounded-md shadow-sm hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 border border-indigo-200 transition-colors duration-200"
-                // onClick={handleAnalyticsClick}
+                  onClick={() => router.push('/analytics')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
                     <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1v-8zM7 8a1 1 0 011-1h2a1 1 0 011 1v11a1 1 0 01-1 1H8a1 1 0 01-1-1V8zM12 4a1 1 0 011-1h2a1 1 0 011 1v15a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM17 11a1 1 0 011-1h2a1 1 0 011 1v8a1 1 0 01-1 1h-2a1 1 0 01-1-1v-8z" />
@@ -304,13 +310,13 @@ export default function Dashboard() {
                       </DropdownMenu>
                     </div>
                     <p
-                      onClick={() => setIsExpanded(!isExpanded)}
-                      className={`text-sm text-gray-700 mb-4 cursor-pointer transition-all duration-200 ${isExpanded ? '' : 'line-clamp-2'
-                        }`}
-                      title={isExpanded ? 'Click to collapse' : 'Click to expand'}
+                      onClick={() => handleDescriptionClick(form.description || 'No description provided.')}
+                      className="text-sm text-gray-700 mb-4 cursor-pointer transition-all duration-200 line-clamp-2"
+                      title="Click to view full description"
                     >
                       {form.description || 'No description provided.'}
                     </p>
+
                     <div className="flex justify-between items-center mt-auto">
                       <p className="text-xs text-gray-500">
                         Created{' '}
@@ -324,7 +330,25 @@ export default function Dashboard() {
                       </button>
                     </div>
                   </div>
+                  {isExpanded && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                      <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-lg relative">
+                        {/* Close Icon */}
+                        <button
+                          onClick={closeModal}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+                          aria-label="Close"
+                        >
+                          &times;
+                        </button>
 
+                        {/* Modal Heading */}
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">Full Description</h2>
+                        {/* Modal Content */}
+                        <p className="text-gray-700">{selectedDescription}</p>
+                      </div>
+                    </div>
+                  )}
                   {/* Shareable Link Section - Always at the bottom */}
                   <div className="p-4 border-t border-gray-200">
                     <p className="text-sm font-semibold text-indigo-600 mb-2">Share Link</p>
@@ -439,6 +463,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
