@@ -7,10 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const embeds = document.querySelectorAll('.custom-embed');
 
   // Dynamically determine the API URL based on the current hostname
-  const API_URL =
-    window.location.hostname === 'localhost'
-      ? 'http://localhost:3000'
-      : 'https://www.fidefeed.com';
 
   embeds.forEach((el) => {
     const responseId = el.getAttribute('data-response-id');
@@ -18,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const starColor = el.getAttribute('data-star-color') || '#FFD700'; // Default star color (gold)
 
     if (responseId) {
-      fetch(`${API_URL}/api/responses/${responseId}`)
+      fetch(`/api/responses/${responseId}`)
         .then((res) => res.json())
         .then((data) => {
           const answers = data.answers.join(' ');
