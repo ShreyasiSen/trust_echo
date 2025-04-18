@@ -1,9 +1,9 @@
 // components/PlatformGrid.tsx
 
 const platforms = [
-    { name: "Webflow", logo: "/webflow.png" },
+    { name: "Webflow", logo: "/Webflow.png" },
     { name: "WordPress", logo: "/WordPress.png" },
-    { name: "Shopify", logo: "/shopify.png" },
+    { name: "Shopify", logo: "/Shopify.png" },
     { name: "Carrd", logo: "/Carrd.png" },
     { name: "Bubble", logo: "/Bubble.png" },
     { name: "Kajabi", logo: "/Kajabi.png" },

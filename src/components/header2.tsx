@@ -14,7 +14,7 @@ const Header2 = () => {
 //   ];
 
   return (
-    <section className="py-4 fixed top-0 left-0 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
+    <section className=" py-4 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
       <div className="container mx-auto">
         <nav className="lg:flex justify-between items-center hidden lg:block">
           <div className="flex items-center">
@@ -31,7 +31,7 @@ const Header2 = () => {
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton>
-                <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white transition-all">
+                <Button variant="outline" className="bg-gradient-to-r from-fuchsia-500 to-rose-400 text-white font-semibold rounded-xl shadow-md hover:from-rose-400 hover:to-fuchsia-500 transition duration-300">
                   Sign In
                 </Button>
               </SignInButton>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="py-28 bg-gradient-to-b from-pink-50 to-blue-50 font-sans mt-18" id="hero">
+    <section className="py-28 bg-gradient-to-b from-pink-50 to-blue-50 font-sans mt-18 " id="hero">
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto px-4">
           {/* Headline */}

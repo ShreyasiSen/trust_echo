@@ -5,13 +5,12 @@ import { Faq } from "@/components/faq";
 import { Contact } from "@/components/contact";
 // import { Footer } from "@/components/footer";
 import { Feature } from "@/components/feature";
-import { Cover } from "@/components/cover";
 import { Speciality } from "@/components/speciality";
 import PlatformGrid  from "@/components/platformGrid";
 import AboutUs from "@/components/about";
 import  Video  from "@/components/video";
-import {Pricing} from "@/components/basicPricing";
 
+import {Pricing} from "@/components/basicPricing"
 export default async function Home() {
 
   return (
@@ -25,9 +24,11 @@ export default async function Home() {
       <Speciality />
         <Feature />
       <PlatformGrid />
-      <Pricing/>
+       <Pricing/> 
       <AboutUs/>
+        
       <Faq />
+
       <Contact />
      <footer className="bg-pink-200 text-black py-4 text-center">
         <p>&copy; 2025 FideFeed. All rights reserved.</p>

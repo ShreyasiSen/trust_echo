@@ -1,18 +1,16 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { Montserrat } from "next/font/google";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const Pricing = () => {
   return (
     <section
-      className={`min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-pink-50 text-gray-900 ${montserrat.className}`}
+      className="min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-pink-50 text-gray-900 font-mono"
       id="pricing"
     >
       <div className="w-full max-w-4xl text-center">
