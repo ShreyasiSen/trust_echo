@@ -156,20 +156,20 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
 
 
   return (
-    <div className="min-h-screen font-sans bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+    <div className="min-h-screen font-sans bg-white  text-gray-800 transition-colors duration-300">
       <div className="grid grid-cols-1 md:grid-cols-3 min-h-screen">
         {/* Left Panel */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: 'spring', stiffness: 60, damping: 14 }}
-          className="bg-[#f5f7ff] dark:bg-gray-800 flex flex-col justify-center items-center px-6 py-10"
+          className="bg-[#f5f7ff]  flex flex-col justify-center items-center px-6 py-10"
         >
           <motion.h1
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, type: 'spring', stiffness: 70 }}
-            className="text-4xl md:text-5xl font-extrabold mb-4 font-serif text-center tracking-wide drop-shadow-sm text-indigo-700 dark:text-indigo-300"
+            className="text-4xl md:text-5xl font-extrabold mb-4 font-serif text-center tracking-wide drop-shadow-sm text-indigo-700 "
           >
             {formName}
           </motion.h1>
@@ -178,7 +178,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, type: 'spring', stiffness: 70 }}
-            className="text-center text-lg md:text-xl font-medium italic max-w-md tracking-wide text-gray-600 dark:text-gray-300"
+            className="text-center text-lg md:text-xl font-medium italic max-w-md tracking-wide text-gray-600 "
           >
             “{formTitle}”
           </motion.p>
@@ -189,13 +189,13 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: 'spring', stiffness: 60, damping: 14 }}
-          className="col-span-2 bg-gradient-to-tr from-[#e3f2fd] via-[#dbeafe] to-[#f0f9ff] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-12"
+          className="col-span-2 bg-gradient-to-tr from-[#e3f2fd] via-[#dbeafe] to-[#f0f9ff]  flex items-center justify-center px-4 py-12"
         >
           <motion.div
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="w-full max-w-lg p-8 md:p-10 bg-white dark:bg-gray-950/70 shadow-xl rounded-3xl border border-gray-200 dark:border-gray-700 backdrop-blur-sm"
+            className="w-full max-w-lg p-8 md:p-10 bg-white  shadow-xl rounded-3xl border border-gray-200  backdrop-blur-sm"
           >
             <h2 className="text-2xl font-bold mb-6 text-center font-serif">Feedback Form</h2>
 
@@ -208,7 +208,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                   type="text"
                   value={responderName}
                   onChange={(e) => setResponderName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full px-4 py-2 border border-gray-300  rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
                 />
                 {errors.responderName && (
@@ -224,7 +224,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                   type="email"
                   value={responderEmail}
                   onChange={(e) => setResponderEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full px-4 py-2 border border-gray-300  rounded-lg shadow-sm bg-white  focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
                 />
                 {errors.responderEmail && (
@@ -244,7 +244,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                       newAnswers[idx] = e.target.value;
                       setAnswers(newAnswers);
                     }}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="w-full px-4 py-2 border border-gray-300  rounded-lg shadow-sm bg-white  focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     rows={3}
                     required
                   />
@@ -263,7 +263,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
               </div>
 
               <div className="space-y-4">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-semibold text-gray-700 ">
                   Upload Your Image (Optional)
                 </label>
                 <div className="flex items-center space-x-4">
@@ -271,10 +271,10 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="w-16 h-16 rounded-full object-cover shadow-md border border-gray-300 dark:border-gray-600"
+                      className="w-16 h-16 rounded-full object-cover shadow-md border border-gray-300 "
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 font-semibold text-lg shadow-md">
+                    <div className="w-16 h-16 rounded-full bg-gray-200  flex items-center justify-center text-gray-500  font-semibold text-lg shadow-md">
                       <span>+</span>
                     </div>
                   )}
@@ -282,7 +282,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="block w-full text-sm text-gray-600 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="block w-full text-sm text-gray-600  file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   />
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                 <input
                   type="text"
                   onChange={(e) => setResponderRole(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full px-4 py-2 border border-gray-300  rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
                 {errors.responderRole && (
                   <p className="text-red-500 text-sm mt-1">{errors.responderRole}</p>
@@ -305,7 +305,7 @@ export default function ResponseForm({ params }: { params: Promise<{ formId: str
                 <textarea
                   value={improvementFeedback}
                   onChange={(e) => setImprovementFeedback(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full px-4 py-2 border border-gray-300  rounded-lg shadow-sm bg-white  focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   rows={2}
                 />
               </div>

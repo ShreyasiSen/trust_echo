@@ -137,9 +137,6 @@
 }
 
 
-
-/* Removed @custom-variant as it is not a standard CSS rule */
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
