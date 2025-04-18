@@ -331,107 +331,99 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         <p>&copy; 2025 FideFeed. All rights reserved.</p>
       </footer>
       {showEmbedModal && selectedResponse && (
-        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400  text-white rounded-2xl p-8 max-w-5xl w-full shadow-2xl transform transition-all duration-300 ease-in-out">
-            <h2 className="text-4xl font-mono text-black font-semibold mb-8 text-center tracking-tight">
+        <div className="fixed inset-0 flex items-center justify-center z-50  backdrop-blur-sm px-4">
+          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400 text-white rounded-2xl p-6 sm:p-8 w-full max-w-6xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
+            <h2 className="text-2xl sm:text-4xl font-mono text-black font-semibold mb-6 sm:mb-8 text-center tracking-tight">
               Choose Embed Layout
             </h2>
+
             {/* Layout Options */}
-            <div className="flex space-x-8 justify-center">
-              {/* Layout 1 – Full Width Review with Centered Avatar */}
-              <div
-                onClick={() => {
-                  router.push(`/responses/${selectedResponse.id}?layout=1`);
-                  setShowEmbedModal(false);
-                }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
-              >
-                {/* Avatar */}
-                <div className="flex justify-center mb-4">
-                  <img
-                    src="https://i.pravatar.cc/100?img=32"
-                    alt="Reviewer Avatar"
-                    className="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
-                  />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12  lg:gap-8  ">
+              {/* Layout 1 */}
+              <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
+                <div
+                  onClick={() => {
+                    router.push(`/responses/${selectedResponse.id}?layout=1`);
+                    setShowEmbedModal(false);
+                  }}
+                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center  transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
+                >
+                  <div className="flex justify-center mb-4">
+                    <img
+                      src="https://i.pravatar.cc/100?img=32"
+                      alt="Reviewer Avatar"
+                      className="w-16 h-16 rounded-full border-2 border-gray-300 object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800">Liam Young</h3>
+                  <p className="text-xs text-gray-500 mb-2">ReviewCollector / CEO</p>
+                  <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
+                  <p className="text-sm text-gray-700 mb-4">
+                    “Elementor is a great tool. When you build a WordPress site ”
+                  </p>
                 </div>
-
-                {/* Name + Title */}
-                <h3 className="text-xl font-semibold text-gray-800">Liam Young</h3>
-                <p className="text-xs text-gray-500 mb-2">ReviewCollector / CEO</p>
-
-                {/* Stars */}
-                <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
-
-                {/* Review Text */}
-                <p className="text-sm text-gray-700 mb-4">
-                  “Visit this .....”
-                </p>
-
-                <div className="text-xs text-gray-400 mt-4 italic">Layout 1 – Classic Review Card</div>
+                <div className="text-xs sm:text-sm text-gray-900 italic text-center">Layout 1 – Classic Review Card</div>
               </div>
 
-              {/* Layout 2 – Minimalistic Testimonial */}
-              <div
-                onClick={() => {
-                  router.push(`/responses/${selectedResponse.id}?layout=2`);
-                  setShowEmbedModal(false);
-                }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
-              >
-                {/* Review Content */}
-                <p className="text-sm text-gray-700 mb-6 px-4">
-                  “Elementor is a great tool. When you build a WordPress site for a client, he or she usually wants to edit the site.”
-                </p>
-
-                {/* Photo + Name/Role */}
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://i.pravatar.cc/100?img=47"
-                    alt="Reviewer Avatar"
-                    className="w-16 h-16 rounded-full border-2 border-gray-300 object-cover"
-                  />
-                  <p className="text-sm font-medium text-gray-800 mt-2">Julia Day</p>
-                  <p className="text-xs text-blue-600 font-semibold">Manager</p>
-                </div>
-
-                <div className="text-xs text-gray-400 mt-4 italic">Layout 2 – Minimalistic Testimonial</div>
-              </div>
-
-              {/* Layout 3 – Left Aligned Testimonial with Avatar */}
-              <div
-                onClick={() => {
-                  router.push(`/responses/${selectedResponse.id}?layout=3`);
-                  setShowEmbedModal(false);
-                }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-left w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
-              >
-                {/* Review Content */}
-                <p className="text-sm text-gray-700 mb-6">
-                  &quot;Shadcn UI Kit for Figma has completely transformed our design process. It&apos;s incredibly intuitive and saves us so much time. The components are beautifully crafted and customizable.&quot;
-                </p>
-
-                {/* Avatar + Info */}
-                <div className="flex items-center mt-4 space-x-4">
-                  <img
-                    src="https://i.pravatar.cc/100?img=56"
-                    alt="Reviewer Avatar"
-                    className="w-12 h-12 rounded-full border-2 border-gray-300 object-cover"
-                  />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">Lando Norris</p>
-                    <p className="text-xs text-gray-500">Founder at Acme Inc.</p>
+              {/* Layout 2 */}
+              <div className="flex flex-col gap-4 sm:gap-6 items-center justify-center">
+                <div
+                  onClick={() => {
+                    router.push(`/responses/${selectedResponse.id}?layout=2`);
+                    setShowEmbedModal(false);
+                  }}
+                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-4 sm:p-6 bg-white text-center transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between w-full max-w-md"
+                >
+                  <p className="text-xs sm:text-base text-gray-700 px-2 sm:px-4 mb-4">
+                    “Elementor is a great tool. When you build a WordPress site”
+                  </p>
+                  <div className="flex flex-col items-center gap-2">
+                    <img
+                      src="https://i.pravatar.cc/100?img=47"
+                      alt="Reviewer Avatar"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-gray-300 object-cover"
+                    />
+                    <p className="text-sm sm:text-base font-medium text-gray-800 mt-2">Julia Day</p>
+                    <p className="text-xs sm:text-sm text-blue-600 font-semibold">Manager</p>
                   </div>
                 </div>
+                <div className="text-xs sm:text-sm text-gray-900 text-center italic">Layout 2 – Minimalistic Testimonial</div>
+              </div>
 
-                <div className="text-xs text-gray-400 mt-4 italic">Layout 3 – Left-Aligned Testimonial</div>
+              {/* Layout 3 */}
+              <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
+                <div
+                  onClick={() => {
+                    router.push(`/responses/${selectedResponse.id}?layout=3`);
+                    setShowEmbedModal(false);
+                  }}
+                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-4 sm:p-6 bg-white text-left transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between w-full max-w-md"
+                >
+                  <p className="text-sm sm:text-base text-gray-700 px-2 sm:px-6">
+                    &quot;Elementor is a great tool. When you build a WordPress site for a client, he or she usually wants to edit the site.
+                    Elementor is a great tool. &quot;
+                  </p>
+                  <div className="flex items-center space-x-2 pl-2 mt-4">
+                    <img
+                      src="https://i.pravatar.cc/100?img=56"
+                      alt="Reviewer Avatar"
+                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-gray-300 object-cover"
+                    />
+                    <div>
+                      <p className="text-sm sm:text-base font-semibold text-gray-800">Lando Norris</p>
+                      <p className="text-xs sm:text-sm text-gray-500">Founder at Acme Inc.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-xs sm:text-sm text-gray-900 italic text-center">Layout 3 – Left-Aligned Testimonial</div>
               </div>
             </div>
 
-            {/* Close Modal */}
-            <div className="flex justify-end mt-8">
+            {/* Close Modal Button */}
+            <div className="flex justify-center sm:justify-end mt-8">
               <button
                 onClick={() => setShowEmbedModal(false)}
-                className="cursor-pointer text-md bg-black  text-white hover:text-gray-300 border border-gray-600 rounded-lg px-6 py-3 hover:bg-gray-700 transition-all duration-200"
+                className="cursor-pointer text-sm sm:text-md bg-black text-white hover:text-gray-300 border border-gray-600 rounded-lg px-5 py-2 sm:px-6 sm:py-3 hover:bg-gray-700 transition-all duration-200"
               >
                 Cancel
               </button>
@@ -439,6 +431,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
         </div>
       )}
+
     </div>
   );
 }
