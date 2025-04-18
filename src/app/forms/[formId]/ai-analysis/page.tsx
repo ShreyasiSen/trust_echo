@@ -82,7 +82,7 @@ const AIAnalysisPage = ({ params }: { params: Promise<{ formId: string }> }) => 
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-200 via-orange-50 to-blue-300 text-slate-700 font-sans flex items-center justify-center px-4 py-2 overflow-hidden">
-      <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md z-0" />
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-md z-0" />
 
       <div className="relative z-10 max-w-6xl w-full">
         {/* Header */}
@@ -95,23 +95,23 @@ const AIAnalysisPage = ({ params }: { params: Promise<{ formId: string }> }) => 
           {/* Sleek Icon Animation */}
           <div className="relative inline-block">
             <Lightbulb className="mx-auto size-12 text-indigo-800 mb-3 animate-pulse" />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-indigo-100/30 dark:bg-indigo-900/30 blur-lg animate-orbit" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-indigo-100/30  blur-lg animate-orbit" />
           </div>
 
           {/* Modern Typography */}
-          <h1 className="text-3xl sm:text-4xl lg:text-4xl font-bold tracking-tight text-indigo-700 dark:text-indigo-300 font-serif leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-4xl font-bold tracking-tight text-indigo-700 font-serif leading-tight">
             {/* Gradient Text with Subtle Shine */}
             <span className="bg-gradient-to-r from-indigo-600 to-blue-500 text-transparent bg-clip-text">
               Illuminate Insights,
             </span>
             <br className="hidden sm:block" />
-            <span className="text-slate-700 dark:text-slate-200">
+            <span className="text-slate-700 ">
               Drive Decisive Action.
             </span>
           </h1>
 
           {/* Concise and Impactful Subheadline */}
-          <p className="mt- text-lg sm:text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto font-medium leading-relaxed tracking-normal">
+          <p className="mt- text-lg sm:text-lg text-slate-500  max-w-xl mx-auto font-medium leading-relaxed tracking-normal">
             Unleash the power of AI to transform raw feedback into clear pathways for growth and enhanced user experiences.
           </p>
         </motion.div>
@@ -135,7 +135,7 @@ const AIAnalysisPage = ({ params }: { params: Promise<{ formId: string }> }) => 
               whileHover="hover"
               whileTap="tap"
               custom={idx}
-              className="relative z-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-lg shadow-xl border-0 overflow-hidden w-full max-w-md transition-transform duration-300 hover:scale-105"
+              className="relative z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-xl border-0 overflow-hidden w-full max-w-md transition-transform duration-300 hover:scale-105"
             >
               {/* Card Header */}
               <div className={`py-5 px-6 bg-gradient-to-r ${option.bgColor} text-white flex items-center space-x-4`}>
@@ -147,12 +147,12 @@ const AIAnalysisPage = ({ params }: { params: Promise<{ formId: string }> }) => 
 
               {/* Card Body */}
               <div className="p-6">
-                <p className="text-md text-slate-600 dark:text-slate-400 leading-relaxed">{option.description}</p>
+                <p className="text-md text-slate-600 leading-relaxed">{option.description}</p>
               </div>
 
               {/* Card Footer */}
               <div className="py-4 px-6 text-right">
-                <button className="cursor-pointer inline-flex items-center font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button className="cursor-pointer inline-flex items-center font-semibold text-indigo-600  hover:text-indigo-800  transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                   Dive In
                   <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

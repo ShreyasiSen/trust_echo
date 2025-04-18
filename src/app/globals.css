@@ -135,10 +135,8 @@
 .animate-slide-up {
   animation: slideUp 1s ease-out;
 }
-
-
-
-@custom-variant dark (&:is(.dark *));
+/* 
+@custom-variant dark (&:is(.dark *)); */
 
 @theme inline {
   --color-background: var(--background);

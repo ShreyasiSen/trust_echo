@@ -62,7 +62,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
     if (formId) {
       fetchResponses();
-     
+
     }
   }, [formId]);
 
@@ -101,50 +101,50 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     ? responses.filter((response) => (filter === 'spam' ? response?.spam : !response?.spam))
     : [];
 
-    if (loading) {
-      return (
-        <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 flex flex-col justify-center items-center z-50">
-          <motion.div
-            className="relative w-20 h-20 rounded-full border-4 border-dashed border-indigo-600"
-            variants={{
-              start: {
-                rotate: 0,
-                scale: 1,
+  if (loading) {
+    return (
+      <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 flex flex-col justify-center items-center z-50">
+        <motion.div
+          className="relative w-20 h-20 rounded-full border-4 border-dashed border-indigo-600"
+          variants={{
+            start: {
+              rotate: 0,
+              scale: 1,
+            },
+            end: {
+              rotate: 360,
+              scale: 1.2,
+              transition: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
               },
-              end: {
-                rotate: 360,
-                scale: 1.2,
-                transition: {
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                },
+            },
+          }}
+          animate="end"
+        />
+        <motion.p
+          className="text-xl text-indigo-700 font-semibold mt-6"
+          variants={{
+            initial: { y: 20, opacity: 0 },
+            animate: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.5,
+                delay: 0.2,
+                ease: 'easeOut',
               },
-            }}
-            animate="end"
-          />
-          <motion.p
-            className="text-xl text-indigo-700 font-semibold mt-6"
-            variants={{
-              initial: { y: 20, opacity: 0 },
-              animate: {
-                y: 0,
-                opacity: 1,
-                transition: {
-                  duration: 0.5,
-                  delay: 0.2,
-                  ease: 'easeOut',
-                },
-              },
-            }}
-            initial="initial"
-            animate="animate"
-          >
-            Fetching responses...
-          </motion.p>
-        </div>
-      );
-    }
+            },
+          }}
+          initial="initial"
+          animate="animate"
+        >
+          Fetching responses...
+        </motion.p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen text-white">
@@ -330,22 +330,23 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         <p>&copy; 2025 FideFeed. All rights reserved.</p>
       </footer>
       {showEmbedModal && selectedResponse && (
-        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400  text-white rounded-2xl p-8 max-w-5xl w-full shadow-2xl transform transition-all duration-300 ease-in-out">
-            <h2 className="text-4xl font-mono text-black font-semibold mb-8 text-center tracking-tight">
+        <div className="fixed inset-0 flex items-center justify-center z-50  backdrop-blur-sm px-4">
+          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400 text-white rounded-2xl p-6 sm:p-8 w-full max-w-5xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
+            <h2 className="text-2xl sm:text-4xl font-mono text-black font-semibold mb-6 sm:mb-8 text-center tracking-tight">
               Choose Embed Layout
             </h2>
+
             {/* Layout Options */}
-            <div className="flex space-x-8 justify-center">
-              {/* Layout 1 – Full Width Review with Centered Avatar */}
+            <div className="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0 justify-center items-center">
+              {/* Layout 1 */}
               <div
                 onClick={() => {
                   router.push(`/responses/${selectedResponse.id}?layout=1`);
                   setShowEmbedModal(false);
                 }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
               >
-                {/* Avatar */}
+
                 <div className="flex justify-center mb-4">
                   <img
                     src="https://i.pravatar.cc/100?img=32"
@@ -353,36 +354,25 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                     className="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
                   />
                 </div>
-
-                {/* Name + Title */}
                 <h3 className="text-xl font-semibold text-gray-800">Liam Young</h3>
                 <p className="text-xs text-gray-500 mb-2">ReviewCollector / CEO</p>
-
-                {/* Stars */}
                 <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
-
-                {/* Review Text */}
-                <p className="text-sm text-gray-700 mb-4">
-                  “Visit this .....”
-                </p>
-
+                <p className="text-sm text-gray-700 mb-4">“Visit this .....”</p>
                 <div className="text-xs text-gray-400 mt-4 italic">Layout 1 – Classic Review Card</div>
               </div>
 
-              {/* Layout 2 – Minimalistic Testimonial */}
+              {/* Layout 2 */}
               <div
                 onClick={() => {
                   router.push(`/responses/${selectedResponse.id}?layout=2`);
                   setShowEmbedModal(false);
                 }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
               >
-                {/* Review Content */}
-                <p className="text-sm text-gray-700 mb-6 px-4">
+
+                <p className="text-sm text-gray-700 mb-6 px-2 sm:px-4">
                   “Elementor is a great tool. When you build a WordPress site for a client, he or she usually wants to edit the site.”
                 </p>
-
-                {/* Photo + Name/Role */}
                 <div className="flex flex-col items-center">
                   <img
                     src="https://i.pravatar.cc/100?img=47"
@@ -392,25 +382,22 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                   <p className="text-sm font-medium text-gray-800 mt-2">Julia Day</p>
                   <p className="text-xs text-blue-600 font-semibold">Manager</p>
                 </div>
-
                 <div className="text-xs text-gray-400 mt-4 italic">Layout 2 – Minimalistic Testimonial</div>
               </div>
 
-              {/* Layout 3 – Left Aligned Testimonial with Avatar */}
+              {/* Layout 3 */}
               <div
                 onClick={() => {
                   router.push(`/responses/${selectedResponse.id}?layout=3`);
                   setShowEmbedModal(false);
                 }}
-                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-left w-96 transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100"
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-left w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
               >
-                {/* Review Content */}
-                <p className="text-sm text-gray-700 mb-6">
-                  &quot;Shadcn UI Kit for Figma has completely transformed our design process. It&apos;s incredibly intuitive and saves us so much time. The components are beautifully crafted and customizable.&quot;
-                </p>
 
-                {/* Avatar + Info */}
-                <div className="flex items-center mt-4 space-x-4">
+                <p className="text-sm text-gray-700">
+                  &quot;Shadcn UI Kit for Figma has completely transformed our design process. It&apos;s incredibly intuitive and saves us so much time.&quot;
+                </p>
+                <div className="flex items-center space-x-4">
                   <img
                     src="https://i.pravatar.cc/100?img=56"
                     alt="Reviewer Avatar"
@@ -421,16 +408,15 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                     <p className="text-xs text-gray-500">Founder at Acme Inc.</p>
                   </div>
                 </div>
-
                 <div className="text-xs text-gray-400 mt-4 italic">Layout 3 – Left-Aligned Testimonial</div>
               </div>
             </div>
 
-            {/* Close Modal */}
-            <div className="flex justify-end mt-8">
+            {/* Close Modal Button */}
+            <div className="flex justify-center sm:justify-end mt-8">
               <button
                 onClick={() => setShowEmbedModal(false)}
-                className="cursor-pointer text-md bg-black  text-white hover:text-gray-300 border border-gray-600 rounded-lg px-6 py-3 hover:bg-gray-700 transition-all duration-200"
+                className="cursor-pointer text-sm sm:text-md bg-black text-white hover:text-gray-300 border border-gray-600 rounded-lg px-5 py-2 sm:px-6 sm:py-3 hover:bg-gray-700 transition-all duration-200"
               >
                 Cancel
               </button>
