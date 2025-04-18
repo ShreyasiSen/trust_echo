@@ -10,9 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const responseId = el.getAttribute('data-response-id');
     const layout = el.getAttribute('data-layout') || '1';
     const starColor = el.getAttribute('data-star-color') || '#FFD700'; // Default star color (gold)
-
+    
+    const API_URL=process.env.NODE_ENV === 'production' ? 'https://www.fidefeed.com' : 'http://localhost:3000'
     if (responseId) {
-      fetch(`https://www.fidefeed.com/api/responses/${responseId}`)
+      axios.get(`${API_URL}/api/responses/${responseId}`)
         .then((res) => res.json())
         .then((data) => {
           const answers = data.answers.join(' ');
