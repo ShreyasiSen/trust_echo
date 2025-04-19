@@ -39,7 +39,7 @@ const Speciality = () => {
         </h1>
         <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mb-6 rounded-full" />
         <p className="text-lg text-gray-700">
-          Paste our HTML snippet and embed your Wall Of Love instantly.
+          Paste our HTML snippet and embed your client feedback instantly.
           Works on Webflow, WordPress — you name it!
         </p>
       </div>

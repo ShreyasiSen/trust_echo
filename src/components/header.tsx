@@ -18,7 +18,6 @@ import { DialogTitle } from "@radix-ui/react-dialog"; // Import DialogTitle from
 const Header = () => {
   const menu = [
     { title: "Features", url: "#features" },
-    { title: "Testimonials", url: "#testimonials" },
     { title: "About", url: "#about" },
     { title: "Pricing", url: "#pricing" },
     { title: "FAQ", url: "#faq" },
