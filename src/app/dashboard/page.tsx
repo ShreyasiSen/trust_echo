@@ -326,7 +326,7 @@ export default function Dashboard() {
   return (
     <div>
       <Header2 />
-      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen py-20 sm:py-24">
+      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen mt-2 ">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
           {/* Header Section */}
           <div className="relative flex flex-col mb-10">
