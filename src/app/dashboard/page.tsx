@@ -1,17 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Header2 } from '@/components/header2';
 import { toast } from 'sonner';
 import { MoreVertical, Pen, Brain, Trash2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+
 import { motion, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 
 const loadingPhrases = [
@@ -170,6 +165,30 @@ export default function Dashboard() {
     setEditDescription(form.description || '');
   };
 
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  const toggleMenu = (formId: string | null) => {
+    setActiveMenu(activeMenu === formId ? null : formId);
+  };
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement;
+      if (menuRef.current && !menuRef.current.contains(target)) {
+        setActiveMenu(null);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside); // For desktop
+    document.addEventListener('touchstart', handleClickOutside); // For mobile
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
   const handleUpdate = async () => {
     try {
       console.log('Updating form with ID:', editFormId);
@@ -326,7 +345,7 @@ export default function Dashboard() {
   return (
     <div>
       <Header2 />
-      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen mt-2 ">
+      <div className="bg-gradient-to-b from-white via-pink-50 to-purple-100 min-h-screen mt-36 pb-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
           {/* Header Section */}
           <div className="relative flex flex-col mb-10">
@@ -407,24 +426,37 @@ export default function Dashboard() {
                   <div className="p-5 flex-grow">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className={`text-xl ${titleFontClass} line-clamp-1`}>{form.title}</h3> {/* Applied font styles to title */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="p-1 hover:bg-gray-100 cursor-pointer rounded-full">
-                            <MoreVertical className="w-4 h-4 text-gray-600" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem onClick={() => handleEditClick(form)} className="cursor-pointer">
-                            <Pen className="mr-2 h-4 w-4 text-blue-500" /> Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/forms/${form.id}/ai-analysis`)} className="cursor-pointer">
-                            <Brain className="mr-2 h-4 w-4 text-purple-500" /> AI Analysis
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(form.id)} className="cursor-pointer text-red-600">
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div ref={menuRef} className="relative">
+                        <button
+                          onClick={() => toggleMenu(form.id)}
+                          className="p-1 hover:bg-gray-100 cursor-pointer rounded-full"
+                        >
+                          <MoreVertical className="w-4 h-4 text-gray-600" />
+                        </button>
+
+                        {activeMenu === form.id && (
+                          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10">
+                            <button
+                              onClick={() => handleEditClick(form)}
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
+                            >
+                              <Pen className="mr-2 h-4 w-4 text-blue-500" /> Edit
+                            </button>
+                            <button
+                              onClick={() => router.push(`/forms/${form.id}/ai-analysis`)}
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
+                            >
+                              <Brain className="mr-2 h-4 w-4 text-purple-500" /> AI Analysis
+                            </button>
+                            <button
+                              onClick={() => handleDelete(form.id)}
+                              className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full cursor-pointer"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <p
                       onClick={() => handleDescriptionClick(form.description || 'No description provided.')}

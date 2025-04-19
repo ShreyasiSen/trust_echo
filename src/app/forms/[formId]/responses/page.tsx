@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Header2 } from '@/components/header2';
-import { FaStar, FaRegStar, FaLink, FaTrash } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaLink, FaTrash, FaPen } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
@@ -51,8 +51,8 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         const formData = await formResponse.json();
 
         setFormTitle(formData?.title ?? 'Untitled Form');
+        console.log("Fetched Responses Data:", responsesData); // Add this line
         setResponses(Array.isArray(responsesData) ? responsesData : []);
-        // setFormTitle(responsesData?.[0]?.formTitle ?? 'Untitled Form'); // Assuming formTitle is part of the response
       } catch (err) {
         console.error('Error fetching responses:', err);
       } finally {
@@ -62,7 +62,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
     if (formId) {
       fetchResponses();
-
     }
   }, [formId]);
 
@@ -93,6 +92,73 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     }
   };
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingAnswers, setEditingAnswers] = useState<string[]>([]);
+
+  const handleEditClick = (response: Response) => {
+    setSelectedResponse(response);
+    setEditingAnswers(response.answers || []); // Initialize with current answers
+    setShowEditModal(true);
+  };
+
+  const handleAnswerChange = (index: number, value: string) => {
+    setEditingAnswers((prev) =>
+      prev.map((answer, i) => (i === index ? value : answer))
+    );
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.relative')) {
+        setActiveMenu(null);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside); // For desktop
+    document.addEventListener('touchstart', handleClickOutside); // For mobile
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  const handleSaveChanges = async () => {
+    if (!selectedResponse) return;
+
+    try {
+      const res = await fetch(`/api/forms/${formId}/responses/${selectedResponse.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers: editingAnswers }),
+      });
+
+      if (res.ok) {
+        setResponses((prevResponses) =>
+          prevResponses.map((response) =>
+            response.id === selectedResponse.id
+              ? { ...response, answers: editingAnswers }
+              : response
+          )
+        );
+      toast.success('Answers updated successfully!', {
+        position: 'bottom-right',
+        style: {
+          color: 'green',
+        },
+      });
+        setShowEditModal(false);
+      } else {
+        toast.error('Failed to update answers.');
+      }
+    } catch (err) {
+      console.error('Error updating answers:', err);
+      toast.error('An error occurred while updating answers.');
+    }
+  };
   const toggleMenu = (id: string | null) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
@@ -146,7 +212,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     );
   }
 
-
   return (
     <div className="min-h-screen text-white">
       {/* Header */}
@@ -155,7 +220,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       {/* Content Area */}
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Sidebar */}
-        <div className="w-full lg:w-1/5 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-1">
+        <div className="w-full lg:w-1/5 px-4 sm:px-6 py-6 sm:py-10 bg-fuchsia-50 backdrop-blur-lg shadow-xl border-b lg:border-b-0 lg:border-r border-gray-200 mt-20">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 border-b border-gray-300 pb-2">
             🎛️ Filters
           </h2>
@@ -184,7 +249,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         </div>
 
         {/* Page Content */}
-        <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 ">
+        <div className="w-full lg:w-3/4 px-4 sm:px-10 py-6 sm:py-10 mt-10 lg:mt-20">
           <div className="w-full mb-6 sm:mb-10 flex justify-between items-center gap-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 border-b border-gray-500 pb-3 sm:pb-4">
               <span className="italic">{formTitle}</span> – Responses
@@ -218,6 +283,12 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
                       <button
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
+                        onClick={() => handleEditClick(response)}
+                      >
+                        <FaPen className="mr-2 h-4 w-4 text-blue-500" /> Edit
+                      </button>
+                      <button
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
                         onClick={() => {
                           setSelectedResponse(response);
                           setShowEmbedModal(true);
@@ -233,7 +304,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                           <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
                         ) : (
                           <>
-                            <FaTrash className="mr-2" /> Delete
+                            <FaTrash className="mr-2 text-red-600" /> Delete
                           </>
                         )}
                       </button>
@@ -332,90 +403,84 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       </footer>
       {showEmbedModal && selectedResponse && (
         <div className="fixed inset-0 flex items-center justify-center z-50  backdrop-blur-sm px-4">
-          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400 text-white rounded-2xl p-6 sm:p-8 w-full max-w-6xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
+          <div className="bg-gradient-to-br from-blue-50 via-blue-200 to-blue-400 text-white rounded-2xl p-6 sm:p-8 w-full max-w-5xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
             <h2 className="text-2xl sm:text-4xl font-mono text-black font-semibold mb-6 sm:mb-8 text-center tracking-tight">
               Choose Embed Layout
             </h2>
 
             {/* Layout Options */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12  lg:gap-8  ">
+            <div className="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0 justify-center items-center">
               {/* Layout 1 */}
-              <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
-                <div
-                  onClick={() => {
-                    router.push(`/responses/${selectedResponse.id}?layout=1`);
-                    setShowEmbedModal(false);
-                  }}
-                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center  transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
-                >
-                  <div className="flex justify-center mb-4">
-                    <img
-                      src="https://i.pravatar.cc/100?img=32"
-                      alt="Reviewer Avatar"
-                      className="w-16 h-16 rounded-full border-2 border-gray-300 object-cover"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-800">Liam Young</h3>
-                  <p className="text-xs text-gray-500 mb-2">ReviewCollector / CEO</p>
-                  <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
-                  <p className="text-sm text-gray-700 mb-4">
-                    “Elementor is a great tool. When you build a WordPress site ”
-                  </p>
+              <div
+                onClick={() => {
+                  router.push(`/responses/${selectedResponse.id}?layout=1`);
+                  setShowEmbedModal(false);
+                }}
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
+              >
+
+                <div className="flex justify-center mb-4">
+                  <img
+                    src="https://i.pravatar.cc/100?img=32"
+                    alt="Reviewer Avatar"
+                    className="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
+                  />
                 </div>
-                <div className="text-xs sm:text-sm text-gray-900 italic text-center">Layout 1 – Classic Review Card</div>
+                <h3 className="text-xl font-semibold text-gray-800">Liam Young</h3>
+                <p className="text-xs text-gray-500 mb-2">ReviewCollector / CEO</p>
+                <div className="text-yellow-400 text-xl mb-4">★★★★★</div>
+                <p className="text-sm text-gray-700 mb-4">“Visit this .....”</p>
+                <div className="text-xs text-gray-400 mt-4 italic">Layout 1 – Classic Review Card</div>
               </div>
 
               {/* Layout 2 */}
-              <div className="flex flex-col gap-4 sm:gap-6 items-center justify-center">
-                <div
-                  onClick={() => {
-                    router.push(`/responses/${selectedResponse.id}?layout=2`);
-                    setShowEmbedModal(false);
-                  }}
-                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-4 sm:p-6 bg-white text-center transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between w-full max-w-md"
-                >
-                  <p className="text-xs sm:text-base text-gray-700 px-2 sm:px-4 mb-4">
-                    “Elementor is a great tool. When you build a WordPress site”
-                  </p>
-                  <div className="flex flex-col items-center gap-2">
-                    <img
-                      src="https://i.pravatar.cc/100?img=47"
-                      alt="Reviewer Avatar"
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-gray-300 object-cover"
-                    />
-                    <p className="text-sm sm:text-base font-medium text-gray-800 mt-2">Julia Day</p>
-                    <p className="text-xs sm:text-sm text-blue-600 font-semibold">Manager</p>
-                  </div>
+              <div
+                onClick={() => {
+                  router.push(`/responses/${selectedResponse.id}?layout=2`);
+                  setShowEmbedModal(false);
+                }}
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-center w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
+              >
+
+                <p className="text-sm text-gray-700 mb-6 px-2 sm:px-4">
+                  “Elementor is a great tool. When you build a WordPress site for a client, he or she usually wants to edit the site.”
+                </p>
+                <div className="flex flex-col items-center">
+                  <img
+                    src="https://i.pravatar.cc/100?img=47"
+                    alt="Reviewer Avatar"
+                    className="w-16 h-16 rounded-full border-2 border-gray-300 object-cover"
+                  />
+                  <p className="text-sm font-medium text-gray-800 mt-2">Julia Day</p>
+                  <p className="text-xs text-blue-600 font-semibold">Manager</p>
                 </div>
-                <div className="text-xs sm:text-sm text-gray-900 text-center italic">Layout 2 – Minimalistic Testimonial</div>
+                <div className="text-xs text-gray-400 mt-4 italic">Layout 2 – Minimalistic Testimonial</div>
               </div>
 
               {/* Layout 3 */}
-              <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
-                <div
-                  onClick={() => {
-                    router.push(`/responses/${selectedResponse.id}?layout=3`);
-                    setShowEmbedModal(false);
-                  }}
-                  className="cursor-pointer border-2 border-gray-300 rounded-2xl p-4 sm:p-6 bg-white text-left transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between w-full max-w-md"
-                >
-                  <p className="text-sm sm:text-base text-gray-700 px-2 sm:px-6">
-                    &quot;Elementor is a great tool. When you build a WordPress site for a client, he or she usually wants to edit the site.
-                    Elementor is a great tool. &quot;
-                  </p>
-                  <div className="flex items-center space-x-2 pl-2 mt-4">
-                    <img
-                      src="https://i.pravatar.cc/100?img=56"
-                      alt="Reviewer Avatar"
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-gray-300 object-cover"
-                    />
-                    <div>
-                      <p className="text-sm sm:text-base font-semibold text-gray-800">Lando Norris</p>
-                      <p className="text-xs sm:text-sm text-gray-500">Founder at Acme Inc.</p>
-                    </div>
+              <div
+                onClick={() => {
+                  router.push(`/responses/${selectedResponse.id}?layout=3`);
+                  setShowEmbedModal(false);
+                }}
+                className="cursor-pointer border-2 border-gray-300 rounded-2xl p-6 bg-white text-left w-full md:w-96 h-[320px] transition-transform transform hover:scale-105 hover:ring-2 hover:ring-blue-600 shadow-xl hover:bg-gray-100 flex flex-col justify-between"
+              >
+
+                <p className="text-sm text-gray-700">
+                  &quot;Shadcn UI Kit for Figma has completely transformed our design process. It&apos;s incredibly intuitive and saves us so much time.&quot;
+                </p>
+                <div className="flex items-center space-x-4">
+                  <img
+                    src="https://i.pravatar.cc/100?img=56"
+                    alt="Reviewer Avatar"
+                    className="w-12 h-12 rounded-full border-2 border-gray-300 object-cover"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">Lando Norris</p>
+                    <p className="text-xs text-gray-500">Founder at Acme Inc.</p>
                   </div>
                 </div>
-                <div className="text-xs sm:text-sm text-gray-900 italic text-center">Layout 3 – Left-Aligned Testimonial</div>
+                <div className="text-xs text-gray-400 mt-4 italic">Layout 3 – Left-Aligned Testimonial</div>
               </div>
             </div>
 
@@ -431,7 +496,46 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
         </div>
       )}
+      {showEditModal && selectedResponse && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-3xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-6 text-center">
+              Edit Answers
+            </h2>
 
+            <div className="space-y-4">
+              {selectedResponse.questions?.map((question, index) => (
+                <div key={index}>
+                  <p className="text-base font-semibold text-gray-800">
+                    Q{index + 1}: <span className="">{question}</span>
+                  </p>
+                  <textarea
+                    value={editingAnswers[index] || ''} // Display the current answer
+                    onChange={(e) => handleAnswerChange(index, e.target.value)} // Update the answer
+                    className="w-full mt-2 p-3 text-blue-900 font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end gap-4 mt-6">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveChanges}
+                className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
