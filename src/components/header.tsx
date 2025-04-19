@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,10 +14,11 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useClerk } from "@clerk/nextjs";
 import { DialogTitle } from "@radix-ui/react-dialog"; // Import DialogTitle from Radix UI
 
 const Header = () => {
+  const { signOut } = useClerk(); // Call useClerk at the top level
   const menu = [
     { title: "Features", url: "#features" },
     { title: "About", url: "#about" },
@@ -127,27 +130,25 @@ const Header = () => {
                   <SignedOut>
                     <div className="flex flex-col gap-3 mt-8 px-6">
                       <SignInButton>
-                        <Button className="bg-gradient-to-r from-fuchsia-500 to-rose-400 text-white font-semibold rounded-xl shadow-md hover:from-rose-400 hover:to-fuchsia-500 transition duration-300">
+                        <Button className="bg-gradient-to-r from-fuchsia-500 to-rose-400 text-white font-semibold rounded-xl shadow-md hover:from-indigo-500 hover:to-indigo-300 transition duration-300">
                           Sign In
                         </Button>
                       </SignInButton>
                       <SignUpButton>
-                        <Button className="text-white bg-green-500 border-green-800 hover:bg-green-700 transition duration-300">
+                        <Button className="text-white bg-gradient-to-r from-indigo-300 to-indigo-500 hover:from-rose-400 hover:to-fuchsia-500 transition duration-300">
                           Sign Up
                         </Button>
                       </SignUpButton>
                     </div>
                   </SignedOut>
-
                   <SignedIn>
-                    <div className="absolute bottom-4 right-4">
-                      <UserButton
-                        appearance={{
-                          elements: {
-                            userButtonAvatarBox: "w-24 h-24 hover:scale-105 transition-transform duration-300 ring-2 ring-white",
-                          },
-                        }}
-                      />
+                    <div className="flex flex-col gap-3 mt-8 px-6">
+                      <button
+                        onClick={() => signOut()} // Use the signOut function from useClerk
+                        className="text-white bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 font-semibold rounded-xl shadow-md px-4 py-2 transition duration-300"
+                      >
+                        Sign Out
+                      </button>
                     </div>
                   </SignedIn>
                 </div>

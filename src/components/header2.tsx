@@ -14,7 +14,7 @@ const Header2 = () => {
 //   ];
 
   return (
-    <section className=" py-4 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
+    <section className="fixed top-0 left-0 py-6 px-6 w-full bg-white/80 z-50 shadow-md backdrop-blur-sm">
       <div className="container mx-auto">
         <nav className="lg:flex justify-between items-center hidden lg:block">
           <div className="flex items-center">

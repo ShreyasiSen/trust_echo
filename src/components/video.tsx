@@ -31,12 +31,13 @@ export default function Video() {
 
         {/* Right Video Placeholder */}
         <div className="md:w-1/2 w-full p-6 flex items-center justify-center min-h-[350px] md:min-h-[420px] bg-white rounded-2xl shadow-md border border-fuchsia-100 relative transition-all duration-300 hover:shadow-xl hover:scale-[1.01]">
-          <div className="text-center z-10">
-            <p className="text-2xl font-semibold text-blue-700">🎥 Video uploading soon...</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Stay tuned! We&apos;ll be adding an awesome video here shortly.
-            </p>
-          </div>
+          <iframe
+            className="absolute inset-0 w-full h-full rounded-2xl"
+            src="https://www.youtube.com/embed/uCrv7rg4zzo"
+            title="YouTube video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
           <div className="absolute -top-8 -right-8 w-32 h-32 bg-fuchsia-300 rounded-full opacity-20 blur-3xl z-0"></div>
         </div>
       </div>
