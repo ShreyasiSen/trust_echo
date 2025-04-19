@@ -5,7 +5,7 @@ import { Header2 } from '@/components/header2';
 import Link from 'next/link';
 import { FiGrid, FiCopy } from 'react-icons/fi';
 import { useSearchParams } from 'next/navigation';
-
+import { useUser } from '@clerk/nextjs';
 // Define a type for the testimonial
 interface Testimonial {
   responderName: string;
@@ -26,6 +26,9 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
   const [bgColor, setBgColor] = useState('#f9f9f9');
   const [fontSize, setFontSize] = useState(16);
   const [textColor, setTextColor] = useState('#333');
+  const { user } = useUser();
+  
+
   // const [margin, setMargin] = useState(20);
   // const [alignment, setAlignment] = useState<'center' | 'left'>('center'); // Alignment option
   const [shadowThickness, setShadowThickness] = useState(4); // New: Shadow thickness
@@ -92,6 +95,25 @@ export default function ResponsePage({ params }: { params: Promise<{ responseId:
       setTimeout(() => setCopied(false), 2000);
     }
   };
+  if(!user) {
+
+    return (
+      <div className="bg-white min-h-screen flex flex-col font-sans">
+        <Header2 />
+        <main className="flex-grow">
+          <div className="max-w-6xl mx-auto px-6 pt-10 pb-16">
+            <div className="text-center text-gray-500 py-20 text-2xl">
+              <span className="animate-pulse">Loading preview...</span>
+            </div>
+          </div>
+        </main>
+        {/* Footer */}
+        <footer className="bg-pink-50 text-black py-4 text-center">
+          <p>&copy; 2025 FideFeed. All rights reserved.</p>
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen  flex flex-col font-sans">
