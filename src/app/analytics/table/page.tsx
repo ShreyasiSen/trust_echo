@@ -61,7 +61,7 @@ export default function FormComparisonPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0c-5.523 0-10 4.477-10 10s4.477 10 10 10v-4a8 8 0 01-8-8z"></path>
                     </svg>
-                    Loading forms...
+                    Loading  tabular data
                 </div>
             </div>
         );
