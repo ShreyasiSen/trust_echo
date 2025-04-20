@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner"; // Import the Toaster component
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,21 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Analytics >
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <link rel="icon" href="/favicon.ico" />
-        </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased `}
-        >
-          <Toaster position="bottom-right" />
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
-
-    </Analytics>
+    <>
+      <ClerkProvider>
+        <html lang="en">
+          <head>
+            <link rel="icon" href="/favicon.ico" />
+          </head>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+          >
+            <Toaster position="bottom-right" />
+            {children}
+          </body>
+        </html>
+      </ClerkProvider>
+      <Analytics />
+    </>
   );
 }
