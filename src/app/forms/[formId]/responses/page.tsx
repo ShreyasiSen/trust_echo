@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Header2 } from '@/components/header2';
-import { FaStar, FaRegStar, FaLink, FaTrash } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaLink, FaTrash, FaPen } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import Link from 'next/link';
 import { FiGrid } from 'react-icons/fi';
@@ -51,8 +51,8 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
         const formData = await formResponse.json();
 
         setFormTitle(formData?.title ?? 'Untitled Form');
+        console.log("Fetched Responses Data:", responsesData); // Add this line
         setResponses(Array.isArray(responsesData) ? responsesData : []);
-        // setFormTitle(responsesData?.[0]?.formTitle ?? 'Untitled Form'); // Assuming formTitle is part of the response
       } catch (err) {
         console.error('Error fetching responses:', err);
       } finally {
@@ -62,7 +62,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
 
     if (formId) {
       fetchResponses();
-
     }
   }, [formId]);
 
@@ -93,6 +92,73 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
     }
   };
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingAnswers, setEditingAnswers] = useState<string[]>([]);
+
+  const handleEditClick = (response: Response) => {
+    setSelectedResponse(response);
+    setEditingAnswers(response.answers || []); // Initialize with current answers
+    setShowEditModal(true);
+  };
+
+  const handleAnswerChange = (index: number, value: string) => {
+    setEditingAnswers((prev) =>
+      prev.map((answer, i) => (i === index ? value : answer))
+    );
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.relative')) {
+        setActiveMenu(null);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside); // For desktop
+    document.addEventListener('touchstart', handleClickOutside); // For mobile
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  const handleSaveChanges = async () => {
+    if (!selectedResponse) return;
+
+    try {
+      const res = await fetch(`/api/forms/${formId}/responses/${selectedResponse.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers: editingAnswers }),
+      });
+
+      if (res.ok) {
+        setResponses((prevResponses) =>
+          prevResponses.map((response) =>
+            response.id === selectedResponse.id
+              ? { ...response, answers: editingAnswers }
+              : response
+          )
+        );
+      toast.success('Answers updated successfully!', {
+        position: 'bottom-right',
+        style: {
+          color: 'green',
+        },
+      });
+        setShowEditModal(false);
+      } else {
+        toast.error('Failed to update answers.');
+      }
+    } catch (err) {
+      console.error('Error updating answers:', err);
+      toast.error('An error occurred while updating answers.');
+    }
+  };
   const toggleMenu = (id: string | null) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
@@ -145,7 +211,6 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
       </div>
     );
   }
-
 
   return (
     <div className="min-h-screen text-white">
@@ -218,6 +283,12 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10 animate-fade-in">
                       <button
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
+                        onClick={() => handleEditClick(response)}
+                      >
+                        <FaPen className="mr-2 h-4 w-4 text-blue-500" /> Edit
+                      </button>
+                      <button
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full cursor-pointer"
                         onClick={() => {
                           setSelectedResponse(response);
                           setShowEmbedModal(true);
@@ -233,7 +304,7 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
                           <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-red-500"></div>
                         ) : (
                           <>
-                            <FaTrash className="mr-2" /> Delete
+                            <FaTrash className="mr-2 text-red-600" /> Delete
                           </>
                         )}
                       </button>
@@ -431,7 +502,46 @@ export default function ResponsesPage({ params }: { params: Promise<{ formId: st
           </div>
         </div>
       )}
+      {showEditModal && selectedResponse && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-3xl shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto max-h-[95vh]">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-6 text-center">
+              Edit Answers
+            </h2>
 
+            <div className="space-y-4">
+              {selectedResponse.questions?.map((question, index) => (
+                <div key={index}>
+                  <p className="text-base font-semibold text-gray-800">
+                    Q{index + 1}: <span className="">{question}</span>
+                  </p>
+                  <textarea
+                    value={editingAnswers[index] || ''} // Display the current answer
+                    onChange={(e) => handleAnswerChange(index, e.target.value)} // Update the answer
+                    className="w-full mt-2 p-3 text-blue-900 font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end gap-4 mt-6">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveChanges}
+                className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
