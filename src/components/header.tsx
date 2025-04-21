@@ -64,12 +64,12 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton>
-                <Button variant="outline" className="bg-gradient-to-r from-fuchsia-500 to-rose-400 text-white font-semibold rounded-lg shadow-md hover:from-indigo-500 hover:to-indigo-300 transition duration-300">
+                <Button variant="outline" className="cursor-pointer bg-gradient-to-r from-fuchsia-500 to-rose-400 text-white font-semibold rounded-lg shadow-md hover:from-indigo-500 hover:to-indigo-300 transition duration-300">
                   Sign In
                 </Button>
               </SignInButton>
               <SignUpButton>
-                <Button variant="outline" className="bg-gradient-to-r from-indigo-300 to-indigo-500 text-white font-semibold rounded-lg shadow-md hover:from-rose-400 hover:to-fuchsia-500 transition duration-300">
+                <Button variant="outline" className="cursor-pointer bg-gradient-to-r from-indigo-300 to-indigo-500 text-white font-semibold rounded-lg shadow-md hover:from-rose-400 hover:to-fuchsia-500 transition duration-300">
                   Sign Up
                 </Button>
               </SignUpButton>
